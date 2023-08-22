@@ -4,10 +4,9 @@ import { SlArrowLeft } from 'react-icons/sl'
 import { TfiClose } from 'react-icons/Tfi'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import Background from './Background'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import BackgroundSelect from './BackgroundSelect'
 import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-const enhanceWithClickOutside = require('react-click-outside');
 
 type Props = {
    setShow: Function,
@@ -42,22 +41,9 @@ function CreateBoard(props: Props) {
    } = useForm<Inputs>()
    const onSubmit: SubmitHandler<Inputs> = (data) => { console.log(data) }
 
-   let menuRef = useRef()
-
-   useEffect(() => {
-      let handle = (e: React.SyntheticEvent<EventTarget>) => {
-         e.stopPropagation()
-         props.setShow(false)
-      }
-      document.addEventListener('mousedown', handle)
-      return () => {
-         document.removeEventListener('mousedown', handle)
-      }
-   })
-
    return (
       <>
-         <div id='content' className={` text-black absolute bg-white top-[calc(100%+10px)] min-w-[306px] left-[-20px] p-1 drop-menu-shadow rounded-md`}>
+         <div className={`text-black absolute bg-white top-[calc(100%+10px)] min-w-[306px] left-[-20px] p-1 drop-menu-shadow rounded-md`}>
             <div className='flex items-center justify-between text-gray-600'>
                <span className='p-3 rounded-md hover:bg-slate-100 cursor-pointer' onClick={() => {
                   props.setShow({ show: true, tab: '' })
@@ -133,4 +119,4 @@ function CreateBoard(props: Props) {
    )
 }
 
-export default enhanceWithClickOutside(CreateBoard)
+export default CreateBoard
