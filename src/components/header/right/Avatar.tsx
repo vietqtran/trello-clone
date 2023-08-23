@@ -28,7 +28,7 @@ function Avatar() {
             </div>
          </div>
 
-         {show && <div className='min-w-[240px] drop-menu-shadow right-0 top-[45px] absolute rounded-md'>
+         {show && <div className='bg-white min-w-[240px] drop-menu-shadow right-0 top-[45px] absolute rounded-md'>
             <h1 className='text-sm font-semibold p-4'>Account</h1>
             <div className='flex items-center justify-start px-4 mb-2'>
                <div>

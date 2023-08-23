@@ -48,8 +48,8 @@ function WorkspaceModal(props: Props) {
    const [workspace, setWorkspace] = useState('')
 
    return (
-      <div className=' p-5 w-full h-fit min-h-[100vh] top-0 left-0 right-0 bottom-0 absolute bg-black bg-opacity-75 flex items-start justify-center'>
-         <div className={`relative w-full md:bg-[url('/assets/other/workspace-modal-bg.png')] bg-[url('/assets/other/workspace-modal-bg-mobile.png')] bg-no-repeat bg-cover rounded-md bg-white container lg:mx-40 md:mx-20 grid grid-cols-2`}
+      <div className='z-50 p-5 w-full h-full min-h-[100vh] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start justify-center'>
+         <div className={`modal h-full overflow-y-scroll relative w-full md:bg-[url('/assets/other/workspace-modal-bg.png')] bg-[url('/assets/other/workspace-modal-bg-mobile.png')] bg-no-repeat bg-cover rounded-md bg-white container lg:mx-40 md:mx-20 grid grid-cols-2`}
             onClick={handleClickInside}
             ref={ref}
          >
