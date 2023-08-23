@@ -55,7 +55,7 @@ function WorkspaceModal(props: Props) {
          >
             <span
                onClick={handleClickOutside}
-               className='absolute right-0 m-2 p-3 hover:bg-slate-100 cursor-pointer rounded-md'><GrClose /></span>
+               className='absolute right-0 m-2 p-3 hover:bg-white cursor-pointer rounded-md'><GrClose /></span>
             <div className='lg:col-span-1 col-span-2 flex items-start justify-center md:px-20 px-5 py-10 flex-col md:order-1 order-2'>
                <h1 className='font-semibold text-2xl mb-2'>
                   {`Let's build a Workspace`}
