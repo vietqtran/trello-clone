@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import StarredItem from './StarredItem'
 
@@ -20,4 +20,4 @@ function Starred() {
    )
 }
 
-export default Starred
+export default memo(Starred)

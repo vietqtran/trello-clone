@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import RecentItem from './RecentItem'
 
@@ -21,4 +21,4 @@ function Recent() {
    )
 }
 
-export default Recent
+export default memo(Recent)

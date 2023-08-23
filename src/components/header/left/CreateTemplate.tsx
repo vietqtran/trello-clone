@@ -1,6 +1,8 @@
 import React from 'react'
 import { SlArrowLeft } from 'react-icons/sl'
 import { TfiClose } from 'react-icons/Tfi'
+import Templates from './Templates'
+import TemplateSelect from './TemplateSelect'
 
 type Props = {
    setShow: Function
@@ -17,6 +19,9 @@ function CreateTemplate(props: Props) {
             <span className='p-3 rounded-md hover:bg-slate-100' onClick={() => {
                props.setShow({ show: false, tab: '' })
             }}><TfiClose /></span>
+         </div>
+         <div className='p-2'>
+            <TemplateSelect />
          </div>
       </div>
    )

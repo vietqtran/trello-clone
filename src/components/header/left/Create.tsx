@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { memo, useContext } from 'react'
 import { RxPlus } from 'react-icons/rx'
 import { useState } from 'react'
 import { FaTrello } from 'react-icons/fa'
@@ -8,14 +8,31 @@ import { FiTrello } from 'react-icons/fi'
 import { BsPeople } from 'react-icons/bs'
 import CreateBoard from './CreateBoard'
 import CreateTemplate from './CreateTemplate'
-import CreateWorkspace from './CreateWorkspace'
+import { useRef } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
-function Create() {
+type Props = {
+   setShowModal: Function
+}
+
+function Create(props: Props) {
 
    const [show, setShow] = useState({ show: false, tab: '' })
+
+   const ref = useRef(null)
+   const handleClickOutside = () => {
+      setShow({ show: false, tab: '' })
+   }
+   const handleClickInside = () => {
+   }
+   useOnClickOutside(ref, handleClickOutside)
+
    return (
       <>
-         <div className='cursor-pointer relative flex items-center justify-center w-fit px-3 bg-blue-500 text-sm text-white hover:bg-blue-600 rounded-sm'>
+         <div
+            ref={ref}
+            onClick={handleClickInside}
+            className='cursor-pointer relative flex items-center justify-center w-fit px-3 bg-blue-500 text-sm text-white hover:bg-blue-600 rounded-sm'>
             <span className='md:block hidden py-2 px-3 cursor-pointer'
                onClick={() => {
                   setShow({ show: !show.show, tab: '' })
@@ -51,7 +68,7 @@ function Create() {
                      </div>
                      <div className='hover:bg-slate-100 p-1 rounded-md text-gray-600'
                         onClick={() => {
-                           setShow({ show: true, tab: 'workspace' })
+                           props.setShowModal({ show: true, type: 'workspace' })
                         }}
                      >
                         <h1 className='flex items-center justify-start leading-none text-base'>
@@ -62,11 +79,10 @@ function Create() {
                   </div>
                </div>}
             {show.show && show.tab === 'board' && <CreateBoard setShow={setShow} />}
-            {show.show && show.tab === 'workspace' && <CreateWorkspace setShow={setShow} />}
             {show.show && show.tab === 'template' && <CreateTemplate setShow={setShow} />}
          </div >
       </>
    )
 }
 
-export default Create
+export default memo(Create)
