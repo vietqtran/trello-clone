@@ -44,7 +44,7 @@ function Create(props: Props) {
                }}
             ><RxPlus /></span>
             {show.show && show.tab === '' &&
-               <div className={`text-black p-3 absolute bg-white top-[calc(100%+10px)] min-w-[306px] left-[-20px] drop-menu-shadow rounded-md`}>
+               <div className={`text-black p-3 absolute bg-white top-[calc(100%+10px)] min-w-[306px] left-[-100px] md:left-[-20px] drop-menu-shadow rounded-md`}>
                   <div>
                      <div className='hover:bg-slate-100 p-1 rounded-md text-gray-600'
                         onClick={() => {

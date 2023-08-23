@@ -9,8 +9,6 @@ import Starred from './left/Starred'
 import Templates from './left/Templates'
 import Create from './left/Create'
 import Search from './right/Search'
-import Notifications from './right/Notifications'
-import Theme from './right/Theme'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
@@ -19,11 +17,9 @@ function Header() {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
 
-
-
    return (
       <>
-         <header className='sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
+         <header className='z-2 sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
                <div className='logo hover:bg-slate-200 rounded-md w-fit'>
                   <Link href={'/boards'}>
@@ -46,11 +42,7 @@ function Header() {
             </div>
             <div className='flex items-center justify-end'>
                <Search />
-               <div className='flex items-center justify-end'>
-                  <Notifications />
-                  <Theme />
-                  <Avatar />
-               </div>
+               <Avatar />
             </div>
          </header>
          {showModal.show && showModal.type === 'workspace' && <WorkspaceModal setShowModal={setShowModal} />}
