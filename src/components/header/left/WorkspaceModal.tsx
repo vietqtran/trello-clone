@@ -63,6 +63,7 @@ function WorkspaceModal(props: Props) {
                   {`Let's build a Workspace`}
                </h1>
                <p className='text-lg font-semibold leading-6 mb-5'>Boost your productivity by making it easier for everyone to access boards in one location.</p>
+               {/* TODO */}
                <form onSubmit={handleSubmit(onSubmit)} className=' w-full mb-3 flex flex-col items-start mt-3 justify-center'>
                   <label htmlFor="title" className='font-bold text-xs mb-2'>Workspace name <span className='text-red-600'>*</span></label>
                   <input type="text"
