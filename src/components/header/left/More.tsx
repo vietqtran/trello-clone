@@ -3,7 +3,11 @@ import { SlArrowDown } from 'react-icons/sl'
 import { useOnClickOutside } from 'usehooks-ts'
 import MoreDropdown from './MoreDropdown'
 
-function More() {
+type Props = {
+   headerType: string
+}
+
+function More(props: Props) {
 
    const [showDropdown, setShowDropdown] = useState({ show: false, tab: '' })
 
@@ -19,7 +23,7 @@ function More() {
       <div
          ref={ref}
          onClick={handleClickInside}
-         className='relative  text-sm w-fit mx-1 cursor-pointer hover:bg-gray-200 rounded-sm'>
+         className={`relative  text-sm w-fit mx-1 cursor-pointer hover:bg-opacity-20 ${props.headerType === 'board' ? 'bg-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0' : 'hover:bg-gray-400'} rounded-sm`}>
          <span className=' py-2 px-3 flex items-center justify-center'
             onClick={() => {
                setShowDropdown({ show: !showDropdown.show, tab: '' })

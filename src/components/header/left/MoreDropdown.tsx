@@ -18,7 +18,7 @@ function MoreDropdown(props: Props) {
       <>
          {props.showDropdown &&
             <div
-               className='bg-white absolute top-[calc(100%+10px)] left-[-80px] drop-menu-shadow rounded-md min-w-[300px]'>
+               className='bg-white text-black absolute top-[calc(100%+10px)] left-[-80px] drop-menu-shadow rounded-md min-w-[300px]'>
                {props.showDropdown.show && props.showDropdown.tab === '' &&
                   <div>
                      <div

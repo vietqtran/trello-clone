@@ -1,7 +1,12 @@
 import React, { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
-function Avatar() {
+
+type Props = {
+   headerType: string
+}
+
+function Avatar(props: Props) {
 
    const [show, setShow] = useState(false)
 
@@ -17,7 +22,7 @@ function Avatar() {
       <div
          onClick={handleClickInside}
          ref={ref}
-         className='bg-white relative'>
+         className='bg-inherit relative'>
          <div className='p-1 hover:bg-slate-200 rounded-full cursor-pointer ml-1'>
             <div
                onClick={() => {
@@ -28,7 +33,7 @@ function Avatar() {
             </div>
          </div>
 
-         {show && <div className='bg-white min-w-[240px] drop-menu-shadow right-0 top-[45px] absolute rounded-md'>
+         {show && <div className='text-black bg-white min-w-[240px] drop-menu-shadow right-0 top-[45px] absolute rounded-md'>
             <h1 className='text-sm font-semibold p-4'>Account</h1>
             <div className='flex items-center justify-start px-4 mb-2'>
                <div>

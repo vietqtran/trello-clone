@@ -7,7 +7,7 @@ function SearchBoardItem() {
       <div className='flex items-start justify-between mt-3 p-1 hover:bg-slate-100 rounded-md cursor-pointer'>
          <div className=' flex items-start justify-start'>
             <Image
-               className='rounded-md block'
+               className='rounded-md block w-full'
                src={'/assets/background/bg-image/bg1.jpg'} width={40} height={40} alt='board-bg' />
          </div>
          <div className='h-full leading-5 ml-3 flex-1'>

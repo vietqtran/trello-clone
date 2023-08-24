@@ -30,7 +30,6 @@ function CreateBoard(props: Props) {
    const [selectBg, setSelectBg] = useState({ ntn: 1, type: 'image' })
    const [showSelectBg, setShowSelectBg] = useState(false)
    const [title, setTitle] = useState('')
-   const [workspace, setWorkspace] = useState(options[0])
 
    const {
       register,
@@ -104,10 +103,10 @@ function CreateBoard(props: Props) {
                         Board title is required</span>}
                      <label htmlFor="workspace" className='font-bold text-xs mt-3'>Workspace</label>
                      <select {...register("workspace")}
-                        name="workspace" id="workspace" className='w-full outline-none p-2 border-slate-400 border-2 rounded-md'>
+                        name="workspace" id="workspace" className='overflow-y-scroll w-full outline-none p-2 border-slate-400 border-2 rounded-md'>
                         {options.map((o) => {
                            return <option key={o.value} value={o.value} className='p-2 flex flex-col' defaultChecked>
-                              <span>{o.label}</span>
+                              {o.label}
                            </option>
                         })}
                      </select>
