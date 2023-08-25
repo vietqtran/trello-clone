@@ -88,3 +88,7 @@ h1 {
 .modal::-webkit-scrollbar {
   display: none;
 }
+
+button {
+  outline: none;
+}
