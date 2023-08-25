@@ -29,20 +29,20 @@ function HeaderBoard() {
                   </Link>
                </div>
                <div className='items-center justify-start md:hidden flex'>
-                  <More headerType={'board'} />
-                  <Create headerType={'board'} setShowModal={setShowModal} />
+                  <More />
+                  <Create setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces headerType={'board'} />
-                  <Recent headerType={'board'} />
-                  <Starred headerType={'board'} />
-                  <Templates headerType={'board'} />
-                  <Create headerType={'board'} setShowModal={setShowModal} />
+                  <Workspaces />
+                  <Recent />
+                  <Starred />
+                  <Templates />
+                  <Create setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
-               <Search headerType={'board'} />
-               <Avatar headerType={'board'} />
+               <Search />
+               <Avatar />
             </div>
          </header>
          {showModal.show && showModal.type === 'workspace' &&

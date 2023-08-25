@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export default function BoardPage() {
   const pathName = usePathname()
-
+  const id = pathName.split('/').at(-1)
   return (
     <>
       <div className={`max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh] bg-[url('/assets/background/bg-image/bg3.jpg')] bg-center bg-cover`}>

@@ -2,14 +2,11 @@ import React, { memo } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import WorkspaceItem from './WorkspaceItem'
 
-type Props = {
-   headerType: string
-}
 
-function Workspaces(props: Props) {
+function Workspaces() {
    return (
       <div>
-         <div className={`relative group flex items-center justify-center p-2 text-sm w-fit mx-1 cursor-pointer hover:bg-opacity-20 ${props.headerType === 'board' ? ' hover:bg-white bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0' : 'hover:bg-gray-400'} rounded-sm`}>
+         <div className={`relative group flex items-center justify-center p-2 text-sm w-fit mx-1 cursor-pointer hover:bg-opacity-20 hover:bg-white bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 rounded-sm`}>
             <span className='mr-2'>Workspaces </span>
             <span className='text-xs translate-y-[2px]'><SlArrowDown /></span>
             <div className='absolute hidden group-hover:block bg-white top-[calc(100%+10px)] min-w-[300%] left-0 p-2 drop-menu-shadow rounded-md'>

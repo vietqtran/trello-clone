@@ -1,12 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
-
-type Props = {
-   headerType: string
-}
-
-function Avatar(props: Props) {
+function Avatar() {
 
    const [show, setShow] = useState(false)
 

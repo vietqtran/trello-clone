@@ -16,6 +16,7 @@
     Helvetica Neue,
     sans-serif;
   user-select: none;
+  scroll-behavior: smooth;
 }
 
 h1 {
