@@ -21,7 +21,7 @@ function HeaderBoard() {
       <>
          <header className='z-30 w-full bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 border-b-[1px] border-slate-400 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
-               <div className='logo bg-white bg-clip-padding backdrop-filter hover:backdrop-blur-sm hover:bg-opacity-10 bg-opacity-0 rounded-sm w-fit flex items-center justify-center'>
+               <div className='logo rounded-md w-fit bg-black bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 hover:bg-opacity-10'>
                   <Link href={'/boards'}>
                      <Image
                         className='px-2 fill-white'
@@ -29,20 +29,20 @@ function HeaderBoard() {
                   </Link>
                </div>
                <div className='items-center justify-start md:hidden flex'>
-                  <More />
-                  <Create setShowModal={setShowModal} />
+                  <More headerType={'board'} />
+                  <Create headerType={'board'} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces />
-                  <Recent />
-                  <Starred />
-                  <Templates />
-                  <Create setShowModal={setShowModal} />
+                  <Workspaces headerType={'board'} />
+                  <Recent headerType={'board'} />
+                  <Starred headerType={'board'} />
+                  <Templates headerType={'board'} />
+                  <Create headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
-               <Search />
-               <Avatar />
+               <Search headerType={'board'} />
+               <Avatar headerType={'board'} />
             </div>
          </header>
          {showModal.show && showModal.type === 'workspace' &&

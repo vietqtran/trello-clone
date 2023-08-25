@@ -79,7 +79,6 @@ function Column(props: Props) {
          </div>
          <div className='column w-full overflow-y-auto px-2'>
             {props.column.cards.map((card) => {
-               console.log(card.id + props.column.id)
                return <Card key={card.id + props.column.id} card={card} />
             })}
          </div>

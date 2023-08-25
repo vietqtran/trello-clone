@@ -217,7 +217,6 @@ function BoardRight(props: Props) {
          }
          return col
       })
-      console.log(columns)
       setColumns(newColumns)
    }
 

@@ -38,7 +38,7 @@ function CreateBoard(props: Props) {
       control,
       formState: { errors },
    } = useForm<Inputs>()
-   const onSubmit: SubmitHandler<Inputs> = (data) => { console.log(data) }
+   const onSubmit: SubmitHandler<Inputs> = (data) => { }
 
    return (
       <>

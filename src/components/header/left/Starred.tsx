@@ -2,7 +2,11 @@ import React, { memo } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import StarredItem from './StarredItem'
 
-function Starred() {
+type Props = {
+   headerType: string
+}
+
+function Starred(props: Props) {
    return (
       <div className={`relative group flex items-center justify-center p-2 text-sm w-fit mx-1 cursor-pointer hover:bg-opacity-20 bg-white bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 rounded-sm`}>
          <span className='mr-2'>Starred </span>

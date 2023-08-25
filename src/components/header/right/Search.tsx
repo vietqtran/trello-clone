@@ -2,12 +2,16 @@ import Link from 'next/link'
 import React from 'react'
 import { FiSearch } from 'react-icons/fi'
 
-function Search() {
+type Props = {
+   headerType: string
+}
+
+function Search(props: Props) {
    return (
       <Link href={'/search'}>
          <div>
             <div className={`md:flex hidden items-center cursor-text justify-center p-1 pr-32 border-[1px] rounded-md overflow-hidden
-               bg-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 hover:bg-opacity-40
+               ${props.headerType === 'board' ? 'bg-white rounded-md bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 hover:bg-opacity-40' : 'hover:bg-slate-100'}
             `}>
                <span className='mx-2'><FiSearch /></span>
                <div>Search</div>

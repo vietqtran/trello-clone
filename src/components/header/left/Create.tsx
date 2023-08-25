@@ -13,6 +13,7 @@ import { useOnClickOutside } from 'usehooks-ts'
 
 type Props = {
    setShowModal: Function,
+   headerType: string
 }
 
 function Create(props: Props) {
@@ -32,7 +33,8 @@ function Create(props: Props) {
          <div
             ref={ref}
             onClick={handleClickInside}
-            className={`cursor-pointer relative flex items-center justify-center w-fit px-3 text-sm text-white rounded-sm bg-white bg-clip-padding backdrop-filter backdrop-blur-sm hover:bg-opacity-30 bg-opacity-40 hover:bg-blue-600}
+            className={`cursor-pointer relative flex items-center justify-center w-fit px-3 text-sm text-white rounded-sm
+               ${props.headerType === 'board' ? 'bg-white bg-clip-padding backdrop-filter backdrop-blur-sm hover:bg-opacity-50 bg-opacity-30' : 'bg-blue-500  hover:bg-blue-600'}
             `}>
             <span className='md:block hidden py-2 px-3 cursor-pointer'
                onClick={() => {
