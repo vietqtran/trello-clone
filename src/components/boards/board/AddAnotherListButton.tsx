@@ -1,9 +1,14 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, memo } from 'react'
 import { BsPlusLg } from 'react-icons/bs'
 import { IoMdClose } from 'react-icons/io'
 import { useOnClickOutside } from 'usehooks-ts'
 
-function AddAnotherListButton() {
+type Props = {
+   currentLength: string,
+   handleAddList: Function
+}
+
+function AddAnotherListButton(props: Props) {
 
    const ref = useRef(null)
    const handleClickOutside = () => {
@@ -45,7 +50,16 @@ function AddAnotherListButton() {
                   className='text-black p-2 w-full rounded-sm border-[3px] border-blue-500 outline-none text-sm card-shadow'
                />
                <div className='mt-2 flex items-center justify-start'>
-                  <button className='px-3 py-2 rounded-sm text-sm bg-blue-600 hover:bg-blue-700 text-white'>Add list</button>
+                  <button
+                     onClick={() => {
+                        if (input != '') {
+                           props.handleAddList({ id: (props.currentLength + 1) + '', name: input, cards: [] })
+                        }
+                        setInput('')
+                     }}
+                     className='px-3 py-2 rounded-sm text-sm bg-blue-600 hover:bg-blue-700 text-white'>
+                     Add list
+                  </button>
                   <span
                      onClick={() => {
                         setShowInput(false)
@@ -58,4 +72,4 @@ function AddAnotherListButton() {
    )
 }
 
-export default AddAnotherListButton
+export default memo(AddAnotherListButton)
