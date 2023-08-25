@@ -9,7 +9,7 @@ export default function BoardPage() {
 
   return (
     <>
-      <div className={`max-w-[100vw] flex flex-row flex-wrap items-center justify-start max-h-100[vh] bg-[url('/assets/background/bg-image/bg3.jpg')] bg-center bg-cover`}>
+      <div className={`max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh] bg-[url('/assets/background/bg-image/bg3.jpg')] bg-center bg-cover`}>
         <HeaderBoard />
         <Board boardId={pathName} />
       </div>

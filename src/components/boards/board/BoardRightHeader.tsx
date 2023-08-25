@@ -27,7 +27,7 @@ function BoardRightHeader() {
    useOnClickOutside(ref, handleClickOutside)
 
    return (
-      <div className='px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 min-h-[60px] max-h-[60px] bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
+      <div className='w-full px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
          <div className='flex items-center justify-start'>
             <div>
                {showInput && <input
@@ -51,7 +51,7 @@ function BoardRightHeader() {
                      onClick={() => {
                         setShowInput(!showInput)
                      }}
-                     className='cursor-pointer truncate max-w-[350px] text-white font-bold text-xl px-1 border-[3px] border-transparent'>{name}
+                     className='cursor-pointer truncate max-w-[250px] text-white font-bold text-xl px-1 border-[3px] border-transparent'>{name}
                   </h1>}
             </div>
             <BoardRightHeaderFeature >

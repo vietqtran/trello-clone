@@ -34,6 +34,36 @@ h1 {
   box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 }
 
+.card-shadow {
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
+.column::-webkit-scrollbar {
+  background-color: transparent;
+  width: 10px;
+  float: right;
+}
+
+.column::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+.rightboard::-webkit-scrollbar {
+  background-color: white;
+  width: 20px;
+  float: right;
+}
+
+.rightboard.column::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 10px solid transparent;
+  background-clip: content-box;
+}
+
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 20px;
@@ -54,6 +84,7 @@ h1 {
   background-color: #a8bbbf;
 }
 
+.sidebar::-webkit-scrollbar,
 .modal::-webkit-scrollbar {
   display: none;
 }
