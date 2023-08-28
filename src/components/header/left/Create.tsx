@@ -33,10 +33,10 @@ function Create(props: Props) {
          <div
             ref={ref}
             onClick={handleClickInside}
-            className={`cursor-pointer relative flex items-center justify-center w-fit px-3 text-sm text-white rounded-sm
+            className={`cursor-pointer relative flex items-center justify-center w-fit text-sm text-white rounded-sm
                ${props.headerType === 'board' ? 'bg-white bg-clip-padding backdrop-filter backdrop-blur-sm hover:bg-opacity-50 bg-opacity-30' : 'bg-blue-500  hover:bg-blue-600'}
             `}>
-            <span className='md:block hidden py-2 px-3 cursor-pointer'
+            <span className='md:block hidden py-2 px-6 cursor-pointer'
                onClick={() => {
                   setShow({ show: !show.show, tab: '' })
                }}

@@ -1,0 +1,65 @@
+import React from 'react'
+import { FiSearch } from 'react-icons/fi'
+import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
+import CreateBoardButton from '../CreateBoardButton'
+import BoardItem from '../BoardItem'
+
+function WorkspaceContent() {
+   return (
+      <div className='w-full mx-auto mb-10'>
+         <span className='text-xl font-semibold my-8 block'>Boards</span>
+         <div className='w-full my-3'>
+            <span className='text-xs font-bold'>Sort by</span>
+            <div className='relative group hover:bg-slate-50 cursor-pointer w-[200px] h-[32px] flex items-center justify-between border-2 px-2 text-sm rounded-sm py-1
+                  before:contents-[] before:absolute before:top-[20px] before:left-0 before:w-full before:h-[20px] before:bg-transparent
+            '>
+               <div>
+                  <span>Most recently active</span>
+               </div>
+               <span><MdOutlineKeyboardArrowDown /></span>
+               <div className='z-10 hidden bg-white group-hover:block w-full drop-menu-shadow rounded-md absolute top-[35px] left-0'>
+                  <ul className='w-full my-2'>
+                     <li className='p-2 w-full hover:bg-blue-100'>Most recently active</li>
+                     <li className='p-2 w-full hover:bg-blue-100'>Least recently active</li>
+                     <li className='p-2 w-full hover:bg-blue-100'>Alphabetically A-Z</li>
+                     <li className='p-2 w-full hover:bg-blue-100'>Alphabetically Z-A</li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div className='my-3 py-1 rounded-sm z-[-1]'>
+            <div>
+               <span className='text-xs font-bold'>Search</span>
+            </div>
+            <div className='relative hover:bg-slate-50 border-2 flex items-center w-fit'>
+               <input type="text" className='pl-7 text-sm bg-transparent outline-none   h-[32px] w-[250px]' placeholder='Search boards' />
+               <div className='absolute top-[50%] px-2 translate-y-[-50%] left-0'><FiSearch /></div>
+            </div>
+         </div>
+         <div className='w-full grid grid-cols-12 gap-5'>
+            <div className='relative cursor-pointer group overflow-hidden bg-slate-100 bg-cover rounded-sm lg:col-span-3 md:col-span-4 col-span-6 w-full min-h-[100px]'>
+               <div className='absolute top-0 left-0 w-full'>
+                  <CreateBoardButton type='button' />
+               </div>
+            </div>
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+            <BoardItem />
+         </div>
+      </div>
+   )
+}
+
+export default WorkspaceContent

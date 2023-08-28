@@ -4,7 +4,11 @@ import React, { useState, useRef } from 'react'
 import CreateBoard from '../header/left/CreateBoard'
 import { useOnClickOutside } from 'usehooks-ts'
 
-function CreateBoardButton() {
+type Props = {
+   type: string
+}
+
+function CreateBoardButton(props: Props) {
 
    const [show, setShow] = useState({ show: false, tab: '' })
 
@@ -32,7 +36,7 @@ function CreateBoardButton() {
                   ref={ref}
                   onClick={handleClickInside}
                   className='z-50 relative'>
-                  <CreateBoard setShow={setShow} />
+                  <CreateBoard type={props.type} setShow={setShow} />
                </div>}
          </div >
       </>
