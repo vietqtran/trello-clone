@@ -19,7 +19,7 @@ function Header() {
 
    return (
       <>
-         <header className='z-30 sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
+         <div className='z-30 sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
                <div className='logo hover:bg-slate-200 rounded-md w-fit'>
                   <Link href={'/boards'}>
@@ -44,7 +44,7 @@ function Header() {
                <Search headerType={''} />
                <Avatar headerType={''} />
             </div>
-         </header>
+         </div>
          {showModal.show && showModal.type === 'workspace' &&
             <>
                <WorkspaceModal setShowModal={setShowModal} />
