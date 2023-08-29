@@ -113,7 +113,7 @@ function Boards() {
                      <BoardItem />
                      <BoardItem />
                      <BoardItem />
-                     <CreateBoardButton />
+                     <CreateBoardButton type='' />
                   </div>
                </div>
                <div className='mb-10'>
@@ -135,7 +135,7 @@ function Boards() {
                      <BoardItem />
                      <BoardItem />
                      <BoardItem />
-                     <CreateBoardButton />
+                     <CreateBoardButton type='' />
                   </div>
                </div>
             </div>

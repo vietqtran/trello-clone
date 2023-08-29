@@ -4,23 +4,23 @@ import { FaTrello, FaUser } from 'react-icons/fa'
 import { BsPlus } from 'react-icons/bs'
 import { ImTable2 } from 'react-icons/im'
 import { BsCalendarMinus } from 'react-icons/bs'
-import BoardLeftPreviewItem from './BoardLeftPreviewItem'
-import BoardLeftTab from './BoardLeftTab'
-import BoardLeftTabFeature from './BoardLeftTabFeature'
+import WorkspaceLeftTab from './WorkspaceLeftTab'
+import WorkspaceLeftTabFeature from './WorkspaceLeftTabFeature'
+import WorkspaceLeftPreviewItem from './WorkspaceLeftPreviewItem'
 
 type Props = {
    showSideBar: boolean,
    setShowSideBar: Function
 }
 
-function BoardLeft(props: Props) {
+function WorkspaceLeft(props: Props) {
 
    const [tab, setTab] = useState('Boards')
 
    return (
       <>
          {props.showSideBar &&
-            <div className={`w-[260px] z-20 bg-transparent text-inherit bg-clip-padding backdrop-filter 
+            <div className={`bg-white w-[260px] z-20 bg-transparent text-inherit bg-clip-padding backdrop-filter 
                backdrop-blur-sm bg-opacity-10
                sidebar min-h-full overflow-y-scroll 
                ${props.showSideBar ? 'translate-x-0' : 'translate-x-[-260px]'} ease-in duration-200`}>
@@ -41,52 +41,56 @@ function BoardLeft(props: Props) {
                         onClick={() => {
                            props.setShowSideBar(false)
                         }}
-                        className='p-2 rounded-sm cursor-pointer hover:backdrop-blur-md bg-clip-padding backdrop-filter hover:bg-opacity-10 bg-opacity-0 bg-white'>
+                        className='p-2 rounded-sm cursor-pointer hover:backdrop-blur-md bg-clip-padding backdrop-filter hover:bg-opacity-10 bg-opacity-0 bg-black'>
                         <MdKeyboardArrowLeft />
                      </span>
                   </div>
                </div>
                <div className='my-3 overflow-y-auto'>
-                  <BoardLeftTab currentTab={tab} tab='Boards' > <FaTrello /></BoardLeftTab>
-                  <BoardLeftTabFeature currentTab={tab} tab='Members' >
+                  <WorkspaceLeftTab currentTab={tab} tab='Boards' > <FaTrello /></WorkspaceLeftTab>
+                  <WorkspaceLeftTabFeature currentTab={tab} tab='Members' >
                      <FaUser />
                      <BsPlus />
-                  </BoardLeftTabFeature>
-                  <BoardLeftTabFeature currentTab={tab} tab='Workspace settings' >
+                  </WorkspaceLeftTabFeature>
+                  <WorkspaceLeftTabFeature currentTab={tab} tab='Workspace settings' >
                      <MdSettings />
                      <MdKeyboardArrowDown />
-                  </BoardLeftTabFeature>
-                  <h1 className='text-white font-semibold text-sm px-2 my-2'>Workspace views</h1>
-                  <BoardLeftTab currentTab={tab} tab='Table' > <ImTable2 /></BoardLeftTab>
-                  <BoardLeftTab currentTab={tab} tab='Calendar' > <BsCalendarMinus /></BoardLeftTab>
-                  <h1 className='text-white font-semibold text-sm px-2 my-2'>Your boards</h1>
+                  </WorkspaceLeftTabFeature>
+                  <h1 className='text-black font-semibold text-sm px-2 my-2'>Workspace views</h1>
+                  <WorkspaceLeftTab currentTab={tab} tab='Table' > <ImTable2 /></WorkspaceLeftTab>
+                  <WorkspaceLeftTab currentTab={tab} tab='Calendar' > <BsCalendarMinus /></WorkspaceLeftTab>
+                  <h1 className='text-black font-semibold text-sm px-2 my-2'>Your boards</h1>
                   <div className='overflow-y-auto max-h-[40vh]'>
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
+                     <WorkspaceLeftPreviewItem />
                   </div>
                </div>
             </div>
          }
          {!props.showSideBar &&
-            <div className={` z-10 sticky bg-slate-800 bg-opacity-50 bottom-0 left-0 min-h-[calc(100vh-55px)]
+            <div className={` z-10 sticky bg-slate-400 bg-opacity-50 bottom-0 left-0 min-h-[calc(100vh-55px)]
                ${props.showSideBar ? 'translate-x-[-260px] min-w-[0px] max-w-[0px]' : 'translate-x-0  min-w-[16px] max-w-[16px]'} ease-in duration-200
             `}>
                <div className='w-full h-full relative'>
@@ -104,4 +108,4 @@ function BoardLeft(props: Props) {
    )
 }
 
-export default BoardLeft
+export default WorkspaceLeft

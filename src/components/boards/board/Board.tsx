@@ -13,7 +13,7 @@ function Board(props: Props) {
 
    return (
       <div className={`flex min-w-full max-w-full max-h-full min-h-full`}>
-         <div className='sidebar min-h-full border-r-[1px] border-slate-300    h-[calc(100vh-55px)]'>
+         <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)]'>
             <BoardLeft showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
          </div>
          <div className='flex-1 h-[calc(100vh-55px)]'>
