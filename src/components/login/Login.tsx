@@ -17,6 +17,8 @@ import dynamic from 'next/dynamic'
 
 function Login() {
 
+
+
    const [show, setShow] = useState(false)
    const [emailInput, setEmailInput] = useState('')
    const [password, setPassword] = useState('')
@@ -31,8 +33,14 @@ function Login() {
       for (let i = 0; i < data.docs.length; i++) {
          if (data.docs[i].data().email === emailInput) {
             check = true
+            console.log(data.docs[i].id)
             if (data.docs[i].data().password === password) {
-               dispatch(setUser({ id: data.docs[i].data().id, email: emailInput, password: password, recentBoard: [] }))
+               console.log(data.docs[i].data().id)
+               dispatch(setUser({
+                  id: data.docs[i].id,
+                  email: emailInput,
+                  recentBoard: []
+               }))
                router.push('/boards')
             } else {
                setError({ show: true, message: 'Password incorrect!' })
@@ -47,20 +55,15 @@ function Login() {
 
    return (
       <div className="flex items-center flex-col justify-start w-full h-full lg:bg-white bg-slate-50 min-h-[100vh]">
-         {/* Left Image  */}
          <div className="fixed left-0 bottom-0 lg:block hidden">
             <SideImage src='/assets/login-left.jpg' />
          </div>
-         {/* Right Image  */}
          <div className="fixed right-0 bottom-0 lg:block hidden">
             <SideImage src='/assets/login-right.jpg' />
          </div>
-
-         {/* Logo  */}
          <div className="flex items-center justify-center py-10">
             <Image src={'/assets/trello-logo-blue.svg'} alt="logo" width={200} height={200} />
          </div>
-
          <div>
             {/* TODO */}
             <div className='flex flex-col items-center justify-start mb-10 bg-white rounded-md form-shadow p-10'>

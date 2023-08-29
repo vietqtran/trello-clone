@@ -35,8 +35,8 @@ function SignUp() {
             break;
          } else {
             if (emailInput && password && confirm && password === confirm) {
-               await addDoc(userCollectionRef, { email: emailInput, password: password }).then((docRef) => {
-                  dispatch(setUser({ id: docRef.id, email: emailInput, password: password, recentBoard: [] }))
+               await addDoc(userCollectionRef, { email: emailInput, password: password, recentBoard: [] }).then((docRef) => {
+                  dispatch(setUser({ id: docRef.id, email: emailInput, recentBoard: [] }))
                   router.push('/boards')
                })
             }

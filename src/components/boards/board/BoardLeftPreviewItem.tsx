@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import React from 'react'
 import { AiOutlineStar } from 'react-icons/ai'
-import { BiDotsHorizontalRounded } from 'react-icons/bi'
 
 function BoardLeftPreviewItem() {
    return (
@@ -16,7 +15,6 @@ function BoardLeftPreviewItem() {
             <p className='block truncate max-w-[170px]'>Board namadsadassaadsdade name</p>
          </div>
          <div className='absolute right-[4px] w-fit items-center justify-center hidden group-hover:flex'>
-            <div className='p-1 bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-40 rounded-sm cursor-pointer'><BiDotsHorizontalRounded /></div>
             <div className='p-1 bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-40 rounded-sm cursor-pointer'><AiOutlineStar /></div>
          </div>
       </div>

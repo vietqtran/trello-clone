@@ -75,11 +75,7 @@ function MoreDropdown(props: Props) {
                         </span>
                      </div>
                      <div className='p-2'>
-                        <WorkspaceItem />
-                        <WorkspaceItem />
-                        <WorkspaceItem />
-                        <WorkspaceItem />
-                        <WorkspaceItem />
+                        <WorkspaceItem workspace={{ id: '', name: '', type: '', boards: [], description: '', userId: '' }} />
                      </div>
                   </div>
                }

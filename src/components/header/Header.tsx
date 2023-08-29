@@ -12,8 +12,13 @@ import Search from './right/Search'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
+import { WorkspaceType } from '@/types'
 
-function Header() {
+type Props = {
+   workspaces: WorkspaceType[] | undefined
+}
+
+function Header(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
 
@@ -33,7 +38,7 @@ function Header() {
                   <Create headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces headerType={''} />
+                  <Workspaces workspaces={props.workspaces} headerType={''} />
                   <Recent headerType={''} />
                   <Starred headerType={''} />
                   <Templates headerType={''} />

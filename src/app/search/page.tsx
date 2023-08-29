@@ -4,7 +4,7 @@ import Header from '@/components/header/Header'
 export default function BoardPage() {
   return (
     <>
-      <Header />
+      <Header workspaces={[]} />
       <Search />
     </>
   )

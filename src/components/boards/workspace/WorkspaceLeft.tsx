@@ -7,10 +7,12 @@ import { BsCalendarMinus } from 'react-icons/bs'
 import WorkspaceLeftTab from './WorkspaceLeftTab'
 import WorkspaceLeftTabFeature from './WorkspaceLeftTabFeature'
 import WorkspaceLeftPreviewItem from './WorkspaceLeftPreviewItem'
+import { WorkspaceType } from '@/types'
 
 type Props = {
    showSideBar: boolean,
-   setShowSideBar: Function
+   setShowSideBar: Function,
+   workspace: WorkspaceType | undefined
 }
 
 function WorkspaceLeft(props: Props) {
@@ -61,30 +63,9 @@ function WorkspaceLeft(props: Props) {
                   <WorkspaceLeftTab currentTab={tab} tab='Calendar' > <BsCalendarMinus /></WorkspaceLeftTab>
                   <h1 className='text-black font-semibold text-sm px-2 my-2'>Your boards</h1>
                   <div className='overflow-y-auto max-h-[40vh]'>
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
-                     <WorkspaceLeftPreviewItem />
+                     {props.workspace?.boards?.map((board) => {
+                        return <WorkspaceLeftPreviewItem key={board.id} board={board} />
+                     })}
                   </div>
                </div>
             </div>

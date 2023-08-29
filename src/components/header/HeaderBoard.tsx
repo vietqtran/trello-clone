@@ -19,7 +19,7 @@ function HeaderBoard() {
 
    return (
       <>
-         <header className='z-30 w-full bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 border-b-[1px] border-slate-400 flex items-center justify-between'>
+         <div className='z-30 w-full bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 border-b-[1px] border-slate-400 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
                <div className='logo rounded-md w-fit bg-black bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 hover:bg-opacity-10'>
                   <Link href={'/boards'}>
@@ -33,7 +33,7 @@ function HeaderBoard() {
                   <Create headerType={'board'} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces headerType={'board'} />
+                  <Workspaces workspaces={[]} headerType={'board'} />
                   <Recent headerType={'board'} />
                   <Starred headerType={'board'} />
                   <Templates headerType={'board'} />
@@ -44,7 +44,7 @@ function HeaderBoard() {
                <Search headerType={'board'} />
                <Avatar headerType={'board'} />
             </div>
-         </header>
+         </div>
          {showModal.show && showModal.type === 'workspace' &&
             <>
                <WorkspaceModal setShowModal={setShowModal} />

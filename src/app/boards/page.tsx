@@ -5,7 +5,7 @@ import { useAppSelector } from "@/redux/hooks";
 export default function BoardPage() {
   return (
     <>
-      <Header />
+      <Header workspaces={[]} />
       <Boards />
     </>
   )

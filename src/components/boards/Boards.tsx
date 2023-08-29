@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { BsTrello } from 'react-icons/bs'
 import { HiTemplate, HiPlus } from 'react-icons/hi'
 import { RiHomeFill } from 'react-icons/ri'
@@ -17,33 +17,35 @@ import { WorkspaceType } from '@/types'
 
 function Boards() {
 
-   const { push } = useRouter()
    const [tab, setTab] = useState('board')
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
    const user = useAppSelector((state) => state.userReducer.value)
    const workspacesCollectionRef = collection(db, "workspaces")
-
-   const getWorkspaces = async () => {
-      const data = await getDocs(workspacesCollectionRef)
-      setWorkspaces(data.docs.map((workspace) => {
-         if (workspace.userId === user.id) {
-            return {
-               id: workspace.id,
+   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
+   useEffect(() => {
+      const getWorkspaces = async () => {
+         await getDocs(workspacesCollectionRef).then((data) => {
+            const newWorkspaces = data.docs.map((doc) => ({
+               id: doc.id,
                userId: user.id,
-               name: toString(workspace.data().name),
-               boards: { ...workspace.data().boards },
-               type: workspace.data().type
-            }
-         }
-      }))
-   }
+               name: doc.data().name,
+               boards: doc.data().boards,
+               type: doc.data().type,
+               description: doc.data().description
+            }))
+            setWorkspaces(newWorkspaces)
+         })
+      }
+      getWorkspaces()
+   })
 
-   if (!(user.id === '')) {
-      push('/')
-      return null
+   if ((user.id === '')) {
+      return <>
+         <div>Error</div>
+      </>
    } else {
       return (
+         <>
          <div className='z-[-1] flex md:items-start md:justify-center justify-start items-start'>
             <div className='grid grid-cols-4 w-full md:w-auto'>
                <div className='col-span-1 relative'>
@@ -94,7 +96,11 @@ function Boards() {
                         <span className='font-bold text-base'>Starred boards</span>
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                        <BoardItem />
+                           {workspaces?.map((workspace) => {
+                              return workspace.boards.map((board) => {
+                                 return <BoardItem board={board} key={board.id} />
+                              })
+                           })}
                      </div>
                   </div>
                   <div className='mb-10'>
@@ -103,44 +109,39 @@ function Boards() {
                         <span className='font-bold text-base'>Recent viewed</span>
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                        <BoardItem />
+                           {user.recentBoard?.map((board) => {
+                              return <BoardItem board={board} key={board.id} />
+                           })}
                      </div>
                   </div>
 
 
                   <h1 className='font-bold mb-5'>YOUR WORKSPACES</h1>
-                  <div className='mb-10'>
-                     <div className='flex items-center mb-4'>
-                        <div className='relative p-5 mr-2 rounded-md bg-black w-fit'>
-                           <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>E</span>
-                        </div>
-                        <h1 className='font-bold'>
-                           Workspace name
-                        </h1>
-                     </div>
-                     <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                        <BoardItem />
-                        <CreateBoardButton type='' />
-                     </div>
-                  </div>
-                  <div className='mb-10'>
-                     <div className='flex items-center mb-4'>
-                        <div className='relative p-5 mr-2 rounded-md bg-black w-fit'>
-                           <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>E</span>
-                        </div>
-                        <h1 className='font-bold'>
-                           Workspace name
-                        </h1>
-                     </div>
-                     <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                        <BoardItem />
-                        <CreateBoardButton type='' />
-                     </div>
-                  </div>
+                     {workspaces?.map((workspace) => {
+                        return (
+                           <div className='mb-10' key={workspace.id}>
+                              <div className='flex items-center mb-4'>
+                                 <div className='relative p-5 mr-2 rounded-md bg-black w-fit'>
+                                    <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>E</span>
+                                 </div>
+                                 <h1 className='font-bold'>
+                                    Workspace name
+                                 </h1>
+                              </div>
+                              <div className='grid grid-cols-12 w-full gap-2 mt-2'>
+                                 {workspace?.boards?.map((board) => {
+                                    return <BoardItem board={board} key={board.id} />
+                                 })}
+                                 <CreateBoardButton type='' />
+                              </div>
+                           </div>
+                        )
+                     })}
                </div>
             </div>
             {showModal.show && <WorkspaceModal setShowModal={setShowModal} />}
-         </div>
+            </div >
+         </>
       )
    }
 }

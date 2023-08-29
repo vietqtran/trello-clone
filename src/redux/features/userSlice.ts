@@ -1,11 +1,10 @@
-import { User } from "@/types";
+import { Board, User } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = {
+const initialState: { value: { id: string, email: string, recentBoard: Board[] } } = {
    value: {
       id: '',
       email: '',
-      password: '',
       recentBoard: []
    },
 };

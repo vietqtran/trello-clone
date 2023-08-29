@@ -13,8 +13,7 @@ export type Board = {
 export type User = {
    id: string,
    email: string,
-   password: string,
-   recentBoard: []
+   recentBoard: Board[]
 }
 
 export type WorkspaceType = {
@@ -22,5 +21,6 @@ export type WorkspaceType = {
    userId: string,
    name: string,
    boards: Board[],
-   type: string
+   type: string,
+   description: string
 }
