@@ -16,7 +16,7 @@ function BoardItem() {
                </div>
             </div>
          </div>
-         <Link href={{ pathname: `/boards/dasdasd`, query: { id: 'asdasd' } }} className='block w-full h-full absolute top-0 left-0 z-10'></Link>
+         <Link href={`/boards/workspaceid/boardid`} className='block w-full h-full absolute top-0 left-0 z-10'></Link>
       </div>
    )
 }

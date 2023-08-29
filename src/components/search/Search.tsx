@@ -9,7 +9,7 @@ function Search() {
    const [searchTab, setSearchTab] = useState('')
 
    return (
-      <div className='mx-auto max-w-[800px] p-[50px] flex flex-col items-start justify-start'>
+      <div className='mx-auto mt-10 max-w-[800px] p-[50px] flex flex-col items-start justify-start'>
          <h1 className='text-2xl font-semibold mb-5'>Search</h1>
          <div className='w-full mb-5'>
             {/* TODO */}

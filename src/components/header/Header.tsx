@@ -29,20 +29,20 @@ function Header() {
                   </Link>
                </div>
                <div className='items-center justify-start md:hidden flex'>
-                  <More />
-                  <Create setShowModal={setShowModal} />
+                  <More headerType={''} />
+                  <Create headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces />
-                  <Recent />
-                  <Starred />
-                  <Templates />
-                  <Create setShowModal={setShowModal} />
+                  <Workspaces headerType={''} />
+                  <Recent headerType={''} />
+                  <Starred headerType={''} />
+                  <Templates headerType={''} />
+                  <Create headerType={''} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
-               <Search />
-               <Avatar />
+               <Search headerType={''} />
+               <Avatar headerType={''} />
             </div>
          </header>
          {showModal.show && showModal.type === 'workspace' &&

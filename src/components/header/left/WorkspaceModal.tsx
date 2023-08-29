@@ -42,7 +42,7 @@ function WorkspaceModal(props: Props) {
       control,
       formState: { errors },
    } = useForm<Inputs>()
-   const onSubmit: SubmitHandler<Inputs> = (data) => { console.log(data) }
+   const onSubmit: SubmitHandler<Inputs> = (data) => { }
 
    const [title, setTitle] = useState('')
    const [workspace, setWorkspace] = useState('')

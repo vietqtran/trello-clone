@@ -17,7 +17,7 @@ function Search(props: Props) {
                <div>Search</div>
             </div>
             <div className={`p-1 md:hidden block hover:bg-slate-200 rounded-full cursor-pointer ml-1
-               ${props.headerType === 'board' ? 'bg-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 hover:bg-opacity-40' : 'hover:bg-slate-100'}`
+               bg-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 hover:bg-opacity-40`
             }>
                <div className='p-1 rounded-full relative'>
                   <FiSearch />

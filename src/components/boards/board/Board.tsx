@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
+import BoardLeft from './BoardLeft'
+import BoardRight from './BoardRight'
 
 type Props = {
    boardId: string
@@ -7,10 +9,16 @@ type Props = {
 function Board(props: Props) {
 
    const id = props.boardId.split('/').at(-1)
+   const [showSideBar, setShowSideBar] = useState(true)
 
    return (
-      <div className={`bg-[url('/assets/background/bg-image/bg3.jpg')] bg-center bg-cover min-h-[100vh] max-h-[100vh] `}>
-
+      <div className={`flex min-w-full max-w-full max-h-full min-h-full`}>
+         <div className='sidebar min-h-full border-r-[1px] border-slate-300    h-[calc(100vh-55px)]'>
+            <BoardLeft showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+         </div>
+         <div className='flex-1 h-[calc(100vh-55px)]'>
+            <BoardRight showSideBar={showSideBar} />
+         </div>
       </div>
    )
 }

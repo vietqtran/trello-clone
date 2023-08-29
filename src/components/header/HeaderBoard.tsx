@@ -19,9 +19,9 @@ function HeaderBoard() {
 
    return (
       <>
-         <header className='z-30 fixed top-0 left-0 right-0 bg-transparent text-white bg-gray-300 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 p-2 border-b-[1px] border-slate-400 flex items-center justify-between'>
+         <header className='z-30 w-full bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 border-b-[1px] border-slate-400 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
-               <div className='logo bg-white bg-clip-padding backdrop-filter hover:backdrop-blur-sm hover:bg-opacity-10 bg-opacity-0 rounded-sm w-fit flex items-center justify-center'>
+               <div className='logo rounded-md w-fit bg-black bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 hover:bg-opacity-10'>
                   <Link href={'/boards'}>
                      <Image
                         className='px-2 fill-white'
