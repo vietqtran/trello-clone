@@ -48,6 +48,7 @@ function SignUp() {
          </div>
 
          <div>
+            {/* TODO */}
             <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-center justify-start mb-10 bg-white rounded-md form-shadow p-10'>
                <h2 className='font-bold text-slate-600 mb-8'>Sign up for your account</h2>
                <div>
