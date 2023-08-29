@@ -55,7 +55,7 @@ function Create(props: Props) {
                         }}
                      >
                         <h1 className='flex items-center justify-start leading-none text-base'>
-                           <FaTrello /> Create board
+                           <FaTrello /><span className='ml-2'>Create board</span>
                         </h1>
                         <p className='text-xs my-2'>A board is made up of cards ordered on list. Use it to manage projects, track information, or organize anything.</p>
                      </div>
@@ -65,7 +65,7 @@ function Create(props: Props) {
                         }}
                      >
                         <h1 className='flex items-center justify-start leading-none text-base'>
-                           <FiTrello /> Start with template
+                           <FiTrello /> <span className='ml-2'>Start with template</span>
                         </h1>
                         <p className='text-xs my-2'>Get started faster with a board template.</p>
                      </div>
@@ -75,13 +75,13 @@ function Create(props: Props) {
                         }}
                      >
                         <h1 className='flex items-center justify-start leading-none text-base'>
-                           <BsPeople /> Create Workspace
+                           <BsPeople /> <span className='ml-2'>Create Workspace</span>
                         </h1>
                         <p className='text-xs my-2'>A Workspace is a group of boards and people. Use it to organize your company, side hustle, family, or friends.</p>
                      </div>
                   </div>
                </div>}
-            {show.show && show.tab === 'board' && <CreateBoard setShow={setShow} />}
+            {show.show && show.tab === 'board' && <CreateBoard type='' setShow={setShow} />}
             {show.show && show.tab === 'template' && <CreateTemplate setShow={setShow} />}
          </div >
       </>

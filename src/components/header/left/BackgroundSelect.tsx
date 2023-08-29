@@ -15,7 +15,7 @@ function BackgroundSelect(props: Props) {
    const [selectType, setSelectType] = useState('common')
 
    return (
-      <div className=' sticky w-[350px] p-2 rounded-md drop-menu-shadow md:top-[-200px] top-[-200px] md:left-[100%] right-0 bg-white pb-3'>
+      <div className=' absolute w-[350px] p-2 rounded-md drop-menu-shadow md:top-[-200px] top-[-200px] md:left-[100%] right-0 bg-white pb-3'>
          {selectType === 'common' &&
             <BackgroundSelectCommon setSelectType={setSelectType} setShowSelectBg={props.setShowSelectBg} setSelectBg={props.setSelectBg} selectBg={props.selectBg} />
          }

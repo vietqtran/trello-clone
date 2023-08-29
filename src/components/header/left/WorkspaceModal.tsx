@@ -1,14 +1,11 @@
 import Image from 'next/image'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import React, { useState, useRef } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { GrClose } from 'react-icons/gr'
-
-type Inputs = {
-   title: string,
-   workspace: string,
-   description: string,
-}
+import { db } from '@/firebase'
+import { collection, addDoc } from '@firebase/firestore'
+import { useAppSelector } from '@/redux/hooks'
+import { useRouter } from 'next/navigation'
 
 type Props = {
    setShowModal: Function
@@ -35,17 +32,25 @@ function WorkspaceModal(props: Props) {
    }
    useOnClickOutside(ref, handleClickOutside)
 
-   const {
-      register,
-      handleSubmit,
-      watch,
-      control,
-      formState: { errors },
-   } = useForm<Inputs>()
-   const onSubmit: SubmitHandler<Inputs> = (data) => { }
+   const workspaceCollectionRef = collection(db, "workspaces")
+   const user = useAppSelector((state) => state.userReducer.value)
+   const router = useRouter()
+   console.log(user.id)
+   const addWorkspace = async () => {
+      await addDoc(workspaceCollectionRef, {
+         name: title,
+         type: workspace,
+         description: description,
+         boards: [],
+         userId: user.id
+      }).then((dataRef) => {
+         router.push(`/boards/${dataRef.id}`)
+      })
+   }
 
    const [title, setTitle] = useState('')
    const [workspace, setWorkspace] = useState('')
+   const [description, setDescription] = useState('')
 
    return (
       <div className='z-50 p-5 w-full h-full min-h-[100vh] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start justify-center'>
@@ -63,14 +68,12 @@ function WorkspaceModal(props: Props) {
                   {`Let's build a Workspace`}
                </h1>
                <p className='text-lg font-semibold leading-6 mb-5'>Boost your productivity by making it easier for everyone to access boards in one location.</p>
-               {/* TODO */}
-               <form onSubmit={handleSubmit(onSubmit)} className=' w-full mb-3 flex flex-col items-start mt-3 justify-center'>
+               <div className=' w-full mb-3 flex flex-col items-start mt-3 justify-center'>
                   <label htmlFor="title" className='font-bold text-xs mb-2'>Workspace name <span className='text-red-600'>*</span></label>
                   <input type="text"
                      id='title'
                      className={`block w-full p-2 outline-none border-2 focus:border-blue-500 rounded-md`}
                      value={title}
-                     {...register("title", { required: true })}
                      name='title'
                      placeholder={`Taco's Co.`}
                      onChange={(e) => {
@@ -79,7 +82,7 @@ function WorkspaceModal(props: Props) {
                   />
                   <span className='text-xs mt-2'>This is the name of your company, team or organization.</span>
                   <label htmlFor="workspace" className='font-bold text-xs mt-3 mb-2'>Workspace type</label>
-                  <select {...register("workspace", { required: true })}
+                  <select 
                      value={workspace}
                      onChange={(e) => {
                         setWorkspace(e.target.value)
@@ -96,17 +99,21 @@ function WorkspaceModal(props: Props) {
                   <textarea
                      id='description'
                      className={`block w-full p-2 outline-none border-2 focus:border-blue-500 rounded-md min-h-[150px]`}
-                     defaultValue={''}
-                     {...register("description")}
+                     value={description}
+                     onChange={(e) => {
+                        setDescription(e.target.value)
+                     }}
                      name='description'
                      placeholder={`Our team organizes everything here.`}
                   />
                   <span className='text-xs mt-2'>Get your members on board with a few words about your Workspace.</span>
-                  <button type={(title !== '' && workspace !== '') ? 'submit' : 'button'}
+                  <button
+                     onClick={addWorkspace}
+                     type={(title !== '' && workspace !== '') ? 'submit' : 'button'}
                      className={`w-full py-2 rounded-md mt-3  ${(title !== '' && workspace !== '') ? 'bg-blue-500 text-white  hover:bg-blue-400' : 'bg-slate-200 text-gray-500 cursor-default'}`}>
                      Create
                   </button>
-               </form>
+               </div>
             </div>
             <div className=' lg:col-span-1 col-span-2 flex items-center justify-center md:order-2 order-1 z-0'>
                <div className='relative'>

@@ -1,9 +1,11 @@
 import React, { memo } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import WorkspaceItem from './WorkspaceItem'
+import { WorkspaceType } from '@/types'
 
 type Props = {
-   headerType: string
+   headerType: string,
+   workspaces: WorkspaceType[] | undefined
 }
 
 function Workspaces(props: Props) {
@@ -17,8 +19,9 @@ function Workspaces(props: Props) {
                 before:contents[] before:absolute before:w-full before:h-[30px] before:bg-black before:top-[-30px] before:left-[-10px] before:bg-transparent
                '>Your Workspaces</h1>
                <div>
-                  <WorkspaceItem />
-                  <WorkspaceItem />
+                  {props.workspaces?.map((w) => {
+                     return <WorkspaceItem key={w.id} workspace={w} />
+                  })}
                </div>
             </div>
          </div>

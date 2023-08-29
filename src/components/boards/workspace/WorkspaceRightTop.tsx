@@ -1,8 +1,13 @@
+import { WorkspaceType } from '@/types'
 import React from 'react'
 import { BsPersonAdd } from 'react-icons/bs'
 import { HiOutlinePencil } from 'react-icons/hi'
 
-function WorkspaceRightTop() {
+type Props = {
+   workspace: WorkspaceType | undefined
+}
+
+function WorkspaceRightTop(props: Props) {
 
    return (
       <div className='w-full border-b-2 flex items-center justify-center'>
@@ -13,7 +18,7 @@ function WorkspaceRightTop() {
                      <span className='absolute w-full h-full flex items-center justify-center text-2xl top-0 left-0 text-white font-bold'>V</span>
                   </div>
                   <div className='flex items-center justify-start mr-2'>
-                     <p className='font-semibold text-lg truncate max-w-[100px] whitespace-normal md:max-w-[300px] leading-5'>Workspace name</p>
+                     <p className='font-semibold text-lg truncate max-w-[100px] whitespace-normal md:max-w-[300px] leading-5'>{props.workspace?.name}</p>
                      <span className='p-2 text-sm rounded-sm hover:bg-slate-200 ml-2 cursor-pointer'><HiOutlinePencil /></span>
                   </div>
                </div>
