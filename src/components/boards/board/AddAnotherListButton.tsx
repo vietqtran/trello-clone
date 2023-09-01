@@ -7,6 +7,7 @@ type Props = {
    currentLength: string,
    handleAddList: Function
 }
+var uniqid = require('uniqid');
 
 function AddAnotherListButton(props: Props) {
 
@@ -53,7 +54,7 @@ function AddAnotherListButton(props: Props) {
                   <button
                      onClick={() => {
                         if (input != '') {
-                           props.handleAddList({ id: (props.currentLength + 1) + '', name: input, cards: [] })
+                           props.handleAddList({ id: uniqid(), name: input, cards: [] })
                         }
                         setInput('')
                      }}

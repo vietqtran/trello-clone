@@ -7,7 +7,7 @@ type Props = {
 
 function CardLabels(props: Props) {
    return (
-      <>
+      <div>
          {props.labels.length > 0 &&
             <div className='grid grid-cols-5 gap-1 pb-0 p-2'>
                {props.labels.map((label) => {
@@ -15,7 +15,7 @@ function CardLabels(props: Props) {
                })}
             </div>
          }
-      </>
+      </div>
    )
 }
 

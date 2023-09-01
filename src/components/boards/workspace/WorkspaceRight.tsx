@@ -11,12 +11,10 @@ type Props = {
 
 function WorkspaceRight(props: Props) {
    return (
-      <>
          <div className='z-[-1] overflow-y-scroll px-4 pt-0 md:px-8 lg:px-12'>
             <WorkspaceRightTop workspace={props.workspace} />
             <WorkspaceContent workspace={props.workspace} />
-         </div>
-      </>
+      </div>
    )
 }
 

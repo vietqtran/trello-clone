@@ -4,7 +4,9 @@ import { BsPlusLg } from 'react-icons/bs'
 import { IoMdClose } from 'react-icons/io'
 import Card from './Card'
 import { useOnClickOutside } from 'usehooks-ts'
-import { data } from 'autoprefixer'
+import ColumnOptions from './ColumnOptions'
+import { CardType, ColumnType } from '@/types'
+import CopyList from './CopyList'
 
 const cards = [
    {
@@ -53,15 +55,19 @@ type Props = {
    column: {
       id: string,
       name: string,
-      cards: Card[]
+      cards: CardType[]
    },
-   handleAddCard: (columnId: string, card: Card) => void
+   handleAddCard: (columnId: string, card: CardType) => void,
+   setColumns: Function,
+   columns: ColumnType[],
+   handleAddList: (list: ColumnType) => void
 }
 
 function Column(props: Props) {
 
    const [showInput, setShowInput] = useState(false)
    const [input, setInput] = useState('')
+   const [showActions, setShowActions] = useState({ show: false, tab: '' })
 
    const ref = useRef(null)
    const handleClickOutside = () => {
@@ -72,10 +78,18 @@ function Column(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    return (
-      <div className='rightboard flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pr-0 rounded-md min-w-[271px] bg-slate-100'>
-         <div className='p-2 flex items-center justify-between w-full'>
+      <div className='rightboard relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pr-0 rounded-md min-w-[271px] bg-slate-100'>
+         <div className='relative p-2 flex items-center justify-between w-full'>
             <h1 className='font-semibold pl-2'>{props.column.name}</h1>
-            <span className='p-2 hover:bg-slate-300 rounded-md cursor-pointer'><BiDotsHorizontalRounded /></span>
+            <div
+               onClick={() => {
+                  setShowActions({ show: true, tab: '' })
+               }}
+               className=' p-2 hover:bg-slate-300 rounded-md cursor-pointer'>
+               <BiDotsHorizontalRounded />
+            </div>
+            {showActions.show && showActions.tab === '' && <ColumnOptions setShowActions={setShowActions} setShowInput={setShowInput} />}
+            {showActions.show && showActions.tab === 'copy' && <CopyList handleAddList={props.handleAddList} column={props.column} setShowActions={setShowActions} />}
          </div>
          <div className='column w-full overflow-y-auto px-2'>
             {props.column.cards.map((card) => {

@@ -29,7 +29,7 @@ function Create(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    return (
-      <>
+      <div>
          <div
             ref={ref}
             onClick={handleClickInside}
@@ -84,7 +84,7 @@ function Create(props: Props) {
             {show.show && show.tab === 'board' && <CreateBoard type='' setShow={setShow} />}
             {show.show && show.tab === 'template' && <CreateTemplate setShow={setShow} />}
          </div >
-      </>
+      </div>
    )
 }
 

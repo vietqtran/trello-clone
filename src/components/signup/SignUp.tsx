@@ -11,8 +11,6 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai'
 import { collection, addDoc, getDocs } from '@firebase/firestore'
 import { db } from '@/firebase'
-import { setUser } from '@/redux/features/userSlice'
-import { useAppDispatch } from '@/redux/hooks'
 
 function SignUp() {
 
@@ -24,24 +22,23 @@ function SignUp() {
    const searchParams = useSearchParams()
    const email = searchParams.get('email')
    const [emailInput, setEmailInput] = useState(email ? email : '')
-   const dispatch = useAppDispatch()
 
    const router = useRouter()
    const addUser = async () => {
-      const data = await getDocs(userCollectionRef)
-      for (let i = 0; i < data.docs.length; i++) {
-         if (data.docs[i].data().email === emailInput) {
-            setError({ show: true, message: 'This address is ready used' })
-            break;
-         } else {
-            if (emailInput && password && confirm && password === confirm) {
-               await addDoc(userCollectionRef, { email: emailInput, password: password, recentBoard: [] }).then((docRef) => {
-                  dispatch(setUser({ id: docRef.id, email: emailInput, recentBoard: [] }))
-                  router.push('/boards')
-               })
-            }
-         }
-      }
+      // const data = await getDocs(userCollectionRef)
+      // for (let i = 0; i < data.docs.length; i++) {
+      //    if (data.docs[i].data().email === emailInput) {
+      //       setError({ show: true, message: 'This address is ready used' })
+      //       break;
+      //    } else {
+      //       if (emailInput && password && confirm && password === confirm) {
+      //          await addDoc(userCollectionRef, { email: emailInput, password: password, recentBoard: [] }).then((docRef) => {
+      //             dispatch(setUser({ id: docRef.id, email: emailInput, recentBoard: [] }))
+      //             router.push('/boards')
+      //          })
+      //       }
+      //    }
+      // }
    }
 
    const emailValid = (e: string) => {

@@ -11,7 +11,7 @@ type Props = {
 
 function BackgroundSelectCommon(props: Props) {
    return (
-      <>
+      <div>
          <div className='relative'>
             <h1 className='text-center py-2 font-semibold'>Board background</h1>
             <span
@@ -60,7 +60,7 @@ function BackgroundSelectCommon(props: Props) {
                <Background ntn={6} type='gradient' setSelectBg={props.setSelectBg} selectBg={props.selectBg} />
             </div>
          </div>
-      </>
+      </div>
    )
 }
 
