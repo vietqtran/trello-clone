@@ -2,6 +2,7 @@ import Image from 'next/image'
 import React, { memo } from 'react'
 import { HiOutlinePencil } from 'react-icons/hi'
 import CardLabels from './CardLabels'
+import { MdCopyAll, MdDeleteForever, MdEast, MdLabel, MdOutlineVideoLabel } from 'react-icons/md'
 
 type Props = {
    card: {
@@ -17,7 +18,7 @@ type Props = {
 
 function Card(props: Props) {
    return (
-      <div className='relative group bg-white hover:bg-slate-100 rounded-md overflow-hidden card-shadow my-2 cursor-pointer'>
+      <div className='relative group bg-white hover:bg-slate-100 rounded-md card-shadow my-1 cursor-pointer'>
          {props?.card?.image.ntn !== 0 && props?.card?.image.type !== '' &&
             <div>
                <Image
@@ -38,7 +39,31 @@ function Card(props: Props) {
                <HiOutlinePencil />
             </span>
          </div>
+
+         <div className='absolute top-0 left-[100%] '>
+            <div className='flex items-center justify-start w-fit bg-black text-white mb-1 p-2'>
+               <span><MdLabel /></span>
+               <span>Edit label</span>
+            </div>
+            <div className='flex items-center justify-start w-fit bg-black text-white mb-1 p-2'>
+               <span><MdOutlineVideoLabel /></span>
+               <span>Change cover</span>
+            </div>
+            <div className='flex items-center justify-start w-fit bg-black text-white mb-1 p-2'>
+               <span><MdEast /></span>
+               <span>Move</span>
+            </div>
+            <div className='flex items-center justify-start w-fit bg-black text-white mb-1 p-2'>
+               <span><MdCopyAll /></span>
+               <span>Copy</span>
+            </div>
+            <div className='flex items-center justify-start w-fit bg-black text-white mb-1 p-2'>
+               <span><MdDeleteForever /></span>
+               <span>Delete</span>
+            </div>
+         </div>
       </div>
+
    )
 }
 

@@ -3,6 +3,8 @@ import BoardRightHeader from './BoardRightHeader'
 import Column from './Column'
 import AddAnotherListButton from './AddAnotherListButton'
 import { CardType, ColumnType } from '@/types'
+import { Container, Draggable } from 'react-smooth-dnd'
+
 
 const data = [
    {
@@ -211,14 +213,33 @@ function BoardRight(props: Props) {
       setColumns(newList)
    }
 
+   const onColumnDrop = (dropResult: any) => {
+      console.log(dropResult)
+   }
    return (
       <div className='h-full w-full z-10'>
          <BoardRightHeader />
          <div className='w-full h-auto'>
             <div className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-170px)] overflow-x-auto flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}>
-               {columns.map((col) => {
-                  return <Column handleAddList={handleAddList} setColumns={setColumns} columns={columns} key={col.id} column={col} handleAddCard={handleAddCard} />
-               })}
+               <Container
+                  orientation="horizontal"
+                  onDrop={onColumnDrop}
+                  dragHandleSelector=".column-drag-handle"
+                  getChildPayload={(index) => columns[index]}
+                  dropPlaceholder={{
+                     animationDuration: 150,
+                     showOnTop: true,
+                     className: 'cards-drop-preview'
+                  }}
+               >
+                  {columns.map((col) => {
+                     return (
+                        <Draggable key={col.id}>
+                           <Column handleAddList={handleAddList} setColumns={setColumns} columns={columns} column={col} handleAddCard={handleAddCard} />
+                        </Draggable>
+                     )
+                  })}
+               </Container>
                <AddAnotherListButton handleAddList={handleAddList} currentLength={columns.length + ''} />
             </div>
          </div>

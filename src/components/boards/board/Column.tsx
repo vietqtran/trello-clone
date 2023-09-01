@@ -7,6 +7,7 @@ import { useOnClickOutside } from 'usehooks-ts'
 import ColumnOptions from './ColumnOptions'
 import { CardType, ColumnType } from '@/types'
 import CopyList from './CopyList'
+import { Container, Draggable } from 'react-smooth-dnd'
 
 const cards = [
    {
@@ -76,10 +77,11 @@ function Column(props: Props) {
    const handleClickInside = () => {
    }
    useOnClickOutside(ref, handleClickOutside)
-
+   const onCardDrop = (id: string, index: number) => { }
+   const getCardPayload = (id: string, index: number) => { }
    return (
       <div className='rightboard relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pr-0 rounded-md min-w-[271px] bg-slate-100'>
-         <div className='relative p-2 flex items-center justify-between w-full'>
+         <div className='column-drag-handle cursor-pointer relative p-2 flex items-center justify-between w-full'>
             <h1 className='font-semibold pl-2'>{props.column.name}</h1>
             <div
                onClick={() => {
@@ -91,10 +93,39 @@ function Column(props: Props) {
             {showActions.show && showActions.tab === '' && <ColumnOptions setShowActions={setShowActions} setShowInput={setShowInput} />}
             {showActions.show && showActions.tab === 'copy' && <CopyList handleAddList={props.handleAddList} column={props.column} setShowActions={setShowActions} />}
          </div>
-         <div className='column w-full overflow-y-auto px-2'>
-            {props.column.cards.map((card) => {
-               return <Card key={card.id + props.column.id} card={card} />
-            })}
+         <div className='column w-full overflow-y-auto overflow-x-visible px-2'>
+            <Container
+               groupName="col"
+               onDragStart={(e: any) => console.log("drag started", e)}
+               onDragEnd={(e: any) => console.log("drag end", e)}
+               onDrop={(e: any) => onCardDrop(props.column.id, e)}
+               getChildPayload={(index: number) =>
+                  getCardPayload(props.column.id, index)
+               }
+               dragClass="card-ghost"
+               dropClass="card-ghost-drop"
+               onDragEnter={() => {
+                  console.log("drag enter:", props.column.id);
+               }}
+               onDragLeave={() => {
+                  console.log("drag leave:", props.column.id);
+               }}
+               onDropReady={(p: any) => console.log('Drop ready: ', p)}
+               dropPlaceholder={{
+                  animationDuration: 150,
+                  showOnTop: true,
+                  className: 'drop-preview'
+               }}
+               dropPlaceholderAnimationDuration={200}
+            >
+               {props.column.cards.map((card) => {
+                  return (
+                     <Draggable key={card.id + props.column.id} >
+                        <Card card={card} />
+                     </Draggable>
+                  )
+               })}
+            </Container>
          </div>
          <div className='p-2 w-full mt-2 cursor-pointer'>
             {!showInput &&
