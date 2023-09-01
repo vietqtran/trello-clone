@@ -11,7 +11,7 @@ type Props = {
 
 function BackgroundColors(props: Props) {
    return (
-      <>
+      <div>
          <div className='relative pb-2'>
             <span
                onClick={() => {
@@ -48,7 +48,7 @@ function BackgroundColors(props: Props) {
             <Background ntn={8} type='color' setSelectBg={props.setSelectBg} selectBg={props.selectBg} />
             <Background ntn={9} type='color' setSelectBg={props.setSelectBg} selectBg={props.selectBg} />
          </div>
-      </>
+      </div>
    )
 }
 

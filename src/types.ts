@@ -24,3 +24,19 @@ export type WorkspaceType = {
    type: string,
    description: string
 }
+
+export type ColumnType = {
+   id: string,
+   name: string,
+   cards: CardType[]
+}
+
+export type CardType = {
+   id: string,
+   text: string,
+   labels: string[],
+   image: {
+      ntn: number,
+      type: string
+   }
+}

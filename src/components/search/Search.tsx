@@ -33,7 +33,7 @@ function Search() {
                </div>
             </div>}
          {input !== '' &&
-            <>
+            <div>
                <div className='w-full'>
                   <h1 className='font-semibold '>Boards</h1>
                   <div className='w-full'>
@@ -50,7 +50,7 @@ function Search() {
                      <SearchBoardItem />
                   </div>
                </div>
-            </>
+            </div>
          }
       </div>
    )

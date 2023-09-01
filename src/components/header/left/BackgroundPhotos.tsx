@@ -11,7 +11,7 @@ type Props = {
 
 function BackgroundPhotos(props: Props) {
    return (
-      <>
+      <div>
          <div className='relative pb-2'>
             <span
                onClick={() => {
@@ -39,7 +39,7 @@ function BackgroundPhotos(props: Props) {
             <Background ntn={11} type='image' setSelectBg={props.setSelectBg} selectBg={props.selectBg} />
             <Background ntn={12} type='image' setSelectBg={props.setSelectBg} selectBg={props.selectBg} />
          </div>
-      </>
+      </div>
    )
 }
 

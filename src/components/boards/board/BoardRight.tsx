@@ -2,6 +2,7 @@ import React, { memo, useState } from 'react'
 import BoardRightHeader from './BoardRightHeader'
 import Column from './Column'
 import AddAnotherListButton from './AddAnotherListButton'
+import { CardType, ColumnType } from '@/types'
 
 const data = [
    {
@@ -186,31 +187,16 @@ const data = [
    }
 ]
 
-type Card = {
-   id: string,
-   text: string,
-   labels: string[],
-   image: {
-      ntn: number,
-      type: string
-   }
-}
-
-type List = {
-   id: string,
-   name: string,
-   cards: Card[]
-}
-
 type Props = {
    showSideBar: boolean
 }
 
 function BoardRight(props: Props) {
 
+
    const [columns, setColumns] = useState(data)
 
-   const handleAddCard = (id: string, card: Card) => {
+   const handleAddCard = (id: string, card: CardType) => {
       const newColumns = columns.map((col) => {
          if (col.id === id) {
             col.cards.push(card)
@@ -220,20 +206,18 @@ function BoardRight(props: Props) {
       setColumns(newColumns)
    }
 
-   const handleAddList = (list: List) => {
+   const handleAddList = (list: ColumnType) => {
       const newList = [...columns, list]
       setColumns(newList)
    }
 
    return (
       <div className='h-full w-full z-10'>
-         {/* header  */}
          <BoardRightHeader />
-         {/* content  */}
          <div className='w-full h-auto'>
             <div className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-170px)] overflow-x-auto flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}>
                {columns.map((col) => {
-                  return <Column key={col.id} column={col} handleAddCard={handleAddCard} />
+                  return <Column handleAddList={handleAddList} setColumns={setColumns} columns={columns} key={col.id} column={col} handleAddCard={handleAddCard} />
                })}
                <AddAnotherListButton handleAddList={handleAddList} currentLength={columns.length + ''} />
             </div>

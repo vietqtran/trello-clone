@@ -20,7 +20,7 @@ function WorkspaceLeft(props: Props) {
    const [tab, setTab] = useState('Boards')
 
    return (
-      <>
+      <div>
          {props.showSideBar &&
             <div className={`bg-white w-[260px] z-20 bg-transparent text-inherit bg-clip-padding backdrop-filter 
                backdrop-blur-sm bg-opacity-10
@@ -85,7 +85,7 @@ function WorkspaceLeft(props: Props) {
                </div>
             </div>
          }
-      </>
+      </div>
    )
 }
 

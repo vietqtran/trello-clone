@@ -1,7 +1,5 @@
 import React, { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
-import { useAppDispatch, useAppSelector } from '@/redux/hooks'
-import { reset } from '@/redux/features/userSlice'
 import { useRouter } from 'next/navigation'
 
 type Props = {
@@ -20,14 +18,8 @@ function Avatar(props: Props) {
    }
    useOnClickOutside(ref, handleClickOutside)
 
-   const user = useAppSelector((state) => state.userReducer.value);
 
-   const dispatch = useAppDispatch()
    const router = useRouter()
-   const handleLogOut = () => {
-      dispatch(reset())
-      router.push('/')
-   }
 
    return (
       <div
@@ -49,15 +41,14 @@ function Avatar(props: Props) {
             <div className='flex items-center justify-start px-4 mb-2'>
                <div>
                   <div className='relative p-5 w-fit bg-blue-500 rounded-full'>
-                     <span className=' font-semibold text-2xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{user?.email?.toUpperCase().charAt(0)}</span>
+                     <span className=' font-semibold text-2xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{''}</span>
                   </div>
                </div>
                <div className='w-[170px] ml-1 flex flex-col items-start justify-center'>
-                  <p className='text-sm w-full truncate whitespace-nowrap'>{user?.email}</p>
+                  <p className='text-sm w-full truncate whitespace-nowrap'>{''}</p>
                </div>
             </div>
             <div
-               onClick={handleLogOut}
                className='p-4 py-2 my-1 border-t-2 cursor-pointer hover:bg-slate-200'>Log out</div>
          </div>}
       </div>

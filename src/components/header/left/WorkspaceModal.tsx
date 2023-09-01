@@ -4,7 +4,6 @@ import { useOnClickOutside } from 'usehooks-ts'
 import { GrClose } from 'react-icons/gr'
 import { db } from '@/firebase'
 import { collection, addDoc } from '@firebase/firestore'
-import { useAppSelector } from '@/redux/hooks'
 import { useRouter } from 'next/navigation'
 
 type Props = {
@@ -33,19 +32,18 @@ function WorkspaceModal(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    const workspaceCollectionRef = collection(db, "workspaces")
-   const user = useAppSelector((state) => state.userReducer.value)
+   // const user = useAppSelector((state) => state.userReducer.value)
    const router = useRouter()
-   console.log(user.id)
    const addWorkspace = async () => {
-      await addDoc(workspaceCollectionRef, {
-         name: title,
-         type: workspace,
-         description: description,
-         boards: [],
-         userId: user.id
-      }).then((dataRef) => {
-         router.push(`/boards/${dataRef.id}`)
-      })
+      // await addDoc(workspaceCollectionRef, {
+      //    name: title,
+      //    type: workspace,
+      //    description: description,
+      //    boards: [],
+      //    userId: user.id
+      // }).then((dataRef) => {
+      //    router.push(`/boards/${dataRef.id}`)
+      // })
    }
 
    const [title, setTitle] = useState('')

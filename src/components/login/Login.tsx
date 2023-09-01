@@ -11,8 +11,6 @@ import { useState } from 'react'
 import { collection, getDocs } from '@firebase/firestore'
 import { db } from '@/firebase'
 import { useRouter } from 'next/navigation'
-import { setUser } from '@/redux/features/userSlice'
-import { useAppDispatch } from '@/redux/hooks'
 import dynamic from 'next/dynamic'
 
 function Login() {
@@ -25,32 +23,9 @@ function Login() {
    const [error, setError] = useState({ show: false, message: '' })
    const userCollectionRef = collection(db, "users")
    const router = useRouter()
-   const dispatch = useAppDispatch()
 
    const handleLogin = async () => {
-      const data = await getDocs(userCollectionRef)
-      let check = false
-      for (let i = 0; i < data.docs.length; i++) {
-         if (data.docs[i].data().email === emailInput) {
-            check = true
-            console.log(data.docs[i].id)
-            if (data.docs[i].data().password === password) {
-               console.log(data.docs[i].data().id)
-               dispatch(setUser({
-                  id: data.docs[i].id,
-                  email: emailInput,
-                  recentBoard: []
-               }))
-               router.push('/boards')
-            } else {
-               setError({ show: true, message: 'Password incorrect!' })
-            }
-            break;
-         }
-      }
-      if (!check) {
-         setError({ show: true, message: 'This address is not exist!' })
-      }
+
    }
 
    return (

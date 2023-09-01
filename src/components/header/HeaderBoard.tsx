@@ -18,8 +18,8 @@ function HeaderBoard() {
    const [showModal, setShowModal] = useState({ show: false, type: '' })
 
    return (
-      <>
-         <div className='z-30 w-full bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 p-2 border-b-[1px] border-slate-400 flex items-center justify-between'>
+      <div className='z-30 w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
+         <div className=' w-full text-white p-2 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
                <div className='logo rounded-md w-fit bg-black bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 hover:bg-opacity-10'>
                   <Link href={'/boards'}>
@@ -46,11 +46,9 @@ function HeaderBoard() {
             </div>
          </div>
          {showModal.show && showModal.type === 'workspace' &&
-            <>
-               <WorkspaceModal setShowModal={setShowModal} />
-            </>
+            <WorkspaceModal setShowModal={setShowModal} />
          }
-      </>
+      </div>
    )
 }
 

@@ -8,7 +8,6 @@ import WorkspaceLeftItem from './WorkspaceLeftItem'
 import { AiOutlineStar, AiOutlineClockCircle } from 'react-icons/ai'
 import BoardItem from './BoardItem'
 import CreateBoardButton from './CreateBoardButton'
-import { useAppSelector } from '@/redux/hooks'
 import { collection, addDoc, getDocs } from '@firebase/firestore'
 import { db } from '@/firebase'
 import { useRouter } from 'next/navigation'
@@ -19,33 +18,28 @@ function Boards() {
 
    const [tab, setTab] = useState('board')
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-   const user = useAppSelector((state) => state.userReducer.value)
+   // const user = useAppSelector((state) => state.userReducer.value)
    const workspacesCollectionRef = collection(db, "workspaces")
    const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
-   useEffect(() => {
-      const getWorkspaces = async () => {
-         await getDocs(workspacesCollectionRef).then((data) => {
-            const newWorkspaces = data.docs.map((doc) => ({
-               id: doc.id,
-               userId: user.id,
-               name: doc.data().name,
-               boards: doc.data().boards,
-               type: doc.data().type,
-               description: doc.data().description
-            }))
-            setWorkspaces(newWorkspaces)
-         })
-      }
-      getWorkspaces()
-   })
+   // useEffect(() => {
+   //    const getWorkspaces = async () => {
+   //       await getDocs(workspacesCollectionRef).then((data) => {
+   //          const newWorkspaces = data.docs.map((doc) => ({
+   //             id: doc.id,
+   //             userId: user.id,
+   //             name: doc.data().name,
+   //             boards: doc.data().boards,
+   //             type: doc.data().type,
+   //             description: doc.data().description
+   //          }))
+   //          setWorkspaces(newWorkspaces)
+   //       })
+   //    }
+   //    getWorkspaces()
+   // })
 
-   if ((user.id === '')) {
-      return <>
-         <div>Error</div>
-      </>
-   } else {
       return (
-         <>
+         <div>
          <div className='z-[-1] flex md:items-start md:justify-center justify-start items-start'>
             <div className='grid grid-cols-4 w-full md:w-auto'>
                <div className='col-span-1 relative'>
@@ -109,9 +103,9 @@ function Boards() {
                         <span className='font-bold text-base'>Recent viewed</span>
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                           {user.recentBoard?.map((board) => {
+                           {/* {user.recentBoard?.map((board) => {
                               return <BoardItem board={board} key={board.id} />
-                           })}
+                           })} */}
                      </div>
                   </div>
 
@@ -141,9 +135,8 @@ function Boards() {
             </div>
             {showModal.show && <WorkspaceModal setShowModal={setShowModal} />}
             </div >
-         </>
+         </div>
       )
-   }
 }
 
 export default Boards
