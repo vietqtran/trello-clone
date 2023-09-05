@@ -12,38 +12,29 @@ import { collection, addDoc, getDocs } from '@firebase/firestore'
 import { db } from '@/firebase'
 import { useRouter } from 'next/navigation'
 import WorkspaceModal from '../header/left/WorkspaceModal'
-import { WorkspaceType } from '@/types'
+import { Board, WorkspaceType } from '@/types'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/app/redux/store'
 
-function Boards() {
+type Props = {
+   workspaces: WorkspaceType[],
+   starredBoards: Board[]
+}
+
+function Boards(props: Props) {
 
    const [tab, setTab] = useState('board')
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-   // const user = useAppSelector((state) => state.userReducer.value)
    const workspacesCollectionRef = collection(db, "workspaces")
-   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
-   // useEffect(() => {
-   //    const getWorkspaces = async () => {
-   //       await getDocs(workspacesCollectionRef).then((data) => {
-   //          const newWorkspaces = data.docs.map((doc) => ({
-   //             id: doc.id,
-   //             userId: user.id,
-   //             name: doc.data().name,
-   //             boards: doc.data().boards,
-   //             type: doc.data().type,
-   //             description: doc.data().description
-   //          }))
-   //          setWorkspaces(newWorkspaces)
-   //       })
-   //    }
-   //    getWorkspaces()
-   // })
 
+   const user = useSelector((state: RootState) => state.userReducer)
+   console.log(user)
       return (
          <div>
          <div className='z-[-1] flex md:items-start md:justify-center justify-start items-start'>
             <div className='grid grid-cols-4 w-full md:w-auto'>
-               <div className='col-span-1 relative'>
-                  <div className='sticky left-0 top-[90px] md:block hidden min-w-[260px] max-w-[260px]'>
+                  <div className='col-span-1 pt-10 relative'>
+                     <div className='sticky left-0 top-[90px] md:block hidden min-w-[260px] max-w-[260px]'>
                      <div>
                         <div
                            onClick={() => {
@@ -78,7 +69,9 @@ function Boards() {
                               className='p-2 hover:bg-slate-100 cursor-pointer rounded-md'><HiPlus /></h1>
                         </div>
                         <div className='max-h-[60vh] overflow-y-auto'>
-                           <WorkspaceLeftItem />
+                              {props.workspaces?.map((workspace) => {
+                                 return <WorkspaceLeftItem key={workspace.id} workspace={workspace} />
+                              })}
                         </div>
                      </div>
                   </div>
@@ -90,10 +83,8 @@ function Boards() {
                         <span className='font-bold text-base'>Starred boards</span>
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                           {workspaces?.map((workspace) => {
-                              return workspace.boards.map((board) => {
-                                 return <BoardItem board={board} key={board.id} />
-                              })
+                           {props.starredBoards.map((board) => {
+                              return <BoardItem key={board.id} board={board} />
                            })}
                      </div>
                   </div>
@@ -111,22 +102,22 @@ function Boards() {
 
 
                   <h1 className='font-bold mb-5'>YOUR WORKSPACES</h1>
-                     {workspaces?.map((workspace) => {
+                     {props.workspaces?.map((workspace) => {
                         return (
                            <div className='mb-10' key={workspace.id}>
                               <div className='flex items-center mb-4'>
                                  <div className='relative p-5 mr-2 rounded-md bg-black w-fit'>
-                                    <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>E</span>
+                                    <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{workspace.name.toUpperCase().charAt(0)}</span>
                                  </div>
                                  <h1 className='font-bold'>
-                                    Workspace name
+                                    {workspace.name}
                                  </h1>
                               </div>
                               <div className='grid grid-cols-12 w-full gap-2 mt-2'>
                                  {workspace?.boards?.map((board) => {
                                     return <BoardItem board={board} key={board.id} />
                                  })}
-                                 <CreateBoardButton type='' />
+                                 <CreateBoardButton workspaces={props.workspaces} type='' />
                               </div>
                            </div>
                         )

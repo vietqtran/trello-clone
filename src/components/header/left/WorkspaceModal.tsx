@@ -5,6 +5,7 @@ import { GrClose } from 'react-icons/gr'
 import { db } from '@/firebase'
 import { collection, addDoc } from '@firebase/firestore'
 import { useRouter } from 'next/navigation'
+import { useAppSelector } from '@/app/redux/store'
 
 type Props = {
    setShowModal: Function
@@ -32,23 +33,24 @@ function WorkspaceModal(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    const workspaceCollectionRef = collection(db, "workspaces")
-   // const user = useAppSelector((state) => state.userReducer.value)
+   const user = useAppSelector((state) => state.userReducer.value)
    const router = useRouter()
-   const addWorkspace = async () => {
-      // await addDoc(workspaceCollectionRef, {
-      //    name: title,
-      //    type: workspace,
-      //    description: description,
-      //    boards: [],
-      //    userId: user.id
-      // }).then((dataRef) => {
-      //    router.push(`/boards/${dataRef.id}`)
-      // })
-   }
-
    const [title, setTitle] = useState('')
    const [workspace, setWorkspace] = useState('')
    const [description, setDescription] = useState('')
+
+   const addWorkspace = async () => {
+      await addDoc(workspaceCollectionRef, {
+         name: title,
+         type: workspace,
+         description: description,
+         boards: [],
+         userId: user.id
+      }).then((dataRef) => {
+         router.push(`/boards/${dataRef.id}`)
+      })
+   }
+
 
    return (
       <div className='z-50 p-5 w-full h-full min-h-[100vh] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start justify-center'>

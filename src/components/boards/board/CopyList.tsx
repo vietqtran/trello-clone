@@ -1,5 +1,4 @@
 import { ColumnType } from '@/types'
-import { randomUUID } from 'crypto'
 import React, { useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiCloseLine } from 'react-icons/ri'
 import { useOnClickOutside } from 'usehooks-ts'

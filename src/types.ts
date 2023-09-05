@@ -13,14 +13,16 @@ export type Board = {
 export type User = {
    id: string,
    email: string,
-   recentBoard: Board[]
+   password: string,
+   recentBoard: Board[],
+   auth: string
 }
 
 export type WorkspaceType = {
    id: string,
    userId: string,
    name: string,
-   boards: Board[],
+   boards: Board[] | undefined,
    type: string,
    description: string
 }

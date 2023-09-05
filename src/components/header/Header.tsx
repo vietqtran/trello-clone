@@ -12,18 +12,21 @@ import Search from './right/Search'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
-import { WorkspaceType } from '@/types'
+import { Board, WorkspaceType } from '@/types'
+import { useAppSelector } from '@/app/redux/store'
 
 type Props = {
-   workspaces: WorkspaceType[] | undefined
+   workspaces: WorkspaceType[],
+   starredBoards: Board[]
 }
 
 function Header(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
+   const user = useAppSelector((state) => state.userReducer.value)
 
    return (
-      <div>
+      <>
          <div className='z-30 sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
                <div className='logo hover:bg-slate-200 rounded-md w-fit'>
@@ -35,25 +38,25 @@ function Header(props: Props) {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={''} />
-                  <Create headerType={''} setShowModal={setShowModal} />
+                  <Create workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={props.workspaces} headerType={''} />
-                  <Recent headerType={''} />
-                  <Starred headerType={''} />
+                  <Recent recentBoards={user.recentBoard} headerType={''} />
+                  <Starred starredBoards={props.starredBoards} headerType={''} />
                   <Templates headerType={''} />
-                  <Create headerType={''} setShowModal={setShowModal} />
+                  <Create workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
                <Search headerType={''} />
-               <Avatar headerType={''} />
+               <Avatar user={user} headerType={''} />
             </div>
          </div>
          {showModal.show && showModal.type === 'workspace' &&
             <WorkspaceModal setShowModal={setShowModal} />
          }
-      </div>
+      </>
    )
 }
 

@@ -15,7 +15,7 @@ function WorkspaceRightTop(props: Props) {
             <div className='py-8 flex items-center justify-between'>
                <div className='flex items-center justify-start'>
                   <div className='relative bg-black p-7 rounded-md w-fit mr-3'>
-                     <span className='absolute w-full h-full flex items-center justify-center text-2xl top-0 left-0 text-white font-bold'>V</span>
+                     <span className='absolute w-full h-full flex items-center justify-center text-2xl top-0 left-0 text-white font-bold'>{props.workspace?.name.toUpperCase().charAt(0)}</span>
                   </div>
                   <div className='flex items-center justify-start mr-2'>
                      <p className='font-semibold text-lg truncate max-w-[100px] whitespace-normal md:max-w-[300px] leading-5'>{props.workspace?.name}</p>

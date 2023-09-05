@@ -20,7 +20,7 @@ function WorkspaceLeft(props: Props) {
    const [tab, setTab] = useState('Boards')
 
    return (
-      <div>
+      <>
          {props.showSideBar &&
             <div className={`bg-white w-[260px] z-20 bg-transparent text-inherit bg-clip-padding backdrop-filter 
                backdrop-blur-sm bg-opacity-10
@@ -28,11 +28,11 @@ function WorkspaceLeft(props: Props) {
                ${props.showSideBar ? 'translate-x-0' : 'translate-x-[-260px]'} ease-in duration-200`}>
                <div className=' flex items-center border-b-[1px] p-2 border-slate-300 justify-between w-full'>
                   <div className='relative p-5 bg-black w-fit rounded-md h-fit'>
-                     <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>V</span>
+                     <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>{props.workspace?.name.toUpperCase().charAt(0)}</span>
                   </div>
                   <div>
                      <div className='w-[150px]'>
-                        <p className='truncate whitespace-normal w-full block font-semibold text-sm'> qljhdaddaddasdasdassjkdaskhasdhashah ahdhajashdjahdjklahasjlhasjlhdasljdhlj</p>
+                        <p className='truncate whitespace-normal w-full block font-semibold text-sm'>{props.workspace?.name}</p>
                      </div>
                      <span className='text-sm'>
                         Free
@@ -85,7 +85,7 @@ function WorkspaceLeft(props: Props) {
                </div>
             </div>
          }
-      </div>
+      </>
    )
 }
 

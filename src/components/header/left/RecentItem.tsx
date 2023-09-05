@@ -4,8 +4,13 @@ import Image from 'next/image'
 import React from 'react'
 import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai'
 import { useState } from 'react'
+import { Board } from '@/types'
 
-function RecentItem() {
+type Props = {
+   board: Board
+}
+
+function RecentItem(props: Props) {
 
    const [star, setStar] = useState(false)
 
@@ -15,17 +20,18 @@ function RecentItem() {
             <Image src={'/assets/background/bg-image/bg1.jpg'} alt='image' width={50} height={30} className='rounded-md object-cover mr-2' />
             <div className='block w-[70%]'>
                <p className='leading-none font-semibold truncate whitespace-nowrap'>name</p>
-               <p className='leading-none truncate whitespace-nowrap'>worjahkjahkhhhhhd khkjhksdadaasdaskspace</p>
+               <p className='leading-none truncate whitespace-nowrap'>{props.board.title}</p>
             </div>
             <div className={`p-2 text-base hover:text-lg hover:text-yellow-400 ease-out duration-150`}
                onClick={() => {
                   setStar(!star)
                }}
             >
-               <span className='text-yellow-400'>
-                  <AiOutlineStar />
-               </span>
-               {/* <span className='text-yellow-400'><AiTwotoneStar /></span> */}
+               {props.board.star ?
+                  <span className='text-yellow-400'><AiOutlineStar /></span>
+                  :
+                  <span className='text-yellow-400'><AiTwotoneStar /></span>
+               }
             </div>
          </div>
       </div>

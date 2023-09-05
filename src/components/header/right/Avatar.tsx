@@ -1,14 +1,21 @@
 import React, { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { useRouter } from 'next/navigation'
+import { User } from '@/types'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from '@/app/redux/store'
+import { logOut } from '@/app/redux/features/user/userSlice'
 
 type Props = {
-   headerType: string
+   headerType: string,
+   user: User
 }
 
 function Avatar(props: Props) {
 
    const [show, setShow] = useState(false)
+   const router = useRouter()
+   const dispatch = useDispatch()
 
    const ref = useRef(null)
    const handleClickOutside = () => {
@@ -18,8 +25,10 @@ function Avatar(props: Props) {
    }
    useOnClickOutside(ref, handleClickOutside)
 
-
-   const router = useRouter()
+   const handleLogOut = () => {
+      dispatch(logOut())
+      router.push('/')
+   }
 
    return (
       <div
@@ -32,7 +41,7 @@ function Avatar(props: Props) {
                   setShow(!show)
                }}
                className='p-3 bg-blue-700 rounded-full relative'>
-               <span className='absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-white text-xs'>V</span>
+               <span className='absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-white text-xs'>{props.user?.email?.toUpperCase().charAt(0)}</span>
             </div>
          </div>
 
@@ -41,14 +50,15 @@ function Avatar(props: Props) {
             <div className='flex items-center justify-start px-4 mb-2'>
                <div>
                   <div className='relative p-5 w-fit bg-blue-500 rounded-full'>
-                     <span className=' font-semibold text-2xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{''}</span>
+                     <span className=' font-semibold text-2xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{props.user?.email?.toUpperCase().charAt(0)}</span>
                   </div>
                </div>
                <div className='w-[170px] ml-1 flex flex-col items-start justify-center'>
-                  <p className='text-sm w-full truncate whitespace-nowrap'>{''}</p>
+                  <p className='text-sm w-full truncate whitespace-nowrap'>{props.user.email}</p>
                </div>
             </div>
             <div
+               onClick={handleLogOut}
                className='p-4 py-2 my-1 border-t-2 cursor-pointer hover:bg-slate-200'>Log out</div>
          </div>}
       </div>
