@@ -2,6 +2,8 @@ import Image from 'next/image'
 import React, { memo } from 'react'
 import { HiOutlinePencil } from 'react-icons/hi'
 import CardLabels from './CardLabels'
+import { MdCopyAll, MdDeleteForever, MdEast, MdLabel, MdOutlineVideoLabel } from 'react-icons/md'
+import { Draggable } from 'react-beautiful-dnd'
 
 type Props = {
    card: {
@@ -12,12 +14,20 @@ type Props = {
          ntn: number,
          type: string
       }
-   }
+   },
+   index: number
 }
 
 function Card(props: Props) {
    return (
-      <div className='relative group bg-white hover:bg-slate-100 rounded-md overflow-hidden card-shadow my-2 cursor-pointer'>
+      <Draggable draggableId={props.card.id} index={props.index}>
+         {(provided, snapshot) => (
+            <div
+               ref={provided.innerRef}
+               {...provided.draggableProps}
+               data-is-dragging={snapshot.isDragging}
+               {...provided.dragHandleProps}
+               className='relative group bg-white hover:bg-slate-100 rounded-md card-shadow my-1 cursor-pointer'>
          {props?.card?.image.ntn !== 0 && props?.card?.image.type !== '' &&
             <div>
                <Image
@@ -37,8 +47,10 @@ function Card(props: Props) {
             <span className='absolute hidden group-hover:block right-0 top-0 p-[5px] bg-slate-300 bg-opacity-50 hover:bg-opacity-70 rounded-md m-1'>
                <HiOutlinePencil />
             </span>
-         </div>
-      </div>
+               </div>
+            </div>
+         )}
+      </Draggable>
    )
 }
 

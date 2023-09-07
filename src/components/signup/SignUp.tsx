@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideImage from '../SideImage'
 import Image from 'next/image'
 import AuthButton from '../AuthButton'
@@ -10,35 +10,114 @@ import { useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { AiFillCheckCircle, AiFillCloseCircle } from 'react-icons/ai'
 import { collection, addDoc, getDocs } from '@firebase/firestore'
-import { db } from '@/firebase'
+import { User } from '@/types'
+import { useDispatch } from 'react-redux'
+import { logIn } from '@/app/redux/features/user/userSlice'
+import { auth, db, googleProvider } from '@/firebase'
+import { signInWithPopup } from 'firebase/auth'
+var generator = require('generate-password')
+var passwordGenerate: string = generator.generate({
+   length: 8,
+   numbers: true
+});
 
 function SignUp() {
 
+   const searchParams = useSearchParams()
+   const email = searchParams.get('email')
+   const [emailInput, setEmailInput] = useState(email ? email : '')
    const [password, setPassword] = useState('')
    const [confirm, setConfirm] = useState('')
    const [show, setShow] = useState(false)
    const [error, setError] = useState({ show: false, message: '' })
+   const [users, setUsers] = useState<User[]>([])
    const userCollectionRef = collection(db, "users")
-   const searchParams = useSearchParams()
-   const email = searchParams.get('email')
-   const [emailInput, setEmailInput] = useState(email ? email : '')
-
    const router = useRouter()
+   const dispatch = useDispatch()
+
+   useEffect(() => {
+      getUsers()
+   }, [])
+
+   const getUsers = async () => {
+      await getDocs(userCollectionRef).then((dataRef) => {
+         setUsers(dataRef.docs.map((doc) => {
+            return {
+               id: doc.id,
+               email: doc.data().email,
+               password: doc.data().password,
+               recentBoard: doc.data().recentBoard,
+               auth: doc.data().auth
+            }
+         }))
+      }).catch((err) => { })
+   }
+
+   const googleSignIn = () => {
+      signInWithPopup(auth, googleProvider).then((result) => {
+         let check = false
+         let userLocal = {}
+         users.forEach((user) => {
+            if (user.auth === 'google') {
+               if (user.email === result.user.email) {
+                  check = true
+                  userLocal = { ...user }
+                  dispatch(logIn(user))
+                  return
+               }
+            }
+         })
+         if (check === false) {
+            add(String(result.user.email), passwordGenerate, 'google')
+            setError({ show: false, message: '' })
+         } else {
+            localStorage.setItem('user', JSON.stringify(userLocal))
+            router.push('/boards')
+         }
+      }).catch((err) => {
+      })
+   }
+
+   const add = async (emailParam: string, passwordParam: string, auth: string) => {
+      await addDoc(userCollectionRef, {
+         email: emailParam,
+         password: passwordParam,
+         recentBoard: [],
+         auth: auth
+      }).then((dataCreate) => {
+         const userCreate = {
+            id: dataCreate.id,
+            email: emailParam,
+            password: passwordParam,
+            recentBoard: [],
+            auth: auth
+         }
+         dispatch(logIn(userCreate))
+         return userCreate
+      }).then((userCreate) => {
+         localStorage.setItem('user', JSON.stringify(userCreate))
+         router.push('/boards')
+      })
+   }
+
    const addUser = async () => {
-      // const data = await getDocs(userCollectionRef)
-      // for (let i = 0; i < data.docs.length; i++) {
-      //    if (data.docs[i].data().email === emailInput) {
-      //       setError({ show: true, message: 'This address is ready used' })
-      //       break;
-      //    } else {
-      //       if (emailInput && password && confirm && password === confirm) {
-      //          await addDoc(userCollectionRef, { email: emailInput, password: password, recentBoard: [] }).then((docRef) => {
-      //             dispatch(setUser({ id: docRef.id, email: emailInput, recentBoard: [] }))
-      //             router.push('/boards')
-      //          })
-      //       }
-      //    }
-      // }
+      if (emailValid(emailInput) && password.length >= 8 && password === confirm) {
+         let check = true
+         users.forEach((user) => {
+            if (user.email === emailInput) {
+               check = false
+               return
+            }
+         })
+         if (check === true) {
+            if (password === confirm) {
+               setError({ show: false, message: '' })
+               add(emailInput, password, '')
+            }
+         } else {
+            setError({ show: true, message: 'This address is exists' })
+         }
+      }
    }
 
    const emailValid = (e: string) => {
@@ -73,7 +152,7 @@ function SignUp() {
                      }}
                   />
                </div>
-               {!error.show ?
+               {!error.show && emailInput.length > 0 ?
                   <div className='w-full mt-1 mb-3'>
                      <div className={`flex text-sm font-semibold items-center justify-start w-full  ${emailValid(emailInput) ? 'text-green-500' : 'text-red-500'}`}>
                         {emailValid(emailInput) ?
@@ -85,7 +164,7 @@ function SignUp() {
                      </div>
                   </div>
                   :
-                  <span className='w-full text-left text-sm font-semibold mt-2 text-red-500'>{error.message}</span>
+                  <span className='w-full text-left text-sm font-semibold mt-0 mb-3 mt-1 text-red-500'>{error.message}</span>
                }
                <div className='relative w-full'>
                   <input
@@ -104,12 +183,15 @@ function SignUp() {
                </div>
                <div className='w-full mt-1'>
                   <div className={`flex text-sm font-semibold items-center justify-start w-full  ${password && password.length >= 8 ? 'text-green-500' : 'text-red-500'}`}>
-                     {(password && password.length >= 8) ?
-                        <span className=''><AiFillCheckCircle /></span>
-                        :
-                        <span><AiFillCloseCircle /></span>
+                     {password.length > 0 &&
+                        <>
+                           {(password.length >= 8 ?
+                              <span className=''><AiFillCheckCircle /></span>
+                              :
+                           <span><AiFillCloseCircle /></span>)}
+                        <span className='ml-2'>At least 8 characters</span>
+                        </>
                      }
-                     <span className='ml-2'>At least 8 characters</span>
                   </div>
                </div>
                <div className='mt-3'>
@@ -125,12 +207,16 @@ function SignUp() {
                </div>
                <div className='w-full mt-1'>
                   <div className={`flex text-sm font-semibold items-center justify-start w-full  ${(password && confirm && password === confirm) ? 'text-green-500' : 'text-red-500'}`}>
-                     {(password && confirm && password === confirm) ?
-                        <span className=''><AiFillCheckCircle /></span>
-                        :
-                        <span><AiFillCloseCircle /></span>
+                     {confirm.length > 0 &&
+                        <>
+                        {(password && confirm && password === confirm) ?
+                           <span className=''><AiFillCheckCircle /></span>
+                           :
+                           <span><AiFillCloseCircle /></span>
+                        }
+                        <span className='ml-2'>Matched</span>   
+                        </>
                      }
-                     <span className='ml-2'>Matched</span>
                   </div>
                </div>
                <button
@@ -139,9 +225,11 @@ function SignUp() {
                   Continue
                </button>
                <span className='font-light text-xs my-5'>OR</span>
-               <AuthButton name='Google'>
-                  <Image src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
-               </AuthButton>
+               <div onClick={googleSignIn}>
+                  <AuthButton name='Google'>
+                     <Image src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
+                  </AuthButton>
+               </div>
                <AuthButton name='Microsoft'>
                   <Image src={'/assets/microsoft-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>

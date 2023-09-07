@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { use, useEffect } from 'react'
 import SideImage from '../SideImage'
 import Image from 'next/image'
 import AuthButton from '../AuthButton'
@@ -8,24 +8,114 @@ import Link from 'next/link'
 import { PiDotOutlineFill } from 'react-icons/pi'
 import Eye from '../Eye'
 import { useState } from 'react'
-import { collection, getDocs } from '@firebase/firestore'
-import { db } from '@/firebase'
+import { collection, getDocs, addDoc, doc } from '@firebase/firestore'
+import { auth, db, googleProvider } from '@/firebase'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import { User } from '@/types'
+import { signInWithPopup } from 'firebase/auth'
+import type { AppDispatch, RootState } from '@/app/redux/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { logIn, logOut } from '@/app/redux/features/user/userSlice'
+var generator = require('generate-password')
+var passwordGenerate = generator.generate({
+   length: 8,
+   numbers: true
+});
 
 function Login() {
-
-
 
    const [show, setShow] = useState(false)
    const [emailInput, setEmailInput] = useState('')
    const [password, setPassword] = useState('')
    const [error, setError] = useState({ show: false, message: '' })
+   const [users, setUsers] = useState<User[]>([])
    const userCollectionRef = collection(db, "users")
    const router = useRouter()
+   const dispatch = useDispatch<AppDispatch>()
 
-   const handleLogin = async () => {
+   useEffect(() => {
+      getUsers()
+      console.log(users)
+   }, [])
 
+   const getUsers = async () => {
+      await getDocs(userCollectionRef).then((dataRef) => {
+         setUsers(dataRef.docs.map((doc) => {
+            return {
+               id: doc.id,
+               email: doc.data().email,
+               password: doc.data().password,
+               recentBoard: doc.data().recentBoard,
+               auth: doc.data().auth
+            }
+         }))
+      }).catch((err) => { })
+   }
+
+   const addUser = async (email: any) => {
+      const passwordCreate = passwordGenerate
+      await addDoc(userCollectionRef, {
+         email: email,
+         password: passwordCreate,
+         recentBoard: [],
+         auth: 'google'
+      }).then((dataCreate) => {
+         const userCreate = {
+            id: dataCreate.id,
+            email: email,
+            password: passwordCreate,
+            recentBoard: [],
+            auth: 'google'
+         }
+         dispatch(logIn(userCreate))
+         return userCreate
+      }).then((userCreate) => {
+         router.push('/boards')
+      })
+   }
+
+   const googleSignIn = () => {
+      signInWithPopup(auth, googleProvider).then((result) => {
+         let check = false
+         users.forEach((user) => {
+            if (user.auth === 'google') {
+               if (user.email === result.user.email) {
+                  check = true
+                  dispatch(logIn(user))
+               }
+            }
+         })
+         if (check === false) {
+            addUser(result.user.email)
+         } else {
+            router.push('/boards')
+            setError({ show: false, message: '' })
+         }
+      }).catch((err) => {
+      })
+   }
+
+   const handleLogin = () => {
+      let check = false
+      let userLocal = {}
+      users.forEach((user) => {
+         if (user.email === emailInput) {
+            check = true
+            if (password === user.password) {
+               userLocal = { ...user }
+               dispatch(logIn(user))
+            } else {
+               setError({ show: true, message: 'Password is incorrect!' })
+            }
+         }
+      })
+      if (check === false) {
+         setError({ show: true, message: 'This address is not exist!' })
+      } else {
+         localStorage.setItem('user', JSON.stringify(userLocal))
+         router.push('/boards')
+      }
    }
 
    return (
@@ -40,7 +130,6 @@ function Login() {
             <Image src={'/assets/trello-logo-blue.svg'} alt="logo" width={200} height={200} />
          </div>
          <div>
-            {/* TODO */}
             <div className='flex flex-col items-center justify-start mb-10 bg-white rounded-md form-shadow p-10'>
                <h2 className='font-bold text-slate-600 mb-8'>Log in to Trello</h2>
                <div>
@@ -72,9 +161,11 @@ function Login() {
                   type='button' className='w-[300px] text-sm text-white font-bold py-2 rounded-md mt-5 bg-[#5AAC44] hover:bg-[#61BD4F]'>Continue</button>
                <span className='font-light text-xs my-5'>OR</span>
                {/* Authentication Button  */}
-               <AuthButton name='Google'>
-                  <Image src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
-               </AuthButton>
+               <div onClick={googleSignIn}>
+                  <AuthButton name='Google'>
+                     <Image src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
+                  </AuthButton>
+               </div>
                <AuthButton name='Microsoft'>
                   <Image src={'/assets/microsoft-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>

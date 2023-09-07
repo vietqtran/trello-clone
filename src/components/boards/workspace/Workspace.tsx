@@ -19,7 +19,7 @@ function Workspace(props: Props) {
             <WorkspaceLeft workspace={props.workspace} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
          </div>
          <div className='w-full'>
-            <WorkspaceRight workspace={props.workspace} />
+            <WorkspaceRight workspaces={props.workspaces} workspace={props.workspace} />
          </div>
       </div>
    )

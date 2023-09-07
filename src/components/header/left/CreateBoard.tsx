@@ -1,16 +1,22 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SlArrowLeft } from 'react-icons/sl'
 import { TfiClose } from 'react-icons/Tfi'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import Background from './Background'
 import { useState } from 'react'
 import BackgroundSelect from './BackgroundSelect'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { collection, updateDoc, doc, getDocs } from '@firebase/firestore'
+import { db } from '@/firebase'
+import { Board, WorkspaceType } from '@/types'
+import { useAppSelector } from '@/app/redux/store'
+var uniqid = require('uniqid');
 
 type Props = {
    setShow: Function,
-   type: string
+   type: string,
+   workspaces: WorkspaceType[] | undefined
 }
 
 type Inputs = {
@@ -18,19 +24,37 @@ type Inputs = {
    workspace: string,
 }
 
-const options = [
-   { value: 'Workspace 1', label: 'Workspace 1' },
-   { value: 'Workspace 2', label: 'Workspace 2' },
-   { value: 'Workspace 3', label: 'Workspace 3' },
-   { value: 'Workspace 4', label: 'Workspace 4' },
-   { value: 'Workspace 5', label: 'Workspace 5' }
-]
-
 function CreateBoard(props: Props) {
-
    const [selectBg, setSelectBg] = useState({ ntn: 1, type: 'image' })
    const [showSelectBg, setShowSelectBg] = useState(false)
+   const workspaceCollectionRef = collection(db, "workspaces")
+   const user = useAppSelector((state) => state.userReducer.value)
    const [title, setTitle] = useState('')
+   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
+
+   useEffect(() => {
+      getWorkspaces()
+      console.log(workspaces)
+   }, [])
+
+   const getWorkspaces = async () => {
+      await getDocs(workspaceCollectionRef).then((dataRef) => {
+         const newWorkspaces: WorkspaceType[] = []
+         dataRef.docs.forEach((doc) => {
+            if (doc.data().userId === user.id) {
+               newWorkspaces.push({
+                  id: doc.id,
+                  userId: String(doc.data().userId),
+                  name: String(doc.data().name),
+                  type: String(doc.data().type),
+                  boards: [...doc.data().boards],
+                  description: String(doc.data().description)
+               })
+            }
+         })
+         setWorkspaces(newWorkspaces)
+      }).catch((err) => { })
+   }
 
    const {
       register,
@@ -39,11 +63,30 @@ function CreateBoard(props: Props) {
       control,
       formState: { errors },
    } = useForm<Inputs>()
-   const onSubmit: SubmitHandler<Inputs> = (data) => { }
+   const onSubmit: SubmitHandler<Inputs> = async (data) => {
+      const boardCreate: Board = {
+         id: uniqid(),
+         background: { ...selectBg },
+         columns: [],
+         star: false,
+         title: data.title,
+         workspaceId: data.workspace
+      }
+
+      const workspaceUpdate = workspaces.find((w) => {
+         return w.id === data.workspace
+      })
+      const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
+      await updateDoc(doc(db, 'workspaces', data.workspace), {
+         boards: boardsUpdate,
+         ...workspaceUpdate,
+      })
+      console.log(boardCreate)
+   }
 
    return (
-      <div>
-         <div className={`mb-5 text-black ${props.type === 'button' ? 'sticky right-[100%] left-0' : 'absolute'} bg-white top-[calc(100%+10px)] min-w-[306px] left-[-100px] md:left-[-20px] p-1 drop-menu-shadow rounded-md`}>
+      <>
+         <div className={`mb-5 text-black ${props.type === 'button' ? 'absolute right-[100%] left-0' : 'absolute'} bg-white top-[calc(100%+10px)] min-w-[306px] left-[-100px] md:left-[-20px] p-1 drop-menu-shadow rounded-md`}>
             <div className='flex items-center justify-between text-gray-600'>
                <span className='p-3 rounded-md hover:bg-slate-100 cursor-pointer' onClick={() => {
                   props.setShow({ show: true, tab: '' })
@@ -105,9 +148,9 @@ function CreateBoard(props: Props) {
                      <label htmlFor="workspace" className='font-bold text-xs mt-3'>Workspace</label>
                      <select {...register("workspace")}
                         name="workspace" id="workspace" className='overflow-y-scroll w-full outline-none p-2 border-slate-400 border-2 rounded-md'>
-                        {options.map((o) => {
-                           return <option key={o.value} value={o.value} className='p-2 flex flex-col' defaultChecked>
-                              {o.label}
+                        {props.workspaces?.map((workspace) => {
+                           return <option key={workspace.id} value={workspace.id} className='p-2 flex flex-col' defaultChecked>
+                              {workspace.name}
                            </option>
                         })}
                      </select>
@@ -116,7 +159,7 @@ function CreateBoard(props: Props) {
                </div>
             </div>
          </div >
-      </div>
+      </>
    )
 }
 

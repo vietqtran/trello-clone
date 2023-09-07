@@ -12,10 +12,14 @@ import Search from './right/Search'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/app/redux/store'
 
 function HeaderBoard() {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
+
+   const user = JSON.parse(localStorage.getItem('user') || '')
 
    return (
       <div className='z-30 w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
@@ -30,19 +34,19 @@ function HeaderBoard() {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={'board'} />
-                  <Create headerType={'board'} setShowModal={setShowModal} />
+                  <Create workspaces={[]} headerType={'board'} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={[]} headerType={'board'} />
-                  <Recent headerType={'board'} />
-                  <Starred headerType={'board'} />
+                  <Recent recentBoards={[]} headerType={'board'} />
+                  <Starred starredBoards={[]} headerType={'board'} />
                   <Templates headerType={'board'} />
-                  <Create headerType={'board'} setShowModal={setShowModal} />
+                  <Create workspaces={[]} headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
                <Search headerType={'board'} />
-               <Avatar headerType={'board'} />
+               <Avatar user={user.value} headerType={'board'} />
             </div>
          </div>
          {showModal.show && showModal.type === 'workspace' &&

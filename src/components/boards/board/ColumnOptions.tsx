@@ -42,6 +42,7 @@ function ColumnOptions(props: Props) {
                }}
                className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Copy list...</li>
             <li className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Move list...</li>
+            <li className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Delete list...</li>
          </ul>
       </div>
    )

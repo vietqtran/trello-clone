@@ -7,7 +7,8 @@ import { useOnClickOutside } from 'usehooks-ts'
 import ColumnOptions from './ColumnOptions'
 import { CardType, ColumnType } from '@/types'
 import CopyList from './CopyList'
-
+import { Draggable, Droppable } from 'react-beautiful-dnd'
+var uniqid = require('uniqid');
 const cards = [
    {
       id: '1',
@@ -60,7 +61,8 @@ type Props = {
    handleAddCard: (columnId: string, card: CardType) => void,
    setColumns: Function,
    columns: ColumnType[],
-   handleAddList: (list: ColumnType) => void
+   handleAddList: (list: ColumnType) => void,
+   index: number
 }
 
 function Column(props: Props) {
@@ -76,11 +78,22 @@ function Column(props: Props) {
    const handleClickInside = () => {
    }
    useOnClickOutside(ref, handleClickOutside)
-
    return (
-      <div className='rightboard relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pr-0 rounded-md min-w-[271px] bg-slate-100'>
-         <div className='relative p-2 flex items-center justify-between w-full'>
-            <h1 className='font-semibold pl-2'>{props.column.name}</h1>
+      <Draggable draggableId={props.column.id} index={props.index}>
+         {(provided, snapshot) => (
+            <div
+               ref={provided.innerRef}
+               {...provided.draggableProps}
+               className='rightboard column-drag-handle relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pr-0 rounded-md min-w-[271px] bg-slate-100'>
+               <div
+                  data-is-dragging={snapshot.isDragging}
+                  {...provided.dragHandleProps}
+                  className='column-drag-handle cursor-pointer relative p-2 flex items-center justify-between w-full'
+               >
+                  <h1
+
+                     className='font-semibold pl-2'>{props.column.name}
+                  </h1>
             <div
                onClick={() => {
                   setShowActions({ show: true, tab: '' })
@@ -91,11 +104,24 @@ function Column(props: Props) {
             {showActions.show && showActions.tab === '' && <ColumnOptions setShowActions={setShowActions} setShowInput={setShowInput} />}
             {showActions.show && showActions.tab === 'copy' && <CopyList handleAddList={props.handleAddList} column={props.column} setShowActions={setShowActions} />}
          </div>
-         <div className='column w-full overflow-y-auto px-2'>
-            {props.column.cards.map((card) => {
-               return <Card key={card.id + props.column.id} card={card} />
-            })}
-         </div>
+               <Droppable
+                  droppableId={props.column.id}
+                  type={'column'}
+               >
+                  {(droppableProvided) => {
+                     return <div
+                        {...droppableProvided.droppableProps}
+                        ref={droppableProvided.innerRef}
+                        className='column w-full overflow-y-auto overflow-x-visible px-2'>
+                        {props.column.cards.map((card, index) => {
+                           return (
+                              <Card key={card.id} index={index} card={card} />
+                           )
+                        })}
+                     </div>
+                  }}
+               </Droppable>
+
          <div className='p-2 w-full mt-2 cursor-pointer'>
             {!showInput &&
                <div
@@ -125,7 +151,7 @@ function Column(props: Props) {
                         onClick={() => {
                            if (input.length > 0) {
                               props.handleAddCard(props.column.id, {
-                                 id: (props.column.cards.length + 1) + '',
+                                 id: uniqid(),
                                  text: input,
                                  labels: [],
                                  image: {
@@ -148,6 +174,8 @@ function Column(props: Props) {
             }
          </div>
       </div >
+         )}
+      </Draggable>
    )
 }
 

@@ -6,7 +6,8 @@ import BoardItem from '../BoardItem'
 import { WorkspaceType } from '@/types'
 
 type Props = {
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | undefined,
+   workspaces: WorkspaceType[] | undefined
 }
 
 function WorkspaceContent(props: Props) {
@@ -44,10 +45,10 @@ function WorkspaceContent(props: Props) {
          <div className='w-full grid grid-cols-12 gap-5'>
             <div className='relative cursor-pointer group bg-slate-100 bg-cover rounded-sm lg:col-span-3 md:col-span-4 col-span-6 w-full min-h-[100px]'>
                <div className='absolute top-0 left-0 w-full'>
-                  <CreateBoardButton type='button' />
+                  <CreateBoardButton workspaces={props.workspaces} type='button' />
                </div>
             </div>
-            {props.workspace?.boards.map((board) => {
+            {props.workspace?.boards?.map((board) => {
                return <BoardItem key={board.id} board={board} />
             })}
          </div>

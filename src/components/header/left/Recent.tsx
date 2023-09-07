@@ -1,9 +1,11 @@
 import React, { memo } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import RecentItem from './RecentItem'
+import { Board } from '@/types'
 
 type Props = {
-   headerType: string
+   headerType: string,
+   recentBoards: Board[]
 }
 
 function Recent(props: Props) {
@@ -12,14 +14,16 @@ function Recent(props: Props) {
          <span className='mr-2'>Recent </span>
          <span className='text-xs translate-y-[2px]'><SlArrowDown /></span>
 
-
          <div className='text-black absolute group-hover:block hidden bg-white top-[calc(100%+10px)] min-w-[300%] left-0 p-3 drop-menu-shadow rounded-md'>
             <span className='relative block before:contents[] before:absolute before:w-full before:h-[30px] before:bg-transparent before:top-[-30px] before:left-[-10px]
             '></span>
-            <div>
-               <RecentItem />
-               <RecentItem />
-            </div>
+            {props.recentBoards?.length > 0 ? <div>
+               {props.recentBoards.map((board) => {
+                  return <RecentItem board={board} key={board.id} />
+               })}
+            </div> :
+               <div>No recent board</div>
+            }
          </div>
       </div>
    )

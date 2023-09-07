@@ -4,7 +4,7 @@ import Header from '@/components/header/Header'
 export default function SearchPage() {
   return (
     <main>
-      <Header workspaces={[]} />
+      <Header starredBoards={[]} workspaces={[]} />
       <Search />
     </main>
   )

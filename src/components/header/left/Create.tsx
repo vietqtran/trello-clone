@@ -10,10 +10,12 @@ import CreateBoard from './CreateBoard'
 import CreateTemplate from './CreateTemplate'
 import { useRef } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
+import { WorkspaceType } from '@/types'
 
 type Props = {
    setShowModal: Function,
-   headerType: string
+   headerType: string,
+   workspaces: WorkspaceType[]
 }
 
 function Create(props: Props) {
@@ -81,7 +83,7 @@ function Create(props: Props) {
                      </div>
                   </div>
                </div>}
-            {show.show && show.tab === 'board' && <CreateBoard type='' setShow={setShow} />}
+            {show.show && show.tab === 'board' && <CreateBoard workspaces={props.workspaces} type='' setShow={setShow} />}
             {show.show && show.tab === 'template' && <CreateTemplate setShow={setShow} />}
          </div >
       </div>
