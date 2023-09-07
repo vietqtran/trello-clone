@@ -13,6 +13,7 @@ type Props = {
 
 function CopyList(props: Props) {
 
+   const [name, setName] = useState(props.column.name)
    const ref = useRef(null)
    const handleClickOutside = () => {
       props.setShowActions({ show: false, tab: '' })
@@ -20,13 +21,11 @@ function CopyList(props: Props) {
    const handleClickInside = () => {
    }
    useOnClickOutside(ref, handleClickOutside)
-   const [name, setName] = useState(props.column.name)
 
    const handleAdd = () => {
       if (name.length === 0 || name === '') {
-
       } else {
-         props.handleAddList({ id: uniqid(), name: name, cards: props.column.cards })
+         props.handleAddList({ id: uniqid(), name: name, cards: [...props.column.cards] })
       }
    }
    return (

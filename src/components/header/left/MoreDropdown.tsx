@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SlArrowRight, SlArrowLeft } from 'react-icons/sl'
 import { GrClose } from 'react-icons/gr'
 import WorkspaceItem from './WorkspaceItem'
@@ -6,6 +6,10 @@ import RecentItem from './RecentItem'
 import Starred from './Starred'
 import StarredItem from './StarredItem'
 import TemplateItem from './TemplateItem'
+import { collection, getDocs, addDoc, doc } from '@firebase/firestore'
+import { db } from '@/firebase'
+import { Board } from '@/types'
+import { useAppSelector } from '@/app/redux/store'
 
 type Props = {
    showDropdown: { show: boolean, tab: string },
@@ -13,7 +17,34 @@ type Props = {
 }
 
 function MoreDropdown(props: Props) {
-
+   const [starredBoards, setStarredBoards] = useState<Board[]>([])
+   const workspaceCollectionRef = collection(db, "workspaces")
+   const user = JSON.parse(localStorage.getItem('user') || '')
+   useEffect(() => {
+      getStarredBoards()
+   }, [])
+   const getStarredBoards = async () => {
+      await getDocs(workspaceCollectionRef).then((dataRef) => {
+         const newStarredBoards: Board[] = []
+         dataRef.docs.forEach((doc) => {
+            if (doc.data().userId === user.id) {
+               doc.data().boards?.forEach((board: Board) => {
+                  if (board.star) {
+                     newStarredBoards.push({
+                        id: board.id,
+                        workspaceId: board.workspaceId,
+                        title: board.title,
+                        columns: [...board.columns],
+                        star: board.star,
+                        background: { ...board.background }
+                     })
+                  }
+               })
+            }
+         })
+         setStarredBoards(newStarredBoards)
+      }).catch((err) => { })
+   }
    return (
       <div>
          {props.showDropdown &&
@@ -99,14 +130,9 @@ function MoreDropdown(props: Props) {
                         </span>
                      </div>
                      <div className='p-2'>
-                        <RecentItem />
-                        <RecentItem />
-                        <RecentItem />
-                        <RecentItem />
-                        <RecentItem />
-                        <RecentItem />
-                        <RecentItem />
-                        <RecentItem />
+                        {starredBoards.map((board) => {
+                           return <RecentItem key={board.id} board={board} />
+                        })}
                      </div>
                   </div>
                }
@@ -130,13 +156,9 @@ function MoreDropdown(props: Props) {
                         </span>
                      </div>
                      <div className='p-2'>
-                        <StarredItem />
-                        <StarredItem />
-                        <StarredItem />
-                        <StarredItem />
-                        <StarredItem />
-                        <StarredItem />
-                        <StarredItem />
+                        {starredBoards.map((board) => {
+                           return <StarredItem key={board.id} board={board} />
+                        })}
                      </div>
                   </div>
                }
@@ -160,14 +182,9 @@ function MoreDropdown(props: Props) {
                         </span>
                      </div>
                      <div className='p-2'>
-                        <TemplateItem />
-                        <TemplateItem />
-                        <TemplateItem />
-                        <TemplateItem />
-                        <TemplateItem />
-                        <TemplateItem />
-                        <TemplateItem />
-                        <TemplateItem />
+                        {starredBoards.map((board) => {
+                           return <TemplateItem key={board.id} />
+                        })}
                      </div>
                   </div>
                }

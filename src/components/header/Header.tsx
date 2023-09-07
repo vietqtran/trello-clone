@@ -23,7 +23,7 @@ type Props = {
 function Header(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-   const user = useAppSelector((state) => state.userReducer.value)
+   const user = JSON.parse(localStorage.getItem('user') || '')
 
    return (
       <>

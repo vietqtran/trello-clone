@@ -2,22 +2,23 @@
 
 import Boards from "@/components/boards/Boards";
 import Header from "@/components/header/Header";
-import { Board, WorkspaceType } from "@/types";
+import { Board, User, WorkspaceType } from "@/types";
 import { db } from '@/firebase'
 import { collection, getDocs, addDoc, doc } from '@firebase/firestore'
 import { useEffect, useState } from "react"
-import { useAppSelector } from "../redux/store";
 
 export default function BoardsPage() {
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
   const [starredBoards, setStarredBoards] = useState<Board[]>([])
-  const user = useAppSelector((state) => state.userReducer.value)
+
+  const user: User = JSON.parse(localStorage.getItem('user') || '') || { id: '' }
+
   const workspaceCollectionRef = collection(db, "workspaces")
 
   useEffect(() => {
     getWorkspaces()
     console.log(workspaces)
-  }, [])
+  }, [workspaceCollectionRef])
 
   const getWorkspaces = async () => {
     await getDocs(workspaceCollectionRef).then((dataRef) => {

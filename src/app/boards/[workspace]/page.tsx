@@ -15,7 +15,7 @@ export default function WorkspacePage() {
   const workspaceCollectionRef = collection(db, "workspaces")
   const [starredBoards, setStarredBoards] = useState<Board[]>([])
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
-  const user = useAppSelector((state) => state.userReducer.value)
+  const user = JSON.parse(localStorage.getItem('user') || '')
   const router = useRouter()
 
   useEffect(() => {

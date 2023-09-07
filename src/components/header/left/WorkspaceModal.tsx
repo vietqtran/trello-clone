@@ -33,7 +33,8 @@ function WorkspaceModal(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    const workspaceCollectionRef = collection(db, "workspaces")
-   const user = useAppSelector((state) => state.userReducer.value)
+   const user = JSON.parse(localStorage.getItem('user') || '')
+
    const router = useRouter()
    const [title, setTitle] = useState('')
    const [workspace, setWorkspace] = useState('')

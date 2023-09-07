@@ -98,10 +98,12 @@ function Login() {
 
    const handleLogin = () => {
       let check = false
+      let userLocal = {}
       users.forEach((user) => {
          if (user.email === emailInput) {
             check = true
             if (password === user.password) {
+               userLocal = { ...user }
                dispatch(logIn(user))
             } else {
                setError({ show: true, message: 'Password is incorrect!' })
@@ -111,6 +113,7 @@ function Login() {
       if (check === false) {
          setError({ show: true, message: 'This address is not exist!' })
       } else {
+         localStorage.setItem('user', JSON.stringify(userLocal))
          router.push('/boards')
       }
    }

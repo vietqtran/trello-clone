@@ -48,7 +48,7 @@ function WorkspaceContent(props: Props) {
                   <CreateBoardButton workspaces={props.workspaces} type='button' />
                </div>
             </div>
-            {props.workspace?.boards.map((board) => {
+            {props.workspace?.boards?.map((board) => {
                return <BoardItem key={board.id} board={board} />
             })}
          </div>

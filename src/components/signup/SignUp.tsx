@@ -56,10 +56,12 @@ function SignUp() {
    const googleSignIn = () => {
       signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
+         let userLocal = {}
          users.forEach((user) => {
             if (user.auth === 'google') {
                if (user.email === result.user.email) {
                   check = true
+                  userLocal = { ...user }
                   dispatch(logIn(user))
                   return
                }
@@ -69,6 +71,7 @@ function SignUp() {
             add(String(result.user.email), passwordGenerate, 'google')
             setError({ show: false, message: '' })
          } else {
+            localStorage.setItem('user', JSON.stringify(userLocal))
             router.push('/boards')
          }
       }).catch((err) => {
@@ -92,6 +95,7 @@ function SignUp() {
          dispatch(logIn(userCreate))
          return userCreate
       }).then((userCreate) => {
+         localStorage.setItem('user', JSON.stringify(userCreate))
          router.push('/boards')
       })
    }

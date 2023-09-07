@@ -27,7 +27,8 @@ function Boards(props: Props) {
    const [showModal, setShowModal] = useState({ show: false, type: '' })
    const workspacesCollectionRef = collection(db, "workspaces")
 
-   const user = useSelector((state: RootState) => state.userReducer)
+   const user = JSON.parse(localStorage.getItem('user') || '')
+
    console.log(user)
       return (
          <div>

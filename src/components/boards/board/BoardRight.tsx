@@ -11,31 +11,31 @@ const data = [
       name: 'Column 1',
       cards: [
          {
-            id: '1',
+            id: '11',
             text: 'Cart content',
             labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '2',
+            id: '21',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#579DFF'],
             image: { ntn: 0, type: '' }
          },
          {
-            id: '3',
+            id: '31',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '4',
+            id: '41',
             text: 'Cart content',
             labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 3, type: 'image' }
          },
          {
-            id: '5',
+            id: '51',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203'],
             image: { ntn: 0, type: '' }
@@ -47,31 +47,31 @@ const data = [
       name: 'Column 2',
       cards: [
          {
-            id: '1',
+            id: '12',
             text: 'Cart content',
             labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '2',
+            id: '22',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#579DFF'],
             image: { ntn: 0, type: '' }
          },
          {
-            id: '3',
+            id: '32',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '4',
+            id: '42',
             text: 'Cart content',
             labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 3, type: 'image' }
          },
          {
-            id: '5',
+            id: '52',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203'],
             image: { ntn: 0, type: '' }
@@ -83,31 +83,31 @@ const data = [
       name: 'Column 3',
       cards: [
          {
-            id: '1',
+            id: '13',
             text: 'Cart content',
             labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '2',
+            id: '23',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#579DFF'],
             image: { ntn: 0, type: '' }
          },
          {
-            id: '3',
+            id: '33',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '4',
+            id: '43',
             text: 'Cart content',
             labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 3, type: 'image' }
          },
          {
-            id: '5',
+            id: '53',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203'],
             image: { ntn: 0, type: '' }
@@ -119,31 +119,31 @@ const data = [
       name: 'Column 4',
       cards: [
          {
-            id: '1',
+            id: '14',
             text: 'Cart content',
             labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '2',
+            id: '24',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#579DFF'],
             image: { ntn: 0, type: '' }
          },
          {
-            id: '3',
+            id: '34',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '4',
+            id: '44',
             text: 'Cart content',
             labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 3, type: 'image' }
          },
          {
-            id: '5',
+            id: '54',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203'],
             image: { ntn: 0, type: '' }
@@ -155,31 +155,31 @@ const data = [
       name: 'Column 5',
       cards: [
          {
-            id: '1',
+            id: '15',
             text: 'Cart content',
             labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '2',
+            id: '25',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#579DFF'],
             image: { ntn: 0, type: '' }
          },
          {
-            id: '3',
+            id: '35',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 1, type: 'image' }
          },
          {
-            id: '4',
+            id: '45',
             text: 'Cart content',
             labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
             image: { ntn: 3, type: 'image' }
          },
          {
-            id: '5',
+            id: '55',
             text: 'Cart content',
             labels: ['#4BCE97', '#E2B203'],
             image: { ntn: 0, type: '' }
@@ -195,12 +195,12 @@ type Props = {
 function BoardRight(props: Props) {
 
 
-   const [columns, setColumns] = useState(data)
+   const [columns, setColumns] = useState<ColumnType[]>(data)
 
    const handleAddCard = (id: string, card: CardType) => {
       const newColumns = columns.map((col) => {
          if (col.id === id) {
-            col.cards.push(card)
+            return { ...col, cards: [...col.cards, card] }
          }
          return col
       })
@@ -212,24 +212,45 @@ function BoardRight(props: Props) {
       setColumns(newList)
    }
 
-   const onColumnDrop = (dropResult: any) => {
-      console.log(dropResult)
-   }
+   const onColumnDrop = () => { }
+
+   const onDragEnd = () => { }
+   const isCombineEnabled = () => { }
+   const containerHeight = () => { }
    return (
       <div className='h-full w-full z-10'>
          <BoardRightHeader />
-         <div className='w-full h-auto'>
-            <div className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-170px)] overflow-x-auto flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}>
-                  {columns.map((col) => {
-                     return (
-                        <div key={col.id}>
-                           <Column handleAddList={handleAddList} setColumns={setColumns} columns={columns} column={col} handleAddCard={handleAddCard} />
-                        </div>
-                     )
-                  })}
-               <AddAnotherListButton handleAddList={handleAddList} currentLength={columns.length + ''} />
+         <DragDropContext
+            onDragEnd={(result) => {
+               console.log(result)
+            }}
+         >
+            <div className='w-full h-auto'>
+               <Droppable direction='horizontal' droppableId="board">
+                  {(droppableProvided) => (
+                     <div
+                        {...droppableProvided.droppableProps}
+                        ref={droppableProvided.innerRef}
+                        className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-170px)] overflow-x-auto flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}
+                     >
+                        {columns.map((col, index) => {
+                           return (
+                              <Column key={col.id}
+                                 index={index}
+                                 handleAddList={handleAddList}
+                                 setColumns={setColumns}
+                                 columns={columns}
+                                 column={col}
+                                 handleAddCard={handleAddCard} />
+                           )
+                        })}
+                        {droppableProvided.placeholder}
+                        <AddAnotherListButton handleAddList={handleAddList} currentLength={columns.length + ''} />
+                     </div>
+                  )}
+               </Droppable>
             </div>
-         </div>
+         </DragDropContext>
       </div>
    )
 }
