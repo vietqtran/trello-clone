@@ -7,7 +7,7 @@ import { WorkspaceType } from '@/types'
 
 type Props = {
    type: string,
-   workspaces: WorkspaceType[],
+   workspaces: WorkspaceType[] | undefined,
    workspaceId: string,
    addBoard: Function
 }

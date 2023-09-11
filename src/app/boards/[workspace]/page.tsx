@@ -3,11 +3,11 @@
 import Workspace from "@/components/boards/workspace/Workspace";
 import Header from "@/components/header/Header";
 import { usePathname, useRouter } from "next/navigation";
-import { collection, getDocs } from '@firebase/firestore'
-import { db } from "@/firebase";
+import { db } from '@/firebase'
+import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Board, WorkspaceType } from "@/types";
-import { useAppSelector } from "@/app/redux/store";
+var uniqid = require('uniqid');
 
 export default function WorkspacePage() {
 
@@ -42,6 +42,27 @@ export default function WorkspacePage() {
     }).catch((err) => { })
   }
 
+  const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
+    const boardCreate: Board = {
+      id: uniqid(),
+      background: { ...selectBg },
+      columns: [],
+      star: false,
+      title: title,
+      workspaceId: workspace
+    }
+
+    const workspaceUpdate = workspaces?.find((w) => {
+      return w.id === workspace
+    })
+    const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
+    await updateDoc(doc(db, 'workspaces', workspace), {
+      boards: boardsUpdate,
+      ...workspaceUpdate,
+    })
+    // router.push(`/boards/${workspace}/${boardCreate.id}`)
+  }
+
   const getStarredBoards = async () => {
     await getDocs(workspaceCollectionRef).then((dataRef) => {
       const newStarredBoards: Board[] = []
@@ -68,7 +89,7 @@ export default function WorkspacePage() {
 
   return (
     <div>
-      <Header starredBoards={starredBoards} workspaces={workspaces} />
+      <Header addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
       <Workspace workspaces={workspaces} workspace={workspace} />
     </div>
   )

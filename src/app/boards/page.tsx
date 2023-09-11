@@ -131,7 +131,7 @@ export default function BoardsPage() {
 
   return (
     <div>
-      <Header starredBoards={starredBoards} workspaces={workspaces} />
+      <Header addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
       <Boards changeStar={changeStar} addBoard={addBoard} workspaces={workspaces} starredBoards={starredBoards} />
     </div>
   )

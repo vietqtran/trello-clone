@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 type Props = {
    setShow: Function,
    type: string,
-   workspaces: WorkspaceType[],
+   workspaces: WorkspaceType[] | undefined,
    workspaceId: string,
    addBoard: Function
 }
@@ -24,7 +24,7 @@ function CreateBoard(props: Props) {
    const [selectBg, setSelectBg] = useState({ ntn: 1, type: 'image' })
    const [showSelectBg, setShowSelectBg] = useState(false)
    const [title, setTitle] = useState('')
-   const [workspace, setWorkspace] = useState(props.workspaces[0]?.id)
+   const [workspace, setWorkspace] = useState(props.workspaceId)
    const router = useRouter()
 
    return (

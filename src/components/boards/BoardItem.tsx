@@ -7,7 +7,7 @@ import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai'
 
 type Props = {
    board: Board | undefined,
-   workspace: string,
+   workspace: string | undefined,
    changeStar: Function
 }
 

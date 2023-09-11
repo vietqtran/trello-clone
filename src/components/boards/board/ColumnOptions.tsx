@@ -1,10 +1,13 @@
+import { ColumnType } from '@/types'
 import React, { useRef } from 'react'
 import { RiCloseLine } from 'react-icons/ri'
 import { useOnClickOutside } from 'usehooks-ts'
 
 type Props = {
    setShowActions: Function,
-   setShowInput: Function
+   setShowInput: Function,
+   handleDeleteList: Function,
+   column: ColumnType
 }
 
 function ColumnOptions(props: Props) {
@@ -42,7 +45,11 @@ function ColumnOptions(props: Props) {
                }}
                className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Copy list...</li>
             <li className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Move list...</li>
-            <li className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Delete list...</li>
+            <li
+               onClick={() => {
+                  props.handleDeleteList(props.column.id)
+               }}
+               className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>Delete list...</li>
          </ul>
       </div>
    )

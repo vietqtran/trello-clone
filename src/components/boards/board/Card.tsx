@@ -54,4 +54,4 @@ function Card(props: Props) {
    )
 }
 
-export default memo(Card)
+export default Card

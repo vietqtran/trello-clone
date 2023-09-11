@@ -19,7 +19,8 @@ import { collection, getDocs } from '@firebase/firestore'
 import { db } from '@/firebase'
 type Props = {
    workspaces: WorkspaceType[],
-   starredBoards: Board[]
+   starredBoards: Board[],
+   addBoard: Function
 }
 
 function Header(props: Props) {
@@ -60,14 +61,14 @@ function Header(props: Props) {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={''} />
-                  <Create workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={props.workspaces} headerType={''} />
                   <Recent recentBoards={user.recentBoard} headerType={''} />
                   <Starred starredBoards={props.starredBoards} headerType={''} />
                   <Templates headerType={''} />
-                  <Create workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>

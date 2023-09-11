@@ -8,61 +8,16 @@ import ColumnOptions from './ColumnOptions'
 import { CardType, ColumnType } from '@/types'
 import CopyList from './CopyList'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
-var uniqid = require('uniqid');
-const cards = [
-   {
-      id: '1',
-      text: 'Cart content',
-      labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-      image: { ntn: 1, type: 'image' }
-   },
-   {
-      id: '2',
-      text: 'Cart content',
-      labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-      image: { ntn: 1, type: 'image' }
-   },
-   {
-      id: '3',
-      text: 'Cart content',
-      labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-      image: { ntn: 1, type: 'image' }
-   },
-   {
-      id: '4',
-      text: 'Cart content',
-      labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-      image: { ntn: 1, type: 'image' }
-   },
-   {
-      id: '5',
-      text: 'Cart content',
-      labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-      image: { ntn: 1, type: 'image' }
-   }
-]
-
-type Card = {
-   id: string,
-   text: string,
-   labels: string[],
-   image: {
-      ntn: number,
-      type: string
-   }
-}
+import uuid from 'react-uuid'
 
 type Props = {
-   column: {
-      id: string,
-      name: string,
-      cards: CardType[]
-   },
+   column: ColumnType,
    handleAddCard: (columnId: string, card: CardType) => void,
    setColumns: Function,
    columns: ColumnType[],
    handleAddList: (list: ColumnType) => void,
-   index: number
+   index: number,
+   handleDeleteList: Function
 }
 
 function Column(props: Props) {
@@ -101,8 +56,15 @@ function Column(props: Props) {
                className=' p-2 hover:bg-slate-300 rounded-md cursor-pointer'>
                <BiDotsHorizontalRounded />
             </div>
-            {showActions.show && showActions.tab === '' && <ColumnOptions setShowActions={setShowActions} setShowInput={setShowInput} />}
-            {showActions.show && showActions.tab === 'copy' && <CopyList handleAddList={props.handleAddList} column={props.column} setShowActions={setShowActions} />}
+                  {showActions.show && showActions.tab === '' && <ColumnOptions
+                     handleDeleteList={props.handleDeleteList}
+                     setShowActions={setShowActions}
+                     column={props.column}
+                     setShowInput={setShowInput} />}
+                  {showActions.show && showActions.tab === 'copy' && <CopyList
+                     handleAddList={props.handleAddList}
+                     column={props.column}
+                     setShowActions={setShowActions} />}
          </div>
                <Droppable
                   droppableId={props.column.id}
@@ -112,12 +74,13 @@ function Column(props: Props) {
                      return <div
                         {...droppableProvided.droppableProps}
                         ref={droppableProvided.innerRef}
-                        className='column w-full overflow-y-auto overflow-x-visible px-2'>
+                        className='column w-full overflow-y-auto px-2'>
                         {props.column.cards.map((card, index) => {
                            return (
                               <Card key={card.id} index={index} card={card} />
                            )
                         })}
+                        {droppableProvided.placeholder}
                      </div>
                   }}
                </Droppable>
@@ -151,7 +114,7 @@ function Column(props: Props) {
                         onClick={() => {
                            if (input.length > 0) {
                               props.handleAddCard(props.column.id, {
-                                 id: uniqid(),
+                                 id: uuid(),
                                  text: input,
                                  labels: [],
                                  image: {
