@@ -12,24 +12,41 @@ import { collection, addDoc, getDocs } from '@firebase/firestore'
 import { db } from '@/firebase'
 import { useRouter } from 'next/navigation'
 import WorkspaceModal from '../header/left/WorkspaceModal'
-import { Board, WorkspaceType } from '@/types'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/app/redux/store'
+import { Board, User, WorkspaceType } from '@/types'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {
    workspaces: WorkspaceType[],
-   starredBoards: Board[]
+   starredBoards: Board[],
+   addBoard: Function,
+   changeStar: Function
 }
 
 function Boards(props: Props) {
 
+   const router = useRouter()
    const [tab, setTab] = useState('board')
    const [showModal, setShowModal] = useState({ show: false, type: '' })
    const workspacesCollectionRef = collection(db, "workspaces")
+   const [user, setUser] = useState<User>({
+      id: '123',
+      email: 'viet',
+      password: '',
+      recentBoard: [],
+      auth: ''
+   })
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
 
-   const user = JSON.parse(localStorage.getItem('user') || '')
-
-   console.log(user)
       return (
          <div>
          <div className='z-[-1] flex md:items-start md:justify-center justify-start items-start'>
@@ -85,7 +102,7 @@ function Boards(props: Props) {
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
                            {props.starredBoards.map((board) => {
-                              return <BoardItem key={board.id} board={board} />
+                              return <BoardItem changeStar={props.changeStar} workspace={board.workspaceId} key={board.id} board={board} />
                            })}
                      </div>
                   </div>
@@ -95,9 +112,9 @@ function Boards(props: Props) {
                         <span className='font-bold text-base'>Recent viewed</span>
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                           {/* {user.recentBoard?.map((board) => {
-                              return <BoardItem board={board} key={board.id} />
-                           })} */}
+                           {user.recentBoard?.map((board) => {
+                              return <BoardItem changeStar={props.changeStar} workspace={board.workspaceId} board={board} key={board.id} />
+                           })}
                      </div>
                   </div>
 
@@ -116,9 +133,9 @@ function Boards(props: Props) {
                               </div>
                               <div className='grid grid-cols-12 w-full gap-2 mt-2'>
                                  {workspace?.boards?.map((board) => {
-                                    return <BoardItem board={board} key={board.id} />
+                                    return <BoardItem changeStar={props.changeStar} workspace={workspace.id} board={board} key={board.id} />
                                  })}
-                                 <CreateBoardButton workspaces={props.workspaces} type='' />
+                                 <CreateBoardButton addBoard={props.addBoard} workspaceId={workspace.id} workspaces={props.workspaces} type='' />
                               </div>
                            </div>
                         )

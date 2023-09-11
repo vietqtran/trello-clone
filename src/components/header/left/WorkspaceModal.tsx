@@ -1,11 +1,12 @@
 import Image from 'next/image'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { GrClose } from 'react-icons/gr'
 import { db } from '@/firebase'
 import { collection, addDoc } from '@firebase/firestore'
 import { useRouter } from 'next/navigation'
-import { useAppSelector } from '@/app/redux/store'
+import { User } from '@/types'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {
    setShowModal: Function
@@ -32,14 +33,31 @@ function WorkspaceModal(props: Props) {
    }
    useOnClickOutside(ref, handleClickOutside)
 
-   const workspaceCollectionRef = collection(db, "workspaces")
-   const user = JSON.parse(localStorage.getItem('user') || '')
+   const [user, setUser] = useState<User>({
+      id: '123',
+      email: 'viet',
+      password: '',
+      recentBoard: [],
+      auth: ''
+   })
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
 
    const router = useRouter()
    const [title, setTitle] = useState('')
    const [workspace, setWorkspace] = useState('')
    const [description, setDescription] = useState('')
 
+   const workspaceCollectionRef = collection(db, "workspaces")
    const addWorkspace = async () => {
       await addDoc(workspaceCollectionRef, {
          name: title,
@@ -51,7 +69,6 @@ function WorkspaceModal(props: Props) {
          router.push(`/boards/${dataRef.id}`)
       })
    }
-
 
    return (
       <div className='z-50 p-5 w-full h-full min-h-[100vh] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start justify-center'>

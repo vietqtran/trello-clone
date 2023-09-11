@@ -5,6 +5,7 @@ import { User } from '@/types'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from '@/app/redux/store'
 import { logOut } from '@/app/redux/features/user/userSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {
    headerType: string,
@@ -25,8 +26,13 @@ function Avatar(props: Props) {
    }
    useOnClickOutside(ref, handleClickOutside)
 
+   const removeUser = async () => {
+      await AsyncStorage.removeItem('USER')
+   }
+
    const handleLogOut = () => {
       dispatch(logOut())
+      removeUser()
       router.push('/')
    }
 

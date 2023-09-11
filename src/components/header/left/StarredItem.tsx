@@ -11,7 +11,7 @@ function StarredItem(props: Props) {
    return (
       <div className='p-1 hover:bg-slate-100 rounded-md w-full'>
          <div className='flex items-center justify-start w-full'>
-            <Image src={`/assets/background/bg-${props.board.background.type}/bg${props.board.background.type}.jpg`} alt='image' width={50} height={30} className='rounded-md object-cover mr-2' />
+            <Image src={`/assets/background/bg-${props.board.background.type}/bg${props.board.background.ntn}.jpg`} alt='image' width={50} height={30} className='rounded-md object-cover mr-2' />
             <div className='block w-[70%]'>
                <p className='leading-none font-semibold truncate whitespace-nowrap'>name</p>
                <p className='leading-none truncate whitespace-nowrap'>{props.board.title}</p>

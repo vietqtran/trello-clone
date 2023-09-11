@@ -7,7 +7,9 @@ import { WorkspaceType } from '@/types'
 
 type Props = {
    type: string,
-   workspaces: WorkspaceType[] | undefined
+   workspaces: WorkspaceType[],
+   workspaceId: string,
+   addBoard: Function
 }
 
 function CreateBoardButton(props: Props) {
@@ -39,7 +41,7 @@ function CreateBoardButton(props: Props) {
                   ref={ref}
                   onClick={handleClickInside}
                   className='z-50 relative'>
-               <CreateBoard workspaces={props.workspaces} type={props.type} setShow={setShow} />
+               <CreateBoard addBoard={props.addBoard} workspaceId={props.workspaceId} workspaces={props.workspaces} type={props.type} setShow={setShow} />
             </div>
          }
       </div >

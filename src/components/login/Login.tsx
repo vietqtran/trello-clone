@@ -17,6 +17,7 @@ import { signInWithPopup } from 'firebase/auth'
 import type { AppDispatch, RootState } from '@/app/redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { logIn, logOut } from '@/app/redux/features/user/userSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 var generator = require('generate-password')
 var passwordGenerate = generator.generate({
    length: 8,
@@ -96,7 +97,7 @@ function Login() {
       })
    }
 
-   const handleLogin = () => {
+   const handleLogin = async () => {
       let check = false
       let userLocal = {}
       users.forEach((user) => {
@@ -113,7 +114,7 @@ function Login() {
       if (check === false) {
          setError({ show: true, message: 'This address is not exist!' })
       } else {
-         localStorage.setItem('user', JSON.stringify(userLocal))
+         await AsyncStorage.setItem('USER', JSON.stringify(userLocal));
          router.push('/boards')
       }
    }

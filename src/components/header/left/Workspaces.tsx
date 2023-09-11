@@ -1,7 +1,9 @@
-import React, { memo } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import WorkspaceItem from './WorkspaceItem'
-import { WorkspaceType } from '@/types'
+import { User, WorkspaceType } from '@/types'
+import { useRouter } from 'next/navigation'
+
 
 type Props = {
    headerType: string,
@@ -9,6 +11,8 @@ type Props = {
 }
 
 function Workspaces(props: Props) {
+
+
    return (
       <div>
          <div className={`relative group flex items-center justify-center p-2 text-sm w-fit mx-1 cursor-pointer hover:bg-opacity-20 ${props.headerType === 'board' ? ' hover:bg-white bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0' : 'hover:bg-gray-400'} rounded-sm`}>
@@ -18,7 +22,7 @@ function Workspaces(props: Props) {
                <h1 className='p-2 font-semibold text-gray-600 text-xs relative
                 before:contents[] before:absolute before:w-full before:h-[30px] before:bg-black before:top-[-30px] before:left-[-10px] before:bg-transparent
                '>Your Workspaces</h1>
-               <div>
+               <div className='max-h-[60vh] overflow-y-auto'>
                   {props.workspaces?.map((w) => {
                      return <WorkspaceItem key={w.id} workspace={w} />
                   })}
