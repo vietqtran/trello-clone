@@ -39,21 +39,20 @@ function Column(props: Props) {
             <div
                ref={provided.innerRef}
                {...provided.draggableProps}
-               className='rightboard column-drag-handle relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pr-0 rounded-md min-w-[271px] bg-slate-100'>
+               className='rightboard column-drag-handle relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pb-0 pr-0 rounded-xl min-w-[271px] bg-slate-100'>
                <div
                   data-is-dragging={snapshot.isDragging}
                   {...provided.dragHandleProps}
-                  className='column-drag-handle cursor-pointer relative p-2 flex items-center justify-between w-full'
+                  className='column-drag-handle cursor-pointer relative p-2 pb-0 flex items-center justify-between w-full'
                >
                   <h1
-
                      className='font-semibold pl-2'>{props.column.name}
                   </h1>
             <div
                onClick={() => {
                   setShowActions({ show: true, tab: '' })
                }}
-               className=' p-2 hover:bg-slate-300 rounded-md cursor-pointer'>
+                     className='p-2 pb-0 hover:bg-slate-300 rounded-md cursor-pointer'>
                <BiDotsHorizontalRounded />
             </div>
                   {showActions.show && showActions.tab === '' && <ColumnOptions
@@ -66,6 +65,7 @@ function Column(props: Props) {
                      column={props.column}
                      setShowActions={setShowActions} />}
          </div>
+               <span className='px-4 mb-3 opacity-75 text-sm'>{props.column.cards.length} cards</span>
                <Droppable
                   droppableId={props.column.id}
                   type={'column'}

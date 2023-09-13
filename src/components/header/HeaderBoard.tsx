@@ -12,13 +12,19 @@ import Search from './right/Search'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
-import { Board, User } from '@/types'
+import { Board, User, WorkspaceType } from '@/types'
 import { useRouter } from 'next/navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Header from './Header'
 var uniqid = require('uniqid');
 
-function HeaderBoard() {
+type Props = {
+   workspaces: WorkspaceType[],
+   starredBoards: Board[],
+   addBoard: Function
+}
+
+function HeaderBoard(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
 
@@ -37,7 +43,7 @@ function HeaderBoard() {
          if (data) {
             setUser(JSON.parse(data))
          } else {
-            router.push('/')
+            // router.push('/')
          }
       }
       getUser()
@@ -73,14 +79,14 @@ function HeaderBoard() {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={'board'} />
-                  <Create addBoard={addBoard} workspaces={[]} headerType={'board'} setShowModal={setShowModal} />
+                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces workspaces={[]} headerType={'board'} />
-                  <Recent recentBoards={[]} headerType={'board'} />
-                  <Starred starredBoards={[]} headerType={'board'} />
+                  <Workspaces workspaces={props.workspaces} headerType={'board'} />
+                  <Recent recentBoards={user.recentBoard} headerType={'board'} />
+                  <Starred starredBoards={props.starredBoards} headerType={'board'} />
                   <Templates headerType={'board'} />
-                  <Create addBoard={addBoard} workspaces={[]} headerType={'board'} setShowModal={setShowModal} />
+                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>

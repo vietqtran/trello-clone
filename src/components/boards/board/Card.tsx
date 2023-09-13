@@ -1,9 +1,11 @@
 import Image from 'next/image'
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { HiOutlinePencil } from 'react-icons/hi'
 import CardLabels from './CardLabels'
 import { MdCopyAll, MdDeleteForever, MdEast, MdLabel, MdOutlineVideoLabel } from 'react-icons/md'
 import { Draggable } from 'react-beautiful-dnd'
+import WorkspaceModal from '@/components/header/left/WorkspaceModal'
+import CardModal from './CardModal'
 
 type Props = {
    card: {
@@ -19,7 +21,9 @@ type Props = {
 }
 
 function Card(props: Props) {
+   const [showModal, setShowModal] = useState(false)
    return (
+      <>
       <Draggable draggableId={props.card.id} index={props.index}>
          {(provided, snapshot) => (
             <div
@@ -27,7 +31,7 @@ function Card(props: Props) {
                {...provided.draggableProps}
                data-is-dragging={snapshot.isDragging}
                {...provided.dragHandleProps}
-               className='relative group bg-white hover:bg-slate-100 rounded-md card-shadow my-1 cursor-pointer'>
+                  className='relative group bg-white hover:bg-slate-100 rounded-lg card-shadow my-1 cursor-pointer'>
          {props?.card?.image.ntn !== 0 && props?.card?.image.type !== '' &&
             <div>
                <Image
@@ -44,13 +48,21 @@ function Card(props: Props) {
          }
          <div className='p-2'>
             <p className='text-sm break-words block w-full'>{props.card.text}</p>
-            <span className='absolute hidden group-hover:block right-0 top-0 p-[5px] bg-slate-300 bg-opacity-50 hover:bg-opacity-70 rounded-md m-1'>
+                     <span
+                        onClick={() => {
+                           setShowModal(true)
+                        }}
+                        className='absolute hidden group-hover:block right-0 top-0 p-[5px] bg-slate-300 bg-opacity-50 hover:bg-opacity-70 rounded-md m-1'>
                <HiOutlinePencil />
             </span>
                </div>
             </div>
          )}
       </Draggable>
+         {showModal &&
+            <CardModal card={props.card} setShowModal={setShowModal} />
+         }
+      </>
    )
 }
 

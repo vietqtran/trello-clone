@@ -7,10 +7,13 @@ import { BsCalendarMinus } from 'react-icons/bs'
 import BoardLeftPreviewItem from './BoardLeftPreviewItem'
 import BoardLeftTab from './BoardLeftTab'
 import BoardLeftTabFeature from './BoardLeftTabFeature'
+import { Board, WorkspaceType } from '@/types'
 
 type Props = {
    showSideBar: boolean,
-   setShowSideBar: Function
+   setShowSideBar: Function,
+   board: Board | undefined,
+   workspace: WorkspaceType | undefined,
 }
 
 function BoardLeft(props: Props) {
@@ -26,11 +29,11 @@ function BoardLeft(props: Props) {
                ${props.showSideBar ? 'translate-x-0' : 'translate-x-[-260px]'} ease-in duration-200`}>
                <div className=' flex items-center border-b-[1px] p-2 border-slate-300 justify-between w-full'>
                   <div className='relative p-5 bg-black w-fit rounded-md h-fit'>
-                     <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>V</span>
+                     <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>{props.board?.title?.toUpperCase().charAt(0) ? props.board.title.toUpperCase().charAt(0) : ''}</span>
                   </div>
                   <div>
                      <div className='w-[150px]'>
-                        <p className='truncate whitespace-normal w-full block font-semibold text-sm'> qljhdaddaddasdasdassjkdaskhasdhashah ahdhajashdjahdjklahasjlhasjlhdasljdhlj</p>
+                        <p className='truncate whitespace-normal w-full block font-semibold text-sm'>{props.board?.title ? props.board.title : ''}</p>
                      </div>
                      <span className='text-sm'>
                         Free
@@ -61,26 +64,9 @@ function BoardLeft(props: Props) {
                   <BoardLeftTab currentTab={tab} tab='Calendar' > <BsCalendarMinus /></BoardLeftTab>
                   <h1 className='text-white font-semibold text-sm px-2 my-2'>Your boards</h1>
                   <div className='overflow-y-auto max-h-[40vh]'>
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
-                     <BoardLeftPreviewItem />
+                     {props.workspace?.boards?.map((board) => {
+                        return <BoardLeftPreviewItem workspace={props.workspace} key={board.id} board={board} />
+                     })}
                   </div>
                </div>
             </div>

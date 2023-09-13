@@ -7,18 +7,20 @@ import { BiGroup, BiDotsHorizontalRounded, BiRocket } from 'react-icons/bi'
 import { useOnClickOutside } from 'usehooks-ts'
 import BoardRightHeaderFeature from './BoardRightHeaderFeature'
 import BoardRightHeaderFeatureButton from './BoardRightHeaderFeatureButton'
+import { Board } from '@/types'
 
-const defaultName = 'name'
+type Props = {
+   board: Board | undefined
+}
 
-function BoardRightHeader() {
-
+function BoardRightHeader(props: Props) {
    const [showInput, setShowInput] = useState(false)
-   const [name, setName] = useState('name')
-
+   const [name, setName] = useState(props.board?.title)
    const ref = useRef(null)
+
    const handleClickOutside = () => {
       if (name === '') {
-         setName(defaultName)
+         setName(props.board?.title)
       }
       setShowInput(false)
    }

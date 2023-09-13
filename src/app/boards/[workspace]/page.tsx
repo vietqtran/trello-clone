@@ -6,21 +6,43 @@ import { usePathname, useRouter } from "next/navigation";
 import { db } from '@/firebase'
 import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
 import { useEffect, useState } from 'react'
-import { Board, WorkspaceType } from "@/types";
+import { Board, User, WorkspaceType } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 var uniqid = require('uniqid');
 
 export default function WorkspacePage() {
 
   const id = usePathname().split('/').at(-1)
+  console.log(id)
   const workspaceCollectionRef = collection(db, "workspaces")
   const [starredBoards, setStarredBoards] = useState<Board[]>([])
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
-  const user = JSON.parse(localStorage.getItem('user') || '')
+  const [user, setUser] = useState<User>({
+    id: '123',
+    email: 'viet',
+    password: '',
+    recentBoard: [],
+    auth: ''
+  })
   const router = useRouter()
 
   useEffect(() => {
+    const getUser = async () => {
+      const data = await AsyncStorage.getItem('USER')
+      if (data) {
+        setUser(JSON.parse(data))
+      } else {
+        router.push('/')
+      }
+    }
+    getUser()
+  }, [])
+  useEffect(() => {
     getWorkspaces()
     console.log(workspaces)
+  }, [])
+  useEffect(() => {
+    getStarredBoards()
   }, [])
 
   const getWorkspaces = async () => {
@@ -38,6 +60,7 @@ export default function WorkspacePage() {
           })
         }
       })
+      console.log(newWorkspaces)
       setWorkspaces(newWorkspaces)
     }).catch((err) => { })
   }
@@ -60,7 +83,7 @@ export default function WorkspacePage() {
       boards: boardsUpdate,
       ...workspaceUpdate,
     })
-    // router.push(`/boards/${workspace}/${boardCreate.id}`)
+    router.push(`/boards/${workspace}/${boardCreate.id}`)
   }
 
   const getStarredBoards = async () => {
@@ -85,12 +108,23 @@ export default function WorkspacePage() {
       setStarredBoards(newStarredBoards)
     }).catch((err) => { })
   }
-  const workspace = workspaces?.find((w) => w.id == id)
 
-  return (
+  const getWorkspace = () => {
+    const workspace = workspaces?.find((w) => w.id === id)
+    console.log(workspace)
+    if (!workspace) {
+      // router.push('/boards')
+    } else {
+      return workspace
+    }
+  }
+  console.log(user)
+  console.log(workspaces)
+  console.log(starredBoards)
+  return (  
     <div>
       <Header addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
-      <Workspace workspaces={workspaces} workspace={workspace} />
+      <Workspace workspaces={workspaces} workspace={getWorkspace()} />
     </div>
   )
 }

@@ -2,15 +2,15 @@ import React, { memo, useState } from 'react'
 import BoardRightHeader from './BoardRightHeader'
 import Column from './Column'
 import AddAnotherListButton from './AddAnotherListButton'
-import { CardType, ColumnType } from '@/types'
+import { Board, CardType, ColumnType } from '@/types'
 import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
 
 type Props = {
-   showSideBar: boolean
+   showSideBar: boolean,
+   board: Board | undefined
 }
 
 function BoardRight(props: Props) {
-
 
    const [columns, setColumns] = useState<ColumnType[]>([])
 
@@ -99,7 +99,7 @@ function BoardRight(props: Props) {
 
    return (
       <div className='h-full w-full z-10'>
-         <BoardRightHeader />
+         <BoardRightHeader board={props.board} />
          <DragDropContext
             onDragEnd={(result) => {
                reorder(result)

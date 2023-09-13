@@ -29,7 +29,7 @@ export default function BoardsPage() {
       if (data) {
         setUser(JSON.parse(data))
       } else {
-        router.push('/')
+        // router.push('/')
       }
     }
     getUser()
@@ -77,7 +77,7 @@ export default function BoardsPage() {
       boards: boardsUpdate,
       ...workspaceUpdate,
     })
-    // router.push(`/boards/${workspace}/${boardCreate.id}`)
+    router.push(`/boards/${workspace}/${boardCreate.id}`)
   }
 
   const changeStar = async (boardId: string, workspaceId: string) => {
