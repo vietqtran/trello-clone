@@ -57,7 +57,7 @@ export default function BoardsPage() {
       }).catch((err) => { })
     }
     getWorkspaces()
-  }, [workspaceCollectionRef])
+  }, [])
 
   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
     const boardCreate: Board = {
@@ -127,7 +127,6 @@ export default function BoardsPage() {
     }
     getStarredBoards()
   }, [])
-
 
   return (
     <div>

@@ -21,7 +21,8 @@ var uniqid = require('uniqid');
 type Props = {
    workspaces: WorkspaceType[],
    starredBoards: Board[],
-   addBoard: Function
+   addBoard: Function,
+   board: Board | undefined
 }
 
 function HeaderBoard(props: Props) {

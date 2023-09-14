@@ -6,35 +6,37 @@ import { useRouter } from 'next/navigation'
 
 type Props = {
    boardId: string,
-   workspace: WorkspaceType | undefined
+   workspaces: WorkspaceType[] | undefined,
+   board: Board | undefined
 }
 
 function BoardContent(props: Props) {
+   const [workspace, setWorkspace] = useState<WorkspaceType>()
 
-   const id = props.boardId.split('/').at(-1)
+   const workspaceId = props.boardId.split('/').at(-2)
    const [showSideBar, setShowSideBar] = useState(true)
-   const [board, setBoard] = useState<Board>()
    const router = useRouter()
 
+
    useEffect(() => {
-      const getBoard = () => {
-         const newBoard = props.workspace?.boards?.find((b) => {
-            return b.id === id
+      const getWorkspace = () => {
+         props.workspaces?.forEach((w) => {
+            if (w.id === workspaceId) {
+               setWorkspace(w)
+               return
+            }
          })
-         if (!newBoard) {
-            // router.push("/boards") 
-         }
-         setBoard(newBoard)
       }
-      getBoard()
-   })   
+      getWorkspace()
+   })
+   console.log(workspace)
    return (
       <div className={`flex min-w-full max-w-full max-h-full min-h-full`}>
-         <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)]'>
-            <BoardLeft workspace={props.workspace} board={board} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+         <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)] bg-transparent text-inherit bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
+            <BoardLeft workspace={workspace} board={props.board} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
          </div>
          <div className='flex-1 h-[calc(100vh-55px)]'>
-            <BoardRight board={board} showSideBar={showSideBar} />
+            <BoardRight board={props.board} showSideBar={showSideBar} />
          </div>
       </div>
    )

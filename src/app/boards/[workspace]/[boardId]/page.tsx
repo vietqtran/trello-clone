@@ -7,6 +7,7 @@ import { db } from '@/firebase'
 import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Board, User, WorkspaceType } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 var uniqid = require('uniqid');
 
 export default function BoardDetailPage() {
@@ -15,25 +16,24 @@ export default function BoardDetailPage() {
   const workspaceCollectionRef = collection(db, "workspaces")
   const [starredBoards, setStarredBoards] = useState<Board[]>([])
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
+  const [board, setBoard] = useState<Board>()
   const router = useRouter()
-  const [user, setUser] = useState<User>({
-    id: '123',
-    email: 'viet',
-    password: '',
-    recentBoard: [],
-    auth: ''
-  })
 
   useEffect(() => {
     getWorkspaces()
     console.log(workspaces)
   }, [])
+  useEffect(() => {
+    getStarredBoards()
+  }, [])
 
   const getWorkspaces = async () => {
+    const data = await AsyncStorage.getItem('USER')
+    const userId = JSON.parse(data || '').id
     await getDocs(workspaceCollectionRef).then((dataRef) => {
       const newWorkspaces: WorkspaceType[] = []
       dataRef.docs.forEach((doc) => {
-        if (doc.data().userId === user.id) {
+        if (doc.data().userId === userId) {
           newWorkspaces.push({
             id: doc.id,
             userId: String(doc.data().userId),
@@ -47,6 +47,57 @@ export default function BoardDetailPage() {
       setWorkspaces(newWorkspaces)
     }).catch((err) => { })
   }
+
+  const getStarredBoards = async () => {
+    const data = await AsyncStorage.getItem('USER')
+    const userId = JSON.parse(data || '').id
+    await getDocs(workspaceCollectionRef).then((dataRef) => {
+      const newStarredBoards: Board[] = []
+      dataRef.docs.forEach((doc) => {
+        if (doc.data().userId === userId) {
+          doc.data().boards?.forEach((board: Board) => {
+            if (board.star) {
+              newStarredBoards.push({
+                id: board.id,
+                workspaceId: board.workspaceId,
+                title: board.title,
+                columns: [...board.columns],
+                star: board.star,
+                background: { ...board.background }
+              })
+            }
+          })
+        }
+      })
+      setStarredBoards(newStarredBoards)
+    }).catch((err) => { })
+  }
+  useEffect(() => {
+    const getBoard = async () => {
+      const data = await AsyncStorage.getItem('USER')
+      const userId = JSON.parse(data || '').id
+      await getDocs(workspaceCollectionRef).then((dataRef) => {
+        dataRef.docs.forEach((doc) => {
+          if (doc.data().userId === userId) {
+            doc.data().boards?.forEach((board: Board) => {
+              if (board.id === id) {
+                setBoard({
+                  id: board.id,
+                  workspaceId: board.workspaceId,
+                  title: board.title,
+                  columns: [...board.columns],
+                  star: board.star,
+                  background: { ...board.background }
+                })
+                return
+              }
+            })
+          }
+        })
+      }).catch((err) => { })
+    }
+    getBoard()
+  }, [])   
 
   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
     const boardCreate: Board = {
@@ -69,14 +120,10 @@ export default function BoardDetailPage() {
     router.push(`/boards/${workspace}/${boardCreate.id}`)
   }
 
-  const workspace = workspaces?.find((w) => w.id == id)
-  if (!workspace) {
-    // router.push('/boards')
-  }
   return (
-      <div className={`max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh] bg-[url('/assets/background/bg-image/bg3.jpg')] bg-center bg-cover`}>
-      <HeaderBoard addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
-      <BoardContent workspace={workspace} boardId={pathName} />
+    <div className={`max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh] bg-[url('/assets/background/bg-image/bg5.jpg')] bg-center bg-cover`}>
+      <HeaderBoard board={board} addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
+      <BoardContent board={board} workspaces={workspaces} boardId={pathName} />
     </div>
   )
 }

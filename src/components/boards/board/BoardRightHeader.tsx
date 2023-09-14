@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { AiOutlineStar, AiOutlineUsergroupAdd, AiFillThunderbolt } from 'react-icons/ai'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { LuTrello } from 'react-icons/lu'
@@ -14,14 +14,12 @@ type Props = {
 }
 
 function BoardRightHeader(props: Props) {
-   const [showInput, setShowInput] = useState(false)
-   const [name, setName] = useState(props.board?.title)
-   const ref = useRef(null)
 
+   const [showInput, setShowInput] = useState(false)
+   const [name, setName] = useState('')
+   const ref = useRef(null)
    const handleClickOutside = () => {
-      if (name === '') {
-         setName(props.board?.title)
-      }
+      console.log(name)
       setShowInput(false)
    }
    const handleClickInside = () => {
@@ -29,18 +27,17 @@ function BoardRightHeader(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    return (
-      <div className='w-full px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
+      <div className='z-40 w-full px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
          <div className='flex items-center justify-start'>
             <div>
                {showInput && <input
-                  value={name}
+                  defaultValue={props.board?.title}
                   onChange={(e) => {
                      setName(e.target.value)
                   }}
                   ref={ref}
                   onClick={handleClickInside}
                   id='input'
-                  defaultValue={'name'}
                   className=' text-white bg-transparent outline-none px-1 text-xl font-bold focus:bg-white 
                      focus:text-black w-fit block rounded-sm focus:border-[3px] focus:border-blue-500 leading-none
                      border-[3px] border-transparent '
@@ -53,7 +50,7 @@ function BoardRightHeader(props: Props) {
                      onClick={() => {
                         setShowInput(!showInput)
                      }}
-                     className='cursor-pointer truncate max-w-[250px] text-white font-bold text-xl px-1 border-[3px] border-transparent'>{name}
+                     className='cursor-pointer truncate max-w-[250px] text-white font-bold text-xl px-1 border-[3px] border-transparent'>{props.board?.title}
                   </h1>}
             </div>
             <BoardRightHeaderFeature >

@@ -17,26 +17,8 @@ export default function WorkspacePage() {
   const workspaceCollectionRef = collection(db, "workspaces")
   const [starredBoards, setStarredBoards] = useState<Board[]>([])
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
-  const [user, setUser] = useState<User>({
-    id: '123',
-    email: 'viet',
-    password: '',
-    recentBoard: [],
-    auth: ''
-  })
   const router = useRouter()
 
-  useEffect(() => {
-    const getUser = async () => {
-      const data = await AsyncStorage.getItem('USER')
-      if (data) {
-        setUser(JSON.parse(data))
-      } else {
-        router.push('/')
-      }
-    }
-    getUser()
-  }, [])
   useEffect(() => {
     getWorkspaces()
     console.log(workspaces)
@@ -46,10 +28,12 @@ export default function WorkspacePage() {
   }, [])
 
   const getWorkspaces = async () => {
+    const data = await AsyncStorage.getItem('USER')
+    const userId = JSON.parse(data || '').id
     await getDocs(workspaceCollectionRef).then((dataRef) => {
       const newWorkspaces: WorkspaceType[] = []
       dataRef.docs.forEach((doc) => {
-        if (doc.data().userId === user.id) {
+        if (doc.data().userId === userId) {
           newWorkspaces.push({
             id: doc.id,
             userId: String(doc.data().userId),
@@ -87,10 +71,12 @@ export default function WorkspacePage() {
   }
 
   const getStarredBoards = async () => {
+    const data = await AsyncStorage.getItem('USER')
+    const userId = JSON.parse(data || '').id
     await getDocs(workspaceCollectionRef).then((dataRef) => {
       const newStarredBoards: Board[] = []
       dataRef.docs.forEach((doc) => {
-        if (doc.data().userId === user.id) {
+        if (doc.data().userId === userId) {
           doc.data().boards?.forEach((board: Board) => {
             if (board.star) {
               newStarredBoards.push({
@@ -118,7 +104,6 @@ export default function WorkspacePage() {
       return workspace
     }
   }
-  console.log(user)
   console.log(workspaces)
   console.log(starredBoards)
   return (  

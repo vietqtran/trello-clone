@@ -76,7 +76,7 @@ function WorkspaceContent(props: Props) {
                <div className='absolute top-[50%] px-2 translate-y-[-50%] left-0'><FiSearch /></div>
             </div>
          </div>
-         <div className='w-full grid grid-cols-12 gap-5'>
+         <div className='w-full grid grid-cols-12 gap-3'>
             <div className='relative cursor-pointer group bg-slate-100 bg-cover rounded-sm lg:col-span-3 md:col-span-4 col-span-6 w-full min-h-[100px]'>
                <div className='absolute top-0 left-0 w-full'>
                   <CreateBoardButton addBoard={addBoard} workspaceId={props.workspace?.id || ''} workspaces={props.workspaces} type='button' />
