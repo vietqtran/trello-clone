@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 import { MdOutlineKeyboardArrowDown } from 'react-icons/md'
 import CreateBoardButton from '../CreateBoardButton'
@@ -13,6 +13,7 @@ type Props = {
    workspaces: WorkspaceType[] | undefined,
 }
 function WorkspaceContent(props: Props) {
+   const [search, setSearch] = useState('')
 
    const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
       const boardCreate: Board = {
@@ -72,7 +73,12 @@ function WorkspaceContent(props: Props) {
                <span className='text-xs font-bold'>Search</span>
             </div>
             <div className='relative hover:bg-slate-50 border-2 flex items-center w-fit'>
-               <input type="text" className='pl-7 text-sm bg-transparent outline-none   h-[32px] w-[250px]' placeholder='Search boards' />
+               <input type="text" className='pl-7 text-sm bg-transparent outline-none h-[32px] w-[250px]'
+                  value={search}
+                  onChange={(e) => {
+                     setSearch(e.target.value)
+                  }}
+                  placeholder='Search boards' />
                <div className='absolute top-[50%] px-2 translate-y-[-50%] left-0'><FiSearch /></div>
             </div>
          </div>
@@ -83,7 +89,10 @@ function WorkspaceContent(props: Props) {
                </div>
             </div>
             {props.workspace?.boards?.map((board) => {
-               return <BoardItem changeStar={changeStar} workspace={props.workspace?.id} key={board.id} board={board} />
+               if (board.title.includes(search)) {
+                  return <BoardItem changeStar={changeStar} workspace={props.workspace?.id} key={board.id} board={board} />
+               }
+               return null
             })}
          </div>
       </div>

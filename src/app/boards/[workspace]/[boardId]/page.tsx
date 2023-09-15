@@ -8,6 +8,7 @@ import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore
 import { useEffect, useState } from 'react'
 import { Board, User, WorkspaceType } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Image from "next/image";
 var uniqid = require('uniqid');
 
 export default function BoardDetailPage() {
@@ -87,7 +88,10 @@ export default function BoardDetailPage() {
                   title: board.title,
                   columns: [...board.columns],
                   star: board.star,
-                  background: { ...board.background }
+                  background: {
+                    type: board.background.type,
+                    ntn: board.background.ntn
+                  }
                 })
                 return
               }
@@ -121,7 +125,10 @@ export default function BoardDetailPage() {
   }
 
   return (
-    <div className={`max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh] bg-[url('/assets/background/bg-image/bg5.jpg')] bg-center bg-cover`}>
+    <div className={`relative max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh]`}>
+      <div className="w-full h-full absolute top-0 left-0 bottom-0 right-0 bg-black z-[-1]">
+        <Image width={2000} height={2000} src={`/assets/background/bg-${board?.background.type}/bg${board?.background.ntn}.jpg`} alt="bg" className="w-full h-full object-cover" />
+      </div>
       <HeaderBoard board={board} addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
       <BoardContent board={board} workspaces={workspaces} boardId={pathName} />
     </div>
