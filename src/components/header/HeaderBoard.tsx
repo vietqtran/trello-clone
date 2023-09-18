@@ -6,7 +6,6 @@ import React, { useState, useEffect } from 'react'
 import Workspaces from './left/Workspaces'
 import Recent from './left/Recent'
 import Starred from './left/Starred'
-import Templates from './left/Templates'
 import Create from './left/Create'
 import Search from './right/Search'
 import Avatar from './right/Avatar'
@@ -15,23 +14,21 @@ import WorkspaceModal from './left/WorkspaceModal'
 import { Board, User, WorkspaceType } from '@/types'
 import { useRouter } from 'next/navigation'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Header from './Header'
-var uniqid = require('uniqid');
-
+import { collection, getDocs, addDoc, doc } from '@firebase/firestore'
+import { auth, db, googleProvider } from '@/firebase'
 type Props = {
    workspaces: WorkspaceType[],
    starredBoards: Board[],
    addBoard: Function,
-   board: Board | undefined
 }
 
 function HeaderBoard(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-
+   const userCollectionRef = collection(db, "users")
    const [user, setUser] = useState<User>({
-      id: '123',
-      email: 'viet',
+      id: '',
+      email: '',
       password: '',
       recentBoard: [],
       auth: ''
@@ -39,33 +36,50 @@ function HeaderBoard(props: Props) {
    const router = useRouter()
 
    useEffect(() => {
+      const getRecentBoards = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         const userId = JSON.parse(data || '').id
+         await getDocs(userCollectionRef).then((dataRef) => {
+            dataRef.docs.forEach((doc) => {
+               if (doc.id === userId) {
+                  const newUser: User = {
+                     id: doc.id,
+                     email: doc.data().email,
+                     password: doc.data().password,
+                     recentBoard: [...doc.data().recentBoard],
+                     auth: doc.data().auth
+                  }
+                  setUser(newUser)
+                  return
+               }
+            })
+         }).catch((err) => { })
+      }
+   }, [])
+
+   useEffect(() => {
       const getUser = async () => {
          const data = await AsyncStorage.getItem('USER')
-         if (data) {
-            setUser(JSON.parse(data))
-         } else {
-            // router.push('/')
-         }
+         const userId = JSON.parse(data || '').id
+         await getDocs(userCollectionRef).then((dataRef) => {
+            dataRef.docs.forEach((doc) => {
+               if (doc.id === userId) {
+                  const newUser: User = {
+                     id: doc.id,
+                     email: doc.data().email,
+                     password: doc.data().password,
+                     recentBoard: [...doc.data().recentBoard],
+                     auth: doc.data().auth
+                  }
+                  console.log(newUser)
+                  setUser(newUser)
+                  return
+               }
+            })
+         }).catch((err) => { })
       }
       getUser()
    }, [])
-
-   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
-      const boardCreate: Board = {
-         id: uniqid(),
-         background: { ...selectBg },
-         columns: [],
-         star: false,
-         title: title,
-         workspaceId: workspace
-      }
-      return (
-         <main>
-            <Header addBoard={addBoard} starredBoards={[]} workspaces={[]} />
-            <Search headerType='' />
-         </main>
-      )
-   }
 
    return (
       <div className='z-30 w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
@@ -86,7 +100,6 @@ function HeaderBoard(props: Props) {
                   <Workspaces workspaces={props.workspaces} headerType={'board'} />
                   <Recent recentBoards={user.recentBoard} headerType={'board'} />
                   <Starred starredBoards={props.starredBoards} headerType={'board'} />
-                  <Templates headerType={'board'} />
                   <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>

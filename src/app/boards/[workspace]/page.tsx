@@ -15,7 +15,6 @@ export default function WorkspacePage() {
   const id = usePathname().split('/').at(-1)
   console.log(id)
   const workspaceCollectionRef = collection(db, "workspaces")
-  const [starredBoards, setStarredBoards] = useState<Board[]>([])
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
   const router = useRouter()
 
@@ -44,10 +43,10 @@ export default function WorkspacePage() {
           })
         }
       })
-      console.log(newWorkspaces)
       setWorkspaces(newWorkspaces)
     }).catch((err) => { })
   }
+  getWorkspaces()
 
   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
     const boardCreate: Board = {
@@ -67,49 +66,58 @@ export default function WorkspacePage() {
       boards: boardsUpdate,
       ...workspaceUpdate,
     })
+    getWorkspaces()
     router.push(`/boards/${workspace}/${boardCreate.id}`)
   }
 
-  const getStarredBoards = async () => {
-    const data = await AsyncStorage.getItem('USER')
-    const userId = JSON.parse(data || '').id
-    await getDocs(workspaceCollectionRef).then((dataRef) => {
-      const newStarredBoards: Board[] = []
-      dataRef.docs.forEach((doc) => {
-        if (doc.data().userId === userId) {
-          doc.data().boards?.forEach((board: Board) => {
-            if (board.star) {
-              newStarredBoards.push({
-                id: board.id,
-                workspaceId: board.workspaceId,
-                title: board.title,
-                columns: [...board.columns],
-                star: board.star,
-                background: { ...board.background }
-              })
-            }
+  const getStarredBoards = () => {
+    const newStarredBoards: Board[] = []
+    workspaces.forEach((w) => {
+      w.boards?.forEach((board: Board) => {
+        if (board.star) {
+          newStarredBoards.push({
+            id: board.id,
+            workspaceId: board.workspaceId,
+            title: board.title,
+            columns: [...board.columns],
+            star: board.star,
+            background: { ...board.background }
           })
         }
       })
-      setStarredBoards(newStarredBoards)
-    }).catch((err) => { })
+    })
+    return newStarredBoards
   }
 
   const getWorkspace = () => {
     const workspace = workspaces?.find((w) => w.id === id)
     console.log(workspace)
-    if (!workspace) {
-      // router.push('/boards')
-    } else {
-      return workspace
-    }
+    return workspace
   }
-  console.log(workspaces)
-  console.log(starredBoards)
-  return (  
+
+  const changeStar = async (boardId: string, workspaceId: string) => {
+    const workspaceUpdate = workspaces?.find((w) => {
+      return w.id === workspaceId
+    })
+    const boardsUpdate: Board[] = []
+    workspaceUpdate?.boards?.forEach((board) => {
+      if (board.id === boardId) {
+        boardsUpdate.push({ ...board, star: !board.star })
+      } else {
+        boardsUpdate.push(board)
+      }
+    })
+    await updateDoc(doc(db, 'workspaces', workspaceId), {
+      ...workspaceUpdate,
+      boards: boardsUpdate,
+    })
+    getWorkspaces()
+  }
+
+  return (
     <div>
-      <Header addBoard={addBoard} starredBoards={starredBoards} workspaces={workspaces} />
-      <Workspace workspaces={workspaces} workspace={getWorkspace()} />
+      <Header addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />
+      <Workspace addBoard={addBoard} changeStar={changeStar} workspaces={workspaces} workspace={getWorkspace()} />
     </div>
   )
 }

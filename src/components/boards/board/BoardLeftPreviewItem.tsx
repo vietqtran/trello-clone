@@ -6,17 +6,18 @@ import { AiOutlineStar } from 'react-icons/ai'
 
 type Props = {
    board: Board | undefined,
-   workspace: WorkspaceType | undefined
 }
 
 function BoardLeftPreviewItem(props: Props) {
 
    const router = useRouter()
    const handleClick = () => {
-      router.push(`/boards/${props.workspace?.id}/${props.board?.id}`)
+      router.push(`/boards/${props.board?.workspaceId}/${props.board?.id}`)
    }
    return (
-      <div className='relative group px-2 flex items-center justify-between w-full text-sm py-[6px] bg-slate-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-20 rounded-sm cursor-pointer'>
+      <div
+         onClick={handleClick}
+         className='relative group px-2 flex items-center justify-between w-full text-sm py-[6px] bg-slate-500 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-20 rounded-sm cursor-pointer'>
          <div className='flex-1 flex items-center justify-start'>
             <Image src={`/assets/background/bg-${props.board?.background.type}/bg${props.board?.background.ntn}.jpg`}
                width={30}

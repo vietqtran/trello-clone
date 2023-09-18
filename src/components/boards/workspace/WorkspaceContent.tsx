@@ -6,45 +6,17 @@ import BoardItem from '../BoardItem'
 import { Board, WorkspaceType } from '@/types'
 import { db } from '@/firebase'
 import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
+import { useRouter } from 'next/navigation'
 var uniqid = require('uniqid');
 
 type Props = {
    workspace: WorkspaceType | undefined,
    workspaces: WorkspaceType[] | undefined,
+   addBoard: Function,
+   changeStar: Function
 }
 function WorkspaceContent(props: Props) {
    const [search, setSearch] = useState('')
-
-   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
-      const boardCreate: Board = {
-         id: uniqid(),
-         background: { ...selectBg },
-         columns: [],
-         star: false,
-         title: title,
-         workspaceId: workspace
-      }
-   }
-
-   const changeStar = async (boardId: string, workspaceId: string) => {
-      const workspaceUpdate = props.workspaces?.find((w) => {
-         return w.id === workspaceId
-      })
-      const boardsUpdate: Board[] = []
-      workspaceUpdate?.boards?.forEach((board) => {
-         if (board.id === boardId) {
-            boardsUpdate.push({ ...board, star: true })
-         } else {
-            boardsUpdate.push(board)
-         }
-      })
-      await updateDoc(doc(db, 'workspaces', workspaceId), {
-         boards: boardsUpdate,
-         ...workspaceUpdate,
-      })
-      console.log('oke')
-      console.log(boardId, workspaceId)
-   }
 
    return (
       <div className='w-full mx-auto mb-10'>
@@ -85,12 +57,12 @@ function WorkspaceContent(props: Props) {
          <div className='w-full grid grid-cols-12 gap-3'>
             <div className='relative cursor-pointer group bg-slate-100 bg-cover rounded-sm lg:col-span-3 md:col-span-4 col-span-6 w-full min-h-[100px]'>
                <div className='absolute top-0 left-0 w-full'>
-                  <CreateBoardButton addBoard={addBoard} workspaceId={props.workspace?.id || ''} workspaces={props.workspaces} type='button' />
+                  <CreateBoardButton addBoard={props.addBoard} workspaceId={props.workspace?.id || ''} workspaces={props.workspaces} type='button' />
                </div>
             </div>
             {props.workspace?.boards?.map((board) => {
                if (board.title.includes(search)) {
-                  return <BoardItem changeStar={changeStar} workspace={props.workspace?.id} key={board.id} board={board} />
+                  return <BoardItem changeStar={props.changeStar} workspace={props.workspace?.id} key={board.id} board={board} />
                }
                return null
             })}

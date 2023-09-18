@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { AiOutlineStar, AiOutlineUsergroupAdd, AiFillThunderbolt } from 'react-icons/ai'
+import { AiOutlineStar, AiOutlineUsergroupAdd, AiFillThunderbolt, AiFillStar } from 'react-icons/ai'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 import { LuTrello } from 'react-icons/lu'
 import { BsFilter } from 'react-icons/bs'
@@ -8,30 +8,38 @@ import { useOnClickOutside } from 'usehooks-ts'
 import BoardRightHeaderFeature from './BoardRightHeaderFeature'
 import BoardRightHeaderFeatureButton from './BoardRightHeaderFeatureButton'
 import { Board } from '@/types'
+import { usePathname } from 'next/navigation'
 
 type Props = {
-   board: Board | undefined
+   board: Board | undefined,
+   starBoard: Function,
+   renameBoard: Function
 }
 
 function BoardRightHeader(props: Props) {
 
+   const pathName = usePathname()
+   const workspaceId = pathName.split('/').at(-2)
    const [showInput, setShowInput] = useState(false)
    const [name, setName] = useState('')
    const ref = useRef(null)
+   useEffect(() => {
+      setName(props.board?.title || '')
+   }, [])
+
    const handleClickOutside = () => {
-      console.log(name)
       setShowInput(false)
+      props.renameBoard(name)
    }
    const handleClickInside = () => {
    }
    useOnClickOutside(ref, handleClickOutside)
-
    return (
       <div className='z-40 w-full px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
          <div className='flex items-center justify-start'>
             <div>
                {showInput && <input
-                  defaultValue={props.board?.title}
+                  value={name}
                   onChange={(e) => {
                      setName(e.target.value)
                   }}
@@ -53,9 +61,20 @@ function BoardRightHeader(props: Props) {
                      className='cursor-pointer truncate max-w-[250px] text-white font-bold text-xl px-1 border-[3px] border-transparent'>{props.board?.title}
                   </h1>}
             </div>
-            <BoardRightHeaderFeature >
-               <AiOutlineStar />
-            </BoardRightHeaderFeature>
+            <div onClick={() => {
+               props.starBoard(props.board?.id, workspaceId)
+            }}
+               className='text-yellow-400'
+            >
+               {!props.board?.star ?
+                  (<BoardRightHeaderFeature >
+                     <AiOutlineStar />
+                  </BoardRightHeaderFeature>) :
+                  (<BoardRightHeaderFeature >
+                     <AiFillStar />
+                  </BoardRightHeaderFeature>)
+               }
+            </div>
             <BoardRightHeaderFeature >
                <BiGroup />
             </BoardRightHeaderFeature>

@@ -7,7 +7,9 @@ import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
 
 type Props = {
    showSideBar: boolean,
-   board: Board | undefined
+   board: Board | undefined,
+   starBoard: Function,
+   renameBoard: Function
 }
 
 function BoardRight(props: Props) {
@@ -99,7 +101,7 @@ function BoardRight(props: Props) {
 
    return (
       <div className='h-full w-full z-10'>
-         <BoardRightHeader board={props.board} />
+         <BoardRightHeader renameBoard={props.renameBoard} starBoard={props.starBoard} board={props.board} />
          <DragDropContext
             onDragEnd={(result) => {
                reorder(result)

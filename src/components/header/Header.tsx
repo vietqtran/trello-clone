@@ -20,7 +20,7 @@ import { db } from '@/firebase'
 type Props = {
    workspaces: WorkspaceType[],
    starredBoards: Board[],
-   addBoard: Function
+   addBoard: Function,
 }
 
 function Header(props: Props) {

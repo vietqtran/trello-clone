@@ -64,7 +64,7 @@ function BoardLeft(props: Props) {
                   <h1 className='text-white font-semibold text-sm px-2 my-2'>Your boards</h1>
                   <div className='overflow-y-auto max-h-[40vh]'>
                      {props.workspace?.boards?.map((board) => {
-                        return <BoardLeftPreviewItem workspace={props.workspace} key={board.id} board={board} />
+                        return <BoardLeftPreviewItem key={board.id} board={board} />
                      })}
                   </div>
                </div>

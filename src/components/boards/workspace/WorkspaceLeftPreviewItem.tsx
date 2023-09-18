@@ -1,10 +1,12 @@
 import { Board, WorkspaceType } from '@/types'
 import Image from 'next/image'
 import React from 'react'
-import { AiOutlineStar } from 'react-icons/ai'
+import { AiFillStar, AiOutlineStar } from 'react-icons/ai'
 
 type Props = {
-   board: Board | undefined
+   board: Board | undefined,
+   changeStar: Function,
+   workspace: string|undefined
 }
 
 function WorkspaceLeftPreviewItem(props: Props) {
@@ -20,9 +22,21 @@ function WorkspaceLeftPreviewItem(props: Props) {
             <p className='block truncate max-w-[170px]'>{props.board?.title}</p>
          </div>
          <div className='absolute right-[4px] w-fit items-center justify-center hidden group-hover:flex'>
-            <div className='p-1 bg-slate-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-40 rounded-sm cursor-pointer'>\
+            {props.board?.star?
+            (<div
+               onClick={()=>{
+                  props.changeStar(props.board?.id, props.workspace)
+               }}
+            className='text-yellow-600 p-1 bg-slate-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-40 rounded-sm cursor-pointer'>
                <AiOutlineStar />
-            </div>
+            </div>):(<div
+               onClick={()=>{
+                  props.changeStar(props.board?.id, props.workspace)
+               }}
+            className='text-yellow-600 p-1 bg-slate-400 bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-40 rounded-sm cursor-pointer'>
+               <AiFillStar />
+            </div>)   
+         }
          </div>
       </div>
    )

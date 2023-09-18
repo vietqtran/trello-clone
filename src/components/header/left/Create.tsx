@@ -7,10 +7,10 @@ import { FaTrello } from 'react-icons/fa'
 import { FiTrello } from 'react-icons/fi'
 import { BsPeople } from 'react-icons/bs'
 import CreateBoard from './CreateBoard'
-import CreateTemplate from './CreateTemplate'
 import { useRef } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { WorkspaceType } from '@/types'
+import CreateTemplate from './CreateTemplate'
 
 type Props = {
    setShowModal: Function,

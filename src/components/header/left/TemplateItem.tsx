@@ -8,7 +8,7 @@ function TemplateItem() {
          <div className='flex items-center justify-start w-full'>
             <Image src={'/assets/background/bg-image/bg1.jpg'} alt='image' width={50} height={30} className='rounded-md object-cover mr-2' />
             <div className='block w-[80%]'>
-               <p className='leading-none font-semibold truncate whitespace-nowrap'>namedsa sdsfafs dssdfafaaddaaafffafafafaaffaaf</p>
+               <p className='leading-none font-semibold truncate whitespace-nowrap'>Template name</p>
             </div>
          </div>
       </div>

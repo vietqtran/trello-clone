@@ -7,7 +7,9 @@ import { WorkspaceType } from '@/types'
 
 type Props = {
    workspace: WorkspaceType | undefined,
-   workspaces: WorkspaceType[] | undefined
+   workspaces: WorkspaceType[] | undefined,
+   changeStar: Function,
+   addBoard: Function
 }
 
 function Workspace(props: Props) {
@@ -16,10 +18,10 @@ function Workspace(props: Props) {
    return (
       <div className=' text-black flex relative'>
          <div className='sidebar sticky top-[53px] left-0 text-black min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)]'>
-            <WorkspaceLeft workspace={props.workspace} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+            <WorkspaceLeft changeStar={props.changeStar} workspace={props.workspace} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
          </div>
          <div className='w-full'>
-            <WorkspaceRight workspaces={props.workspaces} workspace={props.workspace} />
+            <WorkspaceRight changeStar={props.changeStar} addBoard={props.addBoard} workspaces={props.workspaces} workspace={props.workspace} />
          </div>
       </div>
    )

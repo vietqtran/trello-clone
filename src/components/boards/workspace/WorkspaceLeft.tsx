@@ -12,7 +12,8 @@ import { WorkspaceType } from '@/types'
 type Props = {
    showSideBar: boolean,
    setShowSideBar: Function,
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | undefined,
+   changeStar: Function
 }
 
 function WorkspaceLeft(props: Props) {
@@ -64,7 +65,7 @@ function WorkspaceLeft(props: Props) {
                   <h1 className='text-black font-semibold text-sm px-2 my-2'>Your boards</h1>
                   <div className='overflow-y-auto max-h-[40vh]'>
                      {props.workspace?.boards?.map((board) => {
-                        return <WorkspaceLeftPreviewItem key={board.id} board={board} />
+                        return <WorkspaceLeftPreviewItem workspace={props.workspace?.id} changeStar={props.changeStar} key={board.id} board={board} />
                      })}
                   </div>
                </div>
