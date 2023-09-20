@@ -81,13 +81,13 @@ function HeaderBoard(props: Props) {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={'board'} />
-                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create  workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={props.workspaces} headerType={'board'} />
                   <Recent recentBoards={user.recentBoard} headerType={'board'} />
                   <Starred starredBoards={props.starredBoards} headerType={'board'} />
-                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
+                  <Create  workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>

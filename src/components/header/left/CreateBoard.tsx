@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import React, { useEffect } from 'react'
 import { SlArrowLeft } from 'react-icons/sl'
-import { TfiClose } from 'react-icons/Tfi'
+import { AiOutlineClose } from 'react-icons/ai'
 import { HiOutlineDotsHorizontal } from 'react-icons/hi'
 import Background from './Background'
 import { useState } from 'react'
@@ -39,7 +39,7 @@ function CreateBoard(props: Props) {
                <span className='font-semibold'>Create board</span>
                <span className='p-3 rounded-md hover:bg-slate-100 cursor-pointer' onClick={() => {
                   props.setShow({ show: false, tab: '' })
-               }}><TfiClose /></span>
+               }}><AiOutlineClose /></span>
             </div>
             <div className={`relative my-2 aspect-video w-[250px] mx-auto rounded-md overflow-hidden flex items-center justify-center`}>
                <Image className='w-full h-full object-cover' src={`/assets/background/bg-${selectBg.type}/bg${selectBg.ntn}.jpg`} alt='bg-preview' width={200} height={150} />

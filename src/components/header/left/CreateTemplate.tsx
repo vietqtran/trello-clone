@@ -1,6 +1,6 @@
 import React from 'react'
 import { SlArrowLeft } from 'react-icons/sl'
-import { TfiClose } from 'react-icons/Tfi'
+import { AiOutlineClose } from 'react-icons/ai'
 import Templates from './Templates'
 import TemplateSelect from './TemplateSelect'
 
@@ -18,7 +18,7 @@ function CreateTemplate(props: Props) {
             <span className='font-semibold'>Create from template</span>
             <span className='p-3 rounded-md hover:bg-slate-100' onClick={() => {
                props.setShow({ show: false, tab: '' })
-            }}><TfiClose /></span>
+            }}><AiOutlineClose /></span>
          </div>
          <div className='p-2'>
             <TemplateSelect />
