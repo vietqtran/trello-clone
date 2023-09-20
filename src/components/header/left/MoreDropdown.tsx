@@ -8,8 +8,10 @@ import StarredItem from './StarredItem'
 import TemplateItem from './TemplateItem'
 import { collection, getDocs, addDoc, doc } from '@firebase/firestore'
 import { db } from '@/firebase'
-import { Board } from '@/types'
+import { Board, User } from '@/types'
 import { useAppSelector } from '@/app/redux/store'
+import { useRouter } from 'next/navigation'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {
    showDropdown: { show: boolean, tab: string },
@@ -19,7 +21,26 @@ type Props = {
 function MoreDropdown(props: Props) {
    const [starredBoards, setStarredBoards] = useState<Board[]>([])
    const workspaceCollectionRef = collection(db, "workspaces")
-   const user = JSON.parse(localStorage.getItem('user') || '')
+   const [user, setUser] = useState<User>({
+      id: '123',
+      email: 'viet',
+      password: '',
+      recentBoard: [],
+      auth: ''
+   })
+   const router = useRouter()
+
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
    useEffect(() => {
       getStarredBoards()
    }, [])

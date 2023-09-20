@@ -116,7 +116,6 @@ function SignUp() {
          addWorkspace(userCreate.id)
          return userCreate
       }).then((userCreate) => {
-         localStorage.setItem('user', JSON.stringify(userCreate))
          router.push('/boards')
       })
    }
