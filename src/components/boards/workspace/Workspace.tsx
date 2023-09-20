@@ -9,7 +9,8 @@ type Props = {
    workspace: WorkspaceType | undefined,
    workspaces: WorkspaceType[] | undefined,
    changeStar: Function,
-   addBoard: Function
+   addBoard: Function,
+   deleteWorkspace: Function
 }
 
 function Workspace(props: Props) {
@@ -21,7 +22,7 @@ function Workspace(props: Props) {
             <WorkspaceLeft changeStar={props.changeStar} workspace={props.workspace} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
          </div>
          <div className='w-full'>
-            <WorkspaceRight changeStar={props.changeStar} addBoard={props.addBoard} workspaces={props.workspaces} workspace={props.workspace} />
+            <WorkspaceRight deleteWorkspace={props.deleteWorkspace} changeStar={props.changeStar} addBoard={props.addBoard} workspaces={props.workspaces} workspace={props.workspace} />
          </div>
       </div>
    )

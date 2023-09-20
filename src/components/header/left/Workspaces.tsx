@@ -33,4 +33,4 @@ function Workspaces(props: Props) {
    )
 }
 
-export default memo(Workspaces)
+export default Workspaces

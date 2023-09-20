@@ -1,12 +1,11 @@
 'use client'
-
 import BoardContent from "@/components/boards/board/Board";
 import HeaderBoard from "@/components/header/HeaderBoard";
 import { usePathname, useRouter } from "next/navigation";
 import { db } from '@/firebase'
 import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
 import { useEffect, useState } from 'react'
-import { Board, User, WorkspaceType } from "@/types";
+import { Board, ColumnType, User, WorkspaceType } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Image from "next/image";
 var uniqid = require('uniqid');
@@ -71,8 +70,12 @@ export default function BoardDetailPage() {
   const getBoard = () => {
     workspaces.forEach((w) => {
       if (w.id === workspaceId) {
-        const newBoard=  w.boards?.find((b) => b.id === id)
+        const newBoard = w.boards?.find((b) => b.id === id)
+        if(!newBoard){
+          router.push('/boards')
+        }
         setBoard(newBoard)
+        return
       }
     })
   }
@@ -118,22 +121,62 @@ export default function BoardDetailPage() {
     router.push(`/boards/${workspace}/${boardCreate.id}`)
   }
 
-  const reSetWorkspace = async (newWorkspace: any) => {
-    await updateDoc(doc(db, 'workspaces', newWorkspace.id), newWorkspace)
- }
+  const getWorkspace = (id: string) => {
+    return workspaces.find((w) => w.id === id)
+  }
 
- const renameBoard = (newName: string) => {
-    // const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
-    //    if (b.id === props.board?.id) {
-    //       return { ...b, title: newName }
-    //    }
-    //    return b
-    // })
-    // const newWorkspace = { ...workspace, boards: [...newBoards || []] }
-    // console.log(newBoards)
-    // reSetWorkspace(newWorkspace)
-    // props.getWorkspaces()
- }
+  const renameBoard = async (newName: string) => {
+    const workspace = getWorkspace(workspaceId || '')
+    const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
+      if (b.id === id) {
+        return { ...b, title: newName }
+      }
+      return b
+    })
+    console.log(newBoards)
+    await updateDoc(doc(db, 'workspaces', workspace?.id || ''), {
+      ...workspace,
+      boards: newBoards,
+    })
+    getWorkspaces()
+  }
+
+  const reSetBoard = async (columns: ColumnType[]) => {
+    console.log(board)
+    const workspace = getWorkspace(workspaceId || '')
+    const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
+      if (b.id === id) {
+        return { ...b, columns: [...columns] }
+      }
+      return b
+    })
+    await updateDoc(doc(db, 'workspaces', workspace?.id || ''), {
+      ...workspace,
+      boards: newBoards,
+    })
+    getWorkspaces()
+  }
+
+  const updateColumn = async (column: ColumnType)=>{
+    const workspace = getWorkspace(workspaceId || '')
+    const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
+      if (b.id === id) {
+        const newColumns = b.columns.map((c)=>{
+          if(c.id===column.id){
+            return column
+          }
+          return c
+        })
+        return { ...b, columns: [...newColumns] }
+      }
+      return b
+    })
+    await updateDoc(doc(db, 'workspaces', workspace?.id || ''), {
+      ...workspace,
+      boards: newBoards,
+    })
+    getWorkspaces()
+  }
 
   return (
     <div className={`relative max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh]`}>
@@ -141,7 +184,7 @@ export default function BoardDetailPage() {
         <Image width={2000} height={2000} src={`/assets/background/bg-${board?.background.type}/bg${board?.background.ntn}.jpg`} alt="bg" className="w-full h-full object-cover" />
       </div>
       <HeaderBoard addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />
-      <BoardContent renameBoard={renameBoard} getWorkspaces={getWorkspaces} starBoard={starBoard} board={board} workspaces={workspaces} boardId={pathName} />
+      <BoardContent updateColumn={updateColumn} reSetBoard={reSetBoard} renameBoard={renameBoard} getWorkspaces={getWorkspaces} starBoard={starBoard} board={board} workspaces={workspaces} boardId={pathName} />
     </div>
   )
 }

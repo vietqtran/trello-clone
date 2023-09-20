@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { memo } from 'react'
 import { FiSearch } from 'react-icons/fi'
 
 type Props = {
@@ -28,4 +28,4 @@ function Search(props: Props) {
    )
 }
 
-export default Search
+export default memo(Search)

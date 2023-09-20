@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { BsCircleHalf } from 'react-icons/bs'
 
 function Theme() {
@@ -11,4 +11,4 @@ function Theme() {
    )
 }
 
-export default Theme
+export default memo(Theme)

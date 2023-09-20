@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { memo, useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { useRouter } from 'next/navigation'
 import { User } from '@/types'
@@ -46,7 +46,7 @@ function Avatar(props: Props) {
                onClick={() => {
                   setShow(!show)
                }}
-               className='p-3 bg-blue-700 rounded-full relative'>
+               className='p-3 bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full relative'>
                <span className='absolute top-[50%] left-[50%] translate-y-[-50%] translate-x-[-50%] text-white text-xs'>{props.user?.email?.toUpperCase().charAt(0)}</span>
             </div>
          </div>
@@ -55,7 +55,7 @@ function Avatar(props: Props) {
             <h1 className='text-sm font-semibold p-4'>Account</h1>
             <div className='flex items-center justify-start px-4 mb-2'>
                <div>
-                  <div className='relative p-5 w-fit bg-blue-500 rounded-full'>
+                  <div className='relative p-5 w-fit bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full'>
                      <span className=' font-semibold text-2xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{props.user?.email?.toUpperCase().charAt(0)}</span>
                   </div>
                </div>
@@ -71,4 +71,4 @@ function Avatar(props: Props) {
    )
 }
 
-export default Avatar
+export default memo(Avatar)

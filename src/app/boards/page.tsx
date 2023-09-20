@@ -20,6 +20,10 @@ export default function BoardsPage() {
   }, [])
   const getWorkspaces = async () => {
     const data = await AsyncStorage.getItem('USER')
+    if(!data){
+      router.push('/login')
+      return
+    }
     const userId = JSON.parse(data || '').id
     await getDocs(workspaceCollectionRef).then((dataRef) => {
       const newWorkspaces: WorkspaceType[] = []
@@ -97,7 +101,7 @@ export default function BoardsPage() {
     })
     return newStarredBoards
   }
-console.log(workspaces)
+  console.log(workspaces)
   return (
     <div>
       <Header addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />

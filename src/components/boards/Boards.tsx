@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation'
 import WorkspaceModal from '../header/left/WorkspaceModal'
 import { Board, User, WorkspaceType } from '@/types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { changeStar } from '@/userMethods'
 
 type Props = {
    workspaces: WorkspaceType[],
@@ -27,7 +28,6 @@ function Boards(props: Props) {
    const router = useRouter()
    const [tab, setTab] = useState('board')
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-   const workspacesCollectionRef = collection(db, "workspaces")
    const [user, setUser] = useState<User>({
       id: '123',
       email: 'viet',
@@ -113,7 +113,7 @@ function Boards(props: Props) {
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
                            {user.recentBoard?.map((board) => {
-                              return <BoardItem changeStar={props.changeStar} workspace={board.workspaceId} board={board} key={board.id} />
+                              return <BoardItem changeStar={()=>{changeStar(board.id)}} workspace={board.workspaceId} board={board} key={board.id} />
                            })}
                      </div>
                   </div>
@@ -124,7 +124,7 @@ function Boards(props: Props) {
                         return (
                            <div className='mb-10' key={workspace.id}>
                               <div className='flex items-center mb-4'>
-                                 <div className='relative p-5 mr-2 rounded-md bg-black w-fit'>
+                                 <div className='relative p-5 mr-2 rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 w-fit'>
                                     <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{workspace.name.toUpperCase().charAt(0)}</span>
                                  </div>
                                  <h1 className='font-bold'>

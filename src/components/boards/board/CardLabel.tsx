@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 
 type Props = {
    color: string
@@ -14,4 +14,4 @@ function CardLabel(props: Props) {
    )
 }
 
-export default CardLabel
+export default memo(CardLabel)

@@ -67,7 +67,7 @@ h1 {
 
 ::-webkit-scrollbar {
   background-color: transparent;
-  width: 20px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -77,7 +77,7 @@ h1 {
 ::-webkit-scrollbar-thumb {
   background-color: #d6dee1;
   border-radius: 20px;
-  border: 6px solid transparent;
+  border: 2px solid transparent;
   background-clip: content-box;
 }
 
@@ -92,4 +92,8 @@ h1 {
 
 button {
   outline: none;
+}
+
+.bg-workspace{
+  background: linear-gradient((#6E5DC6, #403294), (#0C66E4, #0747a6));
 }

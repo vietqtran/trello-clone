@@ -28,7 +28,7 @@ function WorkspaceLeft(props: Props) {
                sidebar min-h-full overflow-y-scroll 
                ${props.showSideBar ? 'translate-x-0' : 'translate-x-[-260px]'} ease-in duration-200`}>
                <div className=' flex items-center border-b-[1px] p-2 border-slate-300 justify-between w-full'>
-                  <div className='relative p-5 bg-black w-fit rounded-md h-fit'>
+                  <div className='relative p-5 bg-gradient-to-r from-sky-500 to-indigo-500 w-fit rounded-md h-fit'>
                      <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>{props.workspace?.name.toUpperCase().charAt(0)}</span>
                   </div>
                   <div>

@@ -1,6 +1,6 @@
 import { WorkspaceType } from '@/types'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { memo } from 'react'
 
 type Props = {
    workspace: WorkspaceType
@@ -16,7 +16,7 @@ function WorkspaceLeftItem(props: Props) {
          onClick={handleClick}
          className='flex items-center justify-start p-2 hover:bg-slate-100 rounded-md cursor-pointer w-full'>
          <div className='mr-2'>
-            <div className='p-4 rounded-md bg-black w-fit relative'>
+            <div className='p-4 rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 w-fit relative'>
                <span className='text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>{props.workspace.name.toUpperCase().charAt(0)}</span>
             </div>
          </div>
@@ -27,4 +27,4 @@ function WorkspaceLeftItem(props: Props) {
    )
 }
 
-export default WorkspaceLeftItem
+export default memo(WorkspaceLeftItem)

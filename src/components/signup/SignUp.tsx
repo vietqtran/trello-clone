@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux'
 import { logIn } from '@/app/redux/features/user/userSlice'
 import { auth, db, googleProvider } from '@/firebase'
 import { signInWithPopup } from 'firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 var generator = require('generate-password')
 var passwordGenerate: string = generator.generate({
    length: 8,
@@ -32,6 +33,7 @@ function SignUp() {
    const [error, setError] = useState({ show: false, message: '' })
    const [users, setUsers] = useState<User[]>([])
    const userCollectionRef = collection(db, "users")
+   const workspaceCollectionRef = collection(db, "workspaces")
    const router = useRouter()
    const dispatch = useDispatch()
 
@@ -54,6 +56,9 @@ function SignUp() {
    }
 
    const googleSignIn = () => {
+      const setUser = async(user: any)=>{
+         await AsyncStorage.setItem('USER', JSON.stringify(user));
+      }
       signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
          let userLocal = {}
@@ -62,6 +67,7 @@ function SignUp() {
                if (user.email === result.user.email) {
                   check = true
                   userLocal = { ...user }
+                  setUser(user)
                   dispatch(logIn(user))
                   return
                }
@@ -71,14 +77,27 @@ function SignUp() {
             add(String(result.user.email), passwordGenerate, 'google')
             setError({ show: false, message: '' })
          } else {
-            localStorage.setItem('user', JSON.stringify(userLocal))
+            setUser(userLocal)
             router.push('/boards')
          }
       }).catch((err) => {
       })
    }
 
+   
    const add = async (emailParam: string, passwordParam: string, auth: string) => {
+      const setUser = async(user: any)=>{
+         await AsyncStorage.setItem('USER', JSON.stringify(user));
+      }
+      const addWorkspace = async(userId:string)=>{
+         await addDoc(workspaceCollectionRef, {
+            userId: userId,
+            name: 'My Workspace',
+            boards: [],
+            type: '',
+            description: 'Frist Workspace'
+         })
+      }
       await addDoc(userCollectionRef, {
          email: emailParam,
          password: passwordParam,
@@ -92,7 +111,9 @@ function SignUp() {
             recentBoard: [],
             auth: auth
          }
+         setUser(userCreate)
          dispatch(logIn(userCreate))
+         addWorkspace(userCreate.id)
          return userCreate
       }).then((userCreate) => {
          localStorage.setItem('user', JSON.stringify(userCreate))

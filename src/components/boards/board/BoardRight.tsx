@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import BoardRightHeader from './BoardRightHeader'
 import Column from './Column'
 import AddAnotherListButton from './AddAnotherListButton'
@@ -9,33 +9,35 @@ type Props = {
    showSideBar: boolean,
    board: Board | undefined,
    starBoard: Function,
-   renameBoard: Function
+   renameBoard: Function,
+   reSetBoard: Function,
+   updateColumn: Function
 }
 
 function BoardRight(props: Props) {
 
-   const [columns, setColumns] = useState<ColumnType[]>([])
+   console.log(props.board?.columns)
 
    const handleAddCard = (id: string, card: CardType) => {
-      const newColumns = columns.map((col) => {
+      const newColumns = props.board?.columns.map((col) => {
          if (col.id === id) {
             return { ...col, cards: [...col.cards, card] }
          }
          return col
       })
-      setColumns(newColumns)
+      props.reSetBoard(newColumns)
    }
 
    const handleAddList = (list: ColumnType) => {
-      const newList = [...columns, list]
-      setColumns(newList)
+      const newList = [...props.board?.columns||[], list]
+      props.reSetBoard(newList)
    }
 
    const handleDeleteList = (id: string) => {
-      const newList = columns.filter((col) => {
+      const newList = props.board?.columns.filter((col) => {
          return col.id != id
       })
-      setColumns(newList)
+      props.reSetBoard(newList)
    }
 
    const reorder = (result: DropResult) => {
@@ -43,14 +45,14 @@ function BoardRight(props: Props) {
          return
       } else {
          if (result.destination.droppableId === 'board' && result.source.droppableId === 'board') {
-            const newColumns = Array.from(columns);
+            const newColumns = Array.from(props.board?.columns||[]);
             const [removed] = newColumns.splice(result.source.index, 1);
             newColumns.splice(result.destination.index, 0, removed);
-            setColumns(newColumns)
+            props.reSetBoard(newColumns)
          } else {
             console.log(result)
             if (result.destination.droppableId === result.source.droppableId) {
-               const columnActive = columns.find((col) => {
+               const columnActive = props.board?.columns.find((col) => {
                   return col.id === result.source.droppableId
                })
                const tempStart: CardType | undefined = columnActive?.cards[result.source.index]
@@ -58,25 +60,25 @@ function BoardRight(props: Props) {
                   columnActive?.cards.splice(result.source.index, 1)
                   columnActive?.cards.splice(result.destination.index, 0, tempStart)
                }
-               const newList = columns.map((col) => {
+               const newList = props.board?.columns.map((col) => {
                   if (col.id === columnActive?.id) {
                      return columnActive
                   } else {
                      return col
                   }
                })
-               setColumns(newList)
+               props.reSetBoard(newList)
             } else {
-               const cardSource: CardType | undefined = columns.find((col) => {
+               const cardSource: CardType | undefined = props.board?.columns.find((col) => {
                   return col.id === result.source.droppableId
                })?.cards.find((card) => {
                   return card.id === result.draggableId
                })
-               const columnEnd = columns.find((col) => {
+               const columnEnd = props.board?.columns.find((col) => {
                   return col.id === result.destination?.droppableId
                })
                console.log(columnEnd)
-               const columnStart = columns.find((col) => {
+               const columnStart = props.board?.columns.find((col) => {
                   return col.id === result.source.droppableId
                })
                console.log(columnStart)
@@ -84,7 +86,7 @@ function BoardRight(props: Props) {
                   columnEnd?.cards.splice(result.destination.index, 0, cardSource)
                }
                columnStart?.cards.splice(result.source.index, 1)
-               const newList = columns.map((col) => {
+               const newList = props.board?.columns.map((col) => {
                   if (col.id === columnStart?.id) {
                      return columnStart
                   } else if (col.id === columnEnd?.id) {
@@ -93,7 +95,7 @@ function BoardRight(props: Props) {
                      return col
                   }
                })
-               setColumns(newList)
+               props.reSetBoard(newList)
             }
          }
       }
@@ -113,23 +115,24 @@ function BoardRight(props: Props) {
                      <div
                         {...droppableProvided.droppableProps}
                         ref={droppableProvided.innerRef}
-                        className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-110px)] overflow-x-auto flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}
+                        className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-110px)] overflow-x-scroll flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}
                      >
-                        {columns.map((col, index) => {
+                        {props.board?.columns.map((col, index) => {
                            return (
                               <Column key={col.id}
                                  index={index}
                                  handleAddList={handleAddList}
-                                 setColumns={setColumns}
-                                 columns={columns}
+                                 columns={props.board?.columns||[]}
                                  column={col}
                                  handleAddCard={handleAddCard}
                                  handleDeleteList={handleDeleteList}
+                                 reSetBoard={props.reSetBoard}
+                                 updateColumn={props.updateColumn}
                               />
                            )
                         })}
                         {droppableProvided.placeholder}
-                        <AddAnotherListButton handleAddList={handleAddList} currentLength={columns.length + ''} />
+                        <AddAnotherListButton handleAddList={handleAddList} currentLength={props.board?.columns.length + ''} />
                      </div>
                   )}
                </Droppable>

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, memo } from 'react'
 
 type Props = {
    children: ReactNode
@@ -12,4 +12,4 @@ function BoardRightHeaderFeature(props: Props) {
    )
 }
 
-export default BoardRightHeaderFeature
+export default memo(BoardRightHeaderFeature)

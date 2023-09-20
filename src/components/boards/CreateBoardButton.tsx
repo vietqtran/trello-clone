@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, memo } from 'react'
 import CreateBoard from '../header/left/CreateBoard'
 import { useOnClickOutside } from 'usehooks-ts'
 import { WorkspaceType } from '@/types'
@@ -48,4 +48,4 @@ function CreateBoardButton(props: Props) {
    )
 }
 
-export default CreateBoardButton
+export default memo(CreateBoardButton)

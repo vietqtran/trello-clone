@@ -76,7 +76,7 @@ function WorkspaceModal(props: Props) {
             onClick={handleClickInside}
             ref={ref}
          >
-            <div className='col-span-2 flex items-center justify-end'>
+            <div className='col-span-2 flex items-start justify-end'>
                <span
                   onClick={handleClickOutside}
                   className='w-fit float-right z-100 m-2 p-3 hover:bg-white cursor-pointer rounded-md'><GrClose /></span>

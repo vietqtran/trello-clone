@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, memo } from 'react'
 import Workspaces from './left/Workspaces'
 import Recent from './left/Recent'
 import Starred from './left/Starred'
@@ -61,14 +61,14 @@ function Header(props: Props) {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={''} />
-                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={props.workspaces} headerType={''} />
                   <Recent recentBoards={user.recentBoard} headerType={''} />
                   <Starred starredBoards={props.starredBoards} headerType={''} />
                   <Templates headerType={''} />
-                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
@@ -83,4 +83,4 @@ function Header(props: Props) {
    )
 }
 
-export default Header
+export default memo(Header)

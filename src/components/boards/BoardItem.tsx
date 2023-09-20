@@ -1,8 +1,8 @@
 import { Board, WorkspaceType } from '@/types'
+import { addRecent } from '@/userMethods'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { memo } from 'react'
 import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai'
 
 type Props = {
@@ -15,6 +15,7 @@ type Props = {
 function BoardItem(props: Props) {
    const router = useRouter()
    const handleClickBoard = () => {
+      addRecent(props.board || { id: '', background: { ntn: 0, type: '' }, columns: [], star: false, title: '', workspaceId: '' })
       router.push(`/boards/${props.workspace}/${props.board?.id}`)
    }
 
@@ -50,4 +51,4 @@ function BoardItem(props: Props) {
    )
 }
 
-export default BoardItem
+export default memo(BoardItem)

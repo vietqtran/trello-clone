@@ -4,7 +4,7 @@ import Workspace from "@/components/boards/workspace/Workspace";
 import Header from "@/components/header/Header";
 import { usePathname, useRouter } from "next/navigation";
 import { db } from '@/firebase'
-import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
+import { collection, getDocs, addDoc, doc, updateDoc, deleteDoc } from '@firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Board, User, WorkspaceType } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -46,7 +46,6 @@ export default function WorkspacePage() {
       setWorkspaces(newWorkspaces)
     }).catch((err) => { })
   }
-  getWorkspaces()
 
   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {
     const boardCreate: Board = {
@@ -90,6 +89,13 @@ export default function WorkspacePage() {
   }
 
   const getWorkspace = () => {
+    if (workspaces.length == 1) {
+      if (workspaces[0].id != id) {
+        router.push('/boards')
+      } else {
+        return workspaces[0]
+      }
+    }
     const workspace = workspaces?.find((w) => w.id === id)
     console.log(workspace)
     return workspace
@@ -114,10 +120,15 @@ export default function WorkspacePage() {
     getWorkspaces()
   }
 
+  const deleteWorkspace = async () => {
+    await deleteDoc(doc(db, "workspaces", id || ''))
+    router.push('/boards')
+  }
+
   return (
     <div>
       <Header addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />
-      <Workspace addBoard={addBoard} changeStar={changeStar} workspaces={workspaces} workspace={getWorkspace()} />
+      <Workspace deleteWorkspace={deleteWorkspace} addBoard={addBoard} changeStar={changeStar} workspaces={workspaces} workspace={getWorkspace()} />
     </div>
   )
 }

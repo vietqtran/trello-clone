@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import Workspaces from './left/Workspaces'
 import Recent from './left/Recent'
 import Starred from './left/Starred'
@@ -27,14 +27,25 @@ function HeaderBoard(props: Props) {
    const [showModal, setShowModal] = useState({ show: false, type: '' })
    const userCollectionRef = collection(db, "users")
    const [user, setUser] = useState<User>({
-      id: '',
-      email: '',
+      id: '123',
+      email: 'viet',
       password: '',
       recentBoard: [],
       auth: ''
    })
    const router = useRouter()
 
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
    useEffect(() => {
       const getRecentBoards = async () => {
          const data = await AsyncStorage.getItem('USER')
@@ -55,30 +66,6 @@ function HeaderBoard(props: Props) {
             })
          }).catch((err) => { })
       }
-   }, [])
-
-   useEffect(() => {
-      const getUser = async () => {
-         const data = await AsyncStorage.getItem('USER')
-         const userId = JSON.parse(data || '').id
-         await getDocs(userCollectionRef).then((dataRef) => {
-            dataRef.docs.forEach((doc) => {
-               if (doc.id === userId) {
-                  const newUser: User = {
-                     id: doc.id,
-                     email: doc.data().email,
-                     password: doc.data().password,
-                     recentBoard: [...doc.data().recentBoard],
-                     auth: doc.data().auth
-                  }
-                  console.log(newUser)
-                  setUser(newUser)
-                  return
-               }
-            })
-         }).catch((err) => { })
-      }
-      getUser()
    }, [])
 
    return (
@@ -115,4 +102,4 @@ function HeaderBoard(props: Props) {
    )
 }
 
-export default HeaderBoard
+export default memo(HeaderBoard)

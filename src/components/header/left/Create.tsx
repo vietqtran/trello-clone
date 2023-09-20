@@ -16,7 +16,8 @@ type Props = {
    setShowModal: Function,
    headerType: string,
    workspaces: WorkspaceType[],
-   addBoard: Function
+   addBoard: Function,
+   workspaceId: string
 }
 
 function Create(props: Props) {
@@ -84,11 +85,11 @@ function Create(props: Props) {
                      </div>
                   </div>
                </div>}
-            {show.show && show.tab === 'board' && <CreateBoard workspaceId='' addBoard={props.addBoard} workspaces={props.workspaces} type='' setShow={setShow} />}
+            {show.show && show.tab === 'board' && <CreateBoard workspaceId={props.workspaceId} addBoard={props.addBoard} workspaces={props.workspaces} type='' setShow={setShow} />}
             {show.show && show.tab === 'template' && <CreateTemplate setShow={setShow} />}
          </div >
       </div>
    )
 }
 
-export default memo(Create)
+export default Create

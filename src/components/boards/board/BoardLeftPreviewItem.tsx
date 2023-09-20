@@ -1,7 +1,8 @@
 import { Board, WorkspaceType } from '@/types'
+import { addRecent } from '@/userMethods'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import React from 'react'
+import React, { memo } from 'react'
 import { AiOutlineStar } from 'react-icons/ai'
 
 type Props = {
@@ -12,6 +13,7 @@ function BoardLeftPreviewItem(props: Props) {
 
    const router = useRouter()
    const handleClick = () => {
+      addRecent(props.board || { id: '', background: { ntn: 0, type: '' }, columns: [], star: false, title: '', workspaceId: '' })
       router.push(`/boards/${props.board?.workspaceId}/${props.board?.id}`)
    }
    return (
@@ -27,11 +29,8 @@ function BoardLeftPreviewItem(props: Props) {
             />
             <p className='block truncate max-w-[170px]'>{props.board?.title}</p>
          </div>
-         <div className='absolute right-[4px] w-fit items-center justify-center hidden group-hover:flex'>
-            <div className='p-1 bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-0 hover:bg-opacity-40 rounded-sm cursor-pointer'><AiOutlineStar /></div>
-         </div>
       </div>
    )
 }
 
-export default BoardLeftPreviewItem
+export default memo(BoardLeftPreviewItem)

@@ -23,13 +23,16 @@ function BoardRightHeader(props: Props) {
    const [showInput, setShowInput] = useState(false)
    const [name, setName] = useState('')
    const ref = useRef(null)
+
    useEffect(() => {
       setName(props.board?.title || '')
-   }, [])
+   }, [props.board?.title])
 
    const handleClickOutside = () => {
-      setShowInput(false)
-      props.renameBoard(name)
+      if(name!==''){
+         props.renameBoard(name)
+      }
+      setShowInput(false)  
    }
    const handleClickInside = () => {
    }

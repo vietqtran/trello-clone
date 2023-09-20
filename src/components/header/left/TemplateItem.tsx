@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { memo } from 'react'
 import { AiTwotoneStar } from 'react-icons/ai'
 
 function TemplateItem() {
@@ -15,4 +15,4 @@ function TemplateItem() {
    )
 }
 
-export default TemplateItem
+export default memo(TemplateItem)
