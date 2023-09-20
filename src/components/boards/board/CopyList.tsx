@@ -2,8 +2,7 @@ import { ColumnType } from '@/types'
 import React, { useRef, useState } from 'react'
 import { RiArrowLeftSLine, RiCloseLine } from 'react-icons/ri'
 import { useOnClickOutside } from 'usehooks-ts'
-
-var uniqid = require('uniqid');
+import uuid from 'react-uuid'
 
 type Props = {
    setShowActions: Function,
@@ -25,7 +24,13 @@ function CopyList(props: Props) {
    const handleAdd = () => {
       if (name.length === 0 || name === '') {
       } else {
-         props.handleAddList({ id: uniqid(), name: name, cards: [...props.column.cards] })
+         const newCards = props.column.cards.map((card) => {
+            return {
+               ...card,
+               id: uuid()
+            }
+         })
+         props.handleAddList({ id: uuid(), name: name, cards: newCards })
       }
    }
    return (

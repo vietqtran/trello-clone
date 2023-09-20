@@ -12,7 +12,8 @@ import { WorkspaceType } from '@/types'
 type Props = {
    showSideBar: boolean,
    setShowSideBar: Function,
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | undefined,
+   changeStar: Function
 }
 
 function WorkspaceLeft(props: Props) {
@@ -27,7 +28,7 @@ function WorkspaceLeft(props: Props) {
                sidebar min-h-full overflow-y-scroll 
                ${props.showSideBar ? 'translate-x-0' : 'translate-x-[-260px]'} ease-in duration-200`}>
                <div className=' flex items-center border-b-[1px] p-2 border-slate-300 justify-between w-full'>
-                  <div className='relative p-5 bg-black w-fit rounded-md h-fit'>
+                  <div className='relative p-5 bg-gradient-to-r from-sky-500 to-indigo-500 w-fit rounded-md h-fit'>
                      <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>{props.workspace?.name.toUpperCase().charAt(0)}</span>
                   </div>
                   <div>
@@ -64,7 +65,7 @@ function WorkspaceLeft(props: Props) {
                   <h1 className='text-black font-semibold text-sm px-2 my-2'>Your boards</h1>
                   <div className='overflow-y-auto max-h-[40vh]'>
                      {props.workspace?.boards?.map((board) => {
-                        return <WorkspaceLeftPreviewItem key={board.id} board={board} />
+                        return <WorkspaceLeftPreviewItem workspace={props.workspace?.id} changeStar={props.changeStar} key={board.id} board={board} />
                      })}
                   </div>
                </div>

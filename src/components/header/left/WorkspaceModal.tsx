@@ -1,11 +1,12 @@
 import Image from 'next/image'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 import { GrClose } from 'react-icons/gr'
 import { db } from '@/firebase'
 import { collection, addDoc } from '@firebase/firestore'
 import { useRouter } from 'next/navigation'
-import { useAppSelector } from '@/app/redux/store'
+import { User } from '@/types'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 type Props = {
    setShowModal: Function
@@ -32,14 +33,31 @@ function WorkspaceModal(props: Props) {
    }
    useOnClickOutside(ref, handleClickOutside)
 
-   const workspaceCollectionRef = collection(db, "workspaces")
-   const user = JSON.parse(localStorage.getItem('user') || '')
+   const [user, setUser] = useState<User>({
+      id: '123',
+      email: 'viet',
+      password: '',
+      recentBoard: [],
+      auth: ''
+   })
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
 
    const router = useRouter()
    const [title, setTitle] = useState('')
    const [workspace, setWorkspace] = useState('')
    const [description, setDescription] = useState('')
 
+   const workspaceCollectionRef = collection(db, "workspaces")
    const addWorkspace = async () => {
       await addDoc(workspaceCollectionRef, {
          name: title,
@@ -52,14 +70,13 @@ function WorkspaceModal(props: Props) {
       })
    }
 
-
    return (
       <div className='z-50 p-5 w-full h-full min-h-[100vh] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start justify-center'>
          <div className={`modal h-full overflow-y-scroll relative w-full md:bg-[url('/assets/other/workspace-modal-bg.png')] bg-[url('/assets/other/workspace-modal-bg-mobile.png')] bg-no-repeat bg-cover rounded-md bg-white container lg:mx-40 md:mx-20 grid grid-cols-2`}
             onClick={handleClickInside}
             ref={ref}
          >
-            <div className='col-span-2 flex items-center justify-end'>
+            <div className='col-span-2 flex items-start justify-end'>
                <span
                   onClick={handleClickOutside}
                   className='w-fit float-right z-100 m-2 p-3 hover:bg-white cursor-pointer rounded-md'><GrClose /></span>

@@ -14,9 +14,10 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { User } from '@/types'
 import { signInWithPopup } from 'firebase/auth'
-import type { AppDispatch, RootState } from '@/app/redux/store'
-import { useSelector, useDispatch } from 'react-redux'
+import type { AppDispatch } from '@/app/redux/store'
+import { useDispatch } from 'react-redux'
 import { logIn, logOut } from '@/app/redux/features/user/userSlice'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 var generator = require('generate-password')
 var passwordGenerate = generator.generate({
    length: 8,
@@ -31,6 +32,7 @@ function Login() {
    const [error, setError] = useState({ show: false, message: '' })
    const [users, setUsers] = useState<User[]>([])
    const userCollectionRef = collection(db, "users")
+   const workspaceCollectionRef = collection(db, "workspaces")
    const router = useRouter()
    const dispatch = useDispatch<AppDispatch>()
 
@@ -54,6 +56,19 @@ function Login() {
    }
 
    const addUser = async (email: any) => {
+      const setUser = async(user: any)=>{
+         await AsyncStorage.setItem('USER', JSON.stringify(user));
+      }
+
+      const addWorkspace = async(userId:string)=>{
+         await addDoc(workspaceCollectionRef, {
+            userId: userId,
+            name: 'My Workspace',
+            boards: [],
+            type: '',
+            description: 'Frist Workspace'
+         })
+      }
       const passwordCreate = passwordGenerate
       await addDoc(userCollectionRef, {
          email: email,
@@ -68,7 +83,9 @@ function Login() {
             recentBoard: [],
             auth: 'google'
          }
+         setUser(userCreate)
          dispatch(logIn(userCreate))
+         addWorkspace(userCreate.id)
          return userCreate
       }).then((userCreate) => {
          router.push('/boards')
@@ -76,12 +93,16 @@ function Login() {
    }
 
    const googleSignIn = () => {
-      signInWithPopup(auth, googleProvider).then((result) => {
+      const setUser = async(user: any)=>{
+         await AsyncStorage.setItem('USER', JSON.stringify(user));
+      }
+       signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
          users.forEach((user) => {
             if (user.auth === 'google') {
                if (user.email === result.user.email) {
                   check = true
+                  setUser(user)
                   dispatch(logIn(user))
                }
             }
@@ -96,7 +117,7 @@ function Login() {
       })
    }
 
-   const handleLogin = () => {
+   const handleLogin = async () => {
       let check = false
       let userLocal = {}
       users.forEach((user) => {
@@ -104,19 +125,23 @@ function Login() {
             check = true
             if (password === user.password) {
                userLocal = { ...user }
+               console.log(user)
                dispatch(logIn(user))
             } else {
                setError({ show: true, message: 'Password is incorrect!' })
             }
+            return
          }
       })
       if (check === false) {
          setError({ show: true, message: 'This address is not exist!' })
       } else {
-         localStorage.setItem('user', JSON.stringify(userLocal))
+         await AsyncStorage.setItem('USER', JSON.stringify(userLocal));
          router.push('/boards')
       }
    }
+   console.log(users)
+
 
    return (
       <div className="flex items-center flex-col justify-start w-full h-full lg:bg-white bg-slate-50 min-h-[100vh]">

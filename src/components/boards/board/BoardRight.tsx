@@ -1,228 +1,112 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useEffect, useState } from 'react'
 import BoardRightHeader from './BoardRightHeader'
 import Column from './Column'
 import AddAnotherListButton from './AddAnotherListButton'
-import { CardType, ColumnType } from '@/types'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-
-const data = [
-   {
-      id: '1',
-      name: 'Column 1',
-      cards: [
-         {
-            id: '11',
-            text: 'Cart content',
-            labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '21',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#579DFF'],
-            image: { ntn: 0, type: '' }
-         },
-         {
-            id: '31',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '41',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 3, type: 'image' }
-         },
-         {
-            id: '51',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203'],
-            image: { ntn: 0, type: '' }
-         }
-      ]
-   },
-   {
-      id: '2',
-      name: 'Column 2',
-      cards: [
-         {
-            id: '12',
-            text: 'Cart content',
-            labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '22',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#579DFF'],
-            image: { ntn: 0, type: '' }
-         },
-         {
-            id: '32',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '42',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 3, type: 'image' }
-         },
-         {
-            id: '52',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203'],
-            image: { ntn: 0, type: '' }
-         }
-      ]
-   },
-   {
-      id: '3',
-      name: 'Column 3',
-      cards: [
-         {
-            id: '13',
-            text: 'Cart content',
-            labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '23',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#579DFF'],
-            image: { ntn: 0, type: '' }
-         },
-         {
-            id: '33',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '43',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 3, type: 'image' }
-         },
-         {
-            id: '53',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203'],
-            image: { ntn: 0, type: '' }
-         }
-      ]
-   },
-   {
-      id: '4',
-      name: 'Column 4',
-      cards: [
-         {
-            id: '14',
-            text: 'Cart content',
-            labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '24',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#579DFF'],
-            image: { ntn: 0, type: '' }
-         },
-         {
-            id: '34',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '44',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 3, type: 'image' }
-         },
-         {
-            id: '54',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203'],
-            image: { ntn: 0, type: '' }
-         }
-      ]
-   },
-   {
-      id: '5',
-      name: 'Column 5',
-      cards: [
-         {
-            id: '15',
-            text: 'Cart content',
-            labels: ['#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '25',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#579DFF'],
-            image: { ntn: 0, type: '' }
-         },
-         {
-            id: '35',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203', '#FAA53D', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 1, type: 'image' }
-         },
-         {
-            id: '45',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#F87462', '#9F8FEF', '#579DFF'],
-            image: { ntn: 3, type: 'image' }
-         },
-         {
-            id: '55',
-            text: 'Cart content',
-            labels: ['#4BCE97', '#E2B203'],
-            image: { ntn: 0, type: '' }
-         }
-      ]
-   }
-]
+import { Board, CardType, ColumnType } from '@/types'
+import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
 
 type Props = {
-   showSideBar: boolean
+   showSideBar: boolean,
+   board: Board | undefined,
+   starBoard: Function,
+   renameBoard: Function,
+   reSetBoard: Function,
+   updateColumn: Function
 }
 
 function BoardRight(props: Props) {
 
-
-   const [columns, setColumns] = useState<ColumnType[]>(data)
+   console.log(props.board?.columns)
 
    const handleAddCard = (id: string, card: CardType) => {
-      const newColumns = columns.map((col) => {
+      const newColumns = props.board?.columns.map((col) => {
          if (col.id === id) {
             return { ...col, cards: [...col.cards, card] }
          }
          return col
       })
-      setColumns(newColumns)
+      props.reSetBoard(newColumns)
    }
 
    const handleAddList = (list: ColumnType) => {
-      const newList = [...columns, list]
-      setColumns(newList)
+      const newList = [...props.board?.columns||[], list]
+      props.reSetBoard(newList)
    }
 
-   const onColumnDrop = () => { }
+   const handleDeleteList = (id: string) => {
+      const newList = props.board?.columns.filter((col) => {
+         return col.id != id
+      })
+      props.reSetBoard(newList)
+   }
 
-   const onDragEnd = () => { }
-   const isCombineEnabled = () => { }
-   const containerHeight = () => { }
+   const reorder = (result: DropResult) => {
+      if (!result.destination || !result.source) {
+         return
+      } else {
+         if (result.destination.droppableId === 'board' && result.source.droppableId === 'board') {
+            const newColumns = Array.from(props.board?.columns||[]);
+            const [removed] = newColumns.splice(result.source.index, 1);
+            newColumns.splice(result.destination.index, 0, removed);
+            props.reSetBoard(newColumns)
+         } else {
+            console.log(result)
+            if (result.destination.droppableId === result.source.droppableId) {
+               const columnActive = props.board?.columns.find((col) => {
+                  return col.id === result.source.droppableId
+               })
+               const tempStart: CardType | undefined = columnActive?.cards[result.source.index]
+               if (tempStart) {
+                  columnActive?.cards.splice(result.source.index, 1)
+                  columnActive?.cards.splice(result.destination.index, 0, tempStart)
+               }
+               const newList = props.board?.columns.map((col) => {
+                  if (col.id === columnActive?.id) {
+                     return columnActive
+                  } else {
+                     return col
+                  }
+               })
+               props.reSetBoard(newList)
+            } else {
+               const cardSource: CardType | undefined = props.board?.columns.find((col) => {
+                  return col.id === result.source.droppableId
+               })?.cards.find((card) => {
+                  return card.id === result.draggableId
+               })
+               const columnEnd = props.board?.columns.find((col) => {
+                  return col.id === result.destination?.droppableId
+               })
+               console.log(columnEnd)
+               const columnStart = props.board?.columns.find((col) => {
+                  return col.id === result.source.droppableId
+               })
+               console.log(columnStart)
+               if (cardSource) {
+                  columnEnd?.cards.splice(result.destination.index, 0, cardSource)
+               }
+               columnStart?.cards.splice(result.source.index, 1)
+               const newList = props.board?.columns.map((col) => {
+                  if (col.id === columnStart?.id) {
+                     return columnStart
+                  } else if (col.id === columnEnd?.id) {
+                     return columnEnd
+                  } else {
+                     return col
+                  }
+               })
+               props.reSetBoard(newList)
+            }
+         }
+      }
+   }
+
    return (
       <div className='h-full w-full z-10'>
-         <BoardRightHeader />
+         <BoardRightHeader renameBoard={props.renameBoard} starBoard={props.starBoard} board={props.board} />
          <DragDropContext
             onDragEnd={(result) => {
-               console.log(result)
+               reorder(result)
             }}
          >
             <div className='w-full h-auto'>
@@ -231,21 +115,24 @@ function BoardRight(props: Props) {
                      <div
                         {...droppableProvided.droppableProps}
                         ref={droppableProvided.innerRef}
-                        className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-170px)] overflow-x-auto flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}
+                        className={`p-2 w-full max-h-[calc(100vh-110px)] min-h-[calc(100vh-110px)] overflow-x-scroll flex items-start justify-start ${props.showSideBar ? 'max-w-[calc(100vw-260px)]' : 'max-w-[calc(100vw-30px)]'} `}
                      >
-                        {columns.map((col, index) => {
+                        {props.board?.columns.map((col, index) => {
                            return (
                               <Column key={col.id}
                                  index={index}
                                  handleAddList={handleAddList}
-                                 setColumns={setColumns}
-                                 columns={columns}
+                                 columns={props.board?.columns||[]}
                                  column={col}
-                                 handleAddCard={handleAddCard} />
+                                 handleAddCard={handleAddCard}
+                                 handleDeleteList={handleDeleteList}
+                                 reSetBoard={props.reSetBoard}
+                                 updateColumn={props.updateColumn}
+                              />
                            )
                         })}
                         {droppableProvided.placeholder}
-                        <AddAnotherListButton handleAddList={handleAddList} currentLength={columns.length + ''} />
+                        <AddAnotherListButton handleAddList={handleAddList} currentLength={props.board?.columns.length + ''} />
                      </div>
                   )}
                </Droppable>
@@ -255,4 +142,4 @@ function BoardRight(props: Props) {
    )
 }
 
-export default memo(BoardRight)
+export default BoardRight

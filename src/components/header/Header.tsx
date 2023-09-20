@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect, memo } from 'react'
 import Workspaces from './left/Workspaces'
 import Recent from './left/Recent'
 import Starred from './left/Starred'
@@ -12,18 +12,41 @@ import Search from './right/Search'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
-import { Board, WorkspaceType } from '@/types'
-import { useAppSelector } from '@/app/redux/store'
-
+import { Board, User, WorkspaceType } from '@/types'
+import { useRouter } from 'next/navigation'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { collection, getDocs } from '@firebase/firestore'
+import { db } from '@/firebase'
 type Props = {
    workspaces: WorkspaceType[],
-   starredBoards: Board[]
+   starredBoards: Board[],
+   addBoard: Function,
 }
 
 function Header(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
-   const user = JSON.parse(localStorage.getItem('user') || '')
+
+   const [user, setUser] = useState<User>({
+      id: '123',
+      email: 'viet',
+      password: '',
+      recentBoard: [],
+      auth: ''
+   })
+   const router = useRouter()
+
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
 
    return (
       <>
@@ -38,14 +61,14 @@ function Header(props: Props) {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={''} />
-                  <Create workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={props.workspaces} headerType={''} />
                   <Recent recentBoards={user.recentBoard} headerType={''} />
                   <Starred starredBoards={props.starredBoards} headerType={''} />
                   <Templates headerType={''} />
-                  <Create workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
@@ -60,4 +83,4 @@ function Header(props: Props) {
    )
 }
 
-export default Header
+export default memo(Header)

@@ -1,13 +1,15 @@
 'use client'
 
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, memo } from 'react'
 import CreateBoard from '../header/left/CreateBoard'
 import { useOnClickOutside } from 'usehooks-ts'
 import { WorkspaceType } from '@/types'
 
 type Props = {
    type: string,
-   workspaces: WorkspaceType[] | undefined
+   workspaces: WorkspaceType[] | undefined,
+   workspaceId: string,
+   addBoard: Function
 }
 
 function CreateBoardButton(props: Props) {
@@ -39,11 +41,11 @@ function CreateBoardButton(props: Props) {
                   ref={ref}
                   onClick={handleClickInside}
                   className='z-50 relative'>
-               <CreateBoard workspaces={props.workspaces} type={props.type} setShow={setShow} />
+               <CreateBoard addBoard={props.addBoard} workspaceId={props.workspaceId} workspaces={props.workspaces} type={props.type} setShow={setShow} />
             </div>
          }
       </div >
    )
 }
 
-export default CreateBoardButton
+export default memo(CreateBoardButton)

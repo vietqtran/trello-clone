@@ -1,6 +1,5 @@
 import React from 'react'
 import Image from "next/image";
-import { memo } from 'react'
 
 interface SideImageProps {
    src: string
@@ -14,4 +13,4 @@ function SideImage(props: SideImageProps) {
    )
 }
 
-export default memo(SideImage)
+export default SideImage

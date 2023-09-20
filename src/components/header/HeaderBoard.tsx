@@ -2,24 +2,71 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import Workspaces from './left/Workspaces'
 import Recent from './left/Recent'
 import Starred from './left/Starred'
-import Templates from './left/Templates'
 import Create from './left/Create'
 import Search from './right/Search'
 import Avatar from './right/Avatar'
 import More from './left/More'
 import WorkspaceModal from './left/WorkspaceModal'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/app/redux/store'
+import { Board, User, WorkspaceType } from '@/types'
+import { useRouter } from 'next/navigation'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { collection, getDocs, addDoc, doc } from '@firebase/firestore'
+import { auth, db, googleProvider } from '@/firebase'
+type Props = {
+   workspaces: WorkspaceType[],
+   starredBoards: Board[],
+   addBoard: Function,
+}
 
-function HeaderBoard() {
+function HeaderBoard(props: Props) {
 
    const [showModal, setShowModal] = useState({ show: false, type: '' })
+   const userCollectionRef = collection(db, "users")
+   const [user, setUser] = useState<User>({
+      id: '123',
+      email: 'viet',
+      password: '',
+      recentBoard: [],
+      auth: ''
+   })
+   const router = useRouter()
 
-   const user = JSON.parse(localStorage.getItem('user') || '')
+   useEffect(() => {
+      const getUser = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         if (data) {
+            setUser(JSON.parse(data))
+         } else {
+            router.push('/')
+         }
+      }
+      getUser()
+   }, [])
+   useEffect(() => {
+      const getRecentBoards = async () => {
+         const data = await AsyncStorage.getItem('USER')
+         const userId = JSON.parse(data || '').id
+         await getDocs(userCollectionRef).then((dataRef) => {
+            dataRef.docs.forEach((doc) => {
+               if (doc.id === userId) {
+                  const newUser: User = {
+                     id: doc.id,
+                     email: doc.data().email,
+                     password: doc.data().password,
+                     recentBoard: [...doc.data().recentBoard],
+                     auth: doc.data().auth
+                  }
+                  setUser(newUser)
+                  return
+               }
+            })
+         }).catch((err) => { })
+      }
+   }, [])
 
    return (
       <div className='z-30 w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
@@ -34,19 +81,18 @@ function HeaderBoard() {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={'board'} />
-                  <Create workspaces={[]} headerType={'board'} setShowModal={setShowModal} />
+                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces workspaces={[]} headerType={'board'} />
-                  <Recent recentBoards={[]} headerType={'board'} />
-                  <Starred starredBoards={[]} headerType={'board'} />
-                  <Templates headerType={'board'} />
-                  <Create workspaces={[]} headerType={'board'} setShowModal={setShowModal} />
+                  <Workspaces workspaces={props.workspaces} headerType={'board'} />
+                  <Recent recentBoards={user.recentBoard} headerType={'board'} />
+                  <Starred starredBoards={props.starredBoards} headerType={'board'} />
+                  <Create addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>
                <Search headerType={'board'} />
-               <Avatar user={user.value} headerType={'board'} />
+               <Avatar user={user} headerType={'board'} />
             </div>
          </div>
          {showModal.show && showModal.type === 'workspace' &&
@@ -56,4 +102,4 @@ function HeaderBoard() {
    )
 }
 
-export default HeaderBoard
+export default memo(HeaderBoard)

@@ -2,8 +2,8 @@ export type Board = {
    id: string,
    workspaceId: string,
    title: string,
-   columns: [],
-   star: false,
+   columns: ColumnType[],
+   star: boolean,
    background: {
       ntn: number,
       type: string

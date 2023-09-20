@@ -73,4 +73,4 @@ function AddAnotherListButton(props: Props) {
    )
 }
 
-export default memo(AddAnotherListButton)
+export default AddAnotherListButton

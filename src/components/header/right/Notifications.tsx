@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { IoIosNotifications } from 'react-icons/io'
 
 function Notifications() {
@@ -11,4 +11,4 @@ function Notifications() {
    )
 }
 
-export default Notifications
+export default memo(Notifications)

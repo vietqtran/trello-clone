@@ -2,8 +2,15 @@
 
 import React, { useState } from 'react'
 import SearchBoardItem from './SearchBoardItem'
+import { WorkspaceType } from '@/types'
+import SearchBoard from './SearchBoard'
+import SearchWorkspace from './SearchWorkspace'
 
-function Search() {
+type Props = {
+   workspaces: WorkspaceType[] | undefined
+}
+
+function Search(props: Props) {
 
    const [input, setInput] = useState('')
    const [searchTab, setSearchTab] = useState('')
@@ -24,30 +31,21 @@ function Search() {
             <div className='w-full'>
                <h1 className='font-semibold '>Recent boards</h1>
                <div className='w-full'>
-                  <SearchBoardItem />
-                  <SearchBoardItem />
-                  <SearchBoardItem />
-                  <SearchBoardItem />
-                  <SearchBoardItem />
-                  <SearchBoardItem />
+
                </div>
             </div>}
          {input !== '' &&
-            <div>
+            <div className='w-full'>
                <div className='w-full'>
                   <h1 className='font-semibold '>Boards</h1>
                   <div className='w-full'>
-                     <SearchBoardItem />
-                     <SearchBoardItem />
-                     <SearchBoardItem />
+                     <SearchBoard workspaces={props.workspaces} input={input}/>
                   </div>
                </div>
                <div className='w-full mt-5'>
                   <h1 className='font-semibold '>Workspaces</h1>
                   <div className='w-full'>
-                     <SearchBoardItem />
-                     <SearchBoardItem />
-                     <SearchBoardItem />
+                     <SearchWorkspace workspaces={props.workspaces}  input={input}/>
                   </div>
                </div>
             </div>
