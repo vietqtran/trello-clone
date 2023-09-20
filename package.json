@@ -40,6 +40,7 @@
   "devDependencies": {
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-click-outside": "^3.0.3",
+    "encoding": "^0.1.13",
     "uuid": "^9.0.0"
   }
 }
