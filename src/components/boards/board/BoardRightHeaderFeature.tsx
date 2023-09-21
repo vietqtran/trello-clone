@@ -1,4 +1,4 @@
-import React, { ReactNode, memo } from 'react'
+import React, { ReactNode, memo } from "react"
 
 type Props = {
    children: ReactNode

@@ -1,15 +1,15 @@
-'use client'
+"use client"
 
-import React, { useState } from 'react'
-import WorkspaceLeft from './WorkspaceLeft'
-import WorkspaceRight from './WorkspaceRight'
-import { WorkspaceType } from '@/types'
+import React, { useState } from "react"
+import WorkspaceLeft from "./WorkspaceLeft"
+import WorkspaceRight from "./WorkspaceRight"
+import { WorkspaceType } from "@/types"
 
 type Props = {
-   workspace: WorkspaceType | undefined,
-   workspaces: WorkspaceType[] | undefined,
-   changeStar: Function,
-   addBoard: Function,
+   workspace: WorkspaceType | undefined
+   workspaces: WorkspaceType[] | undefined
+   changeStar: Function
+   addBoard: Function
    deleteWorkspace: Function
 }
 
@@ -19,10 +19,21 @@ function Workspace(props: Props) {
    return (
       <div className=' text-black flex relative'>
          <div className='sidebar sticky top-[53px] left-0 text-black min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)]'>
-            <WorkspaceLeft changeStar={props.changeStar} workspace={props.workspace} showSideBar={showSideBar} setShowSideBar={setShowSideBar} />
+            <WorkspaceLeft
+               changeStar={props.changeStar}
+               workspace={props.workspace}
+               showSideBar={showSideBar}
+               setShowSideBar={setShowSideBar}
+            />
          </div>
          <div className='w-full'>
-            <WorkspaceRight deleteWorkspace={props.deleteWorkspace} changeStar={props.changeStar} addBoard={props.addBoard} workspaces={props.workspaces} workspace={props.workspace} />
+            <WorkspaceRight
+               deleteWorkspace={props.deleteWorkspace}
+               changeStar={props.changeStar}
+               addBoard={props.addBoard}
+               workspaces={props.workspaces}
+               workspace={props.workspace}
+            />
          </div>
       </div>
    )
