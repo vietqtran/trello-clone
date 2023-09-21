@@ -8,7 +8,7 @@ interface SideImageProps {
 function SideImage(props: SideImageProps) {
    return (
       <div>
-         <Image src={props.src} alt="image" width={400} height={400} />
+         <Image src={props.src} alt="image" width={400} height={400} priority />
       </div>
    )
 }

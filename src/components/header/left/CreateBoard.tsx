@@ -42,9 +42,9 @@ function CreateBoard(props: Props) {
                }}><AiOutlineClose /></span>
             </div>
             <div className={`relative my-2 aspect-video w-[250px] mx-auto rounded-md overflow-hidden flex items-center justify-center`}>
-               <Image className='w-full h-full object-cover' src={`/assets/background/bg-${selectBg.type}/bg${selectBg.ntn}.jpg`} alt='bg-preview' width={200} height={150} />
+               <Image priority className='w-full h-full object-cover' src={`/assets/background/bg-${selectBg.type}/bg${selectBg.ntn}.jpg`} alt='bg-preview' width={200} height={150} />
                <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>
-                  <Image src={'/assets/other/preview-top.svg'} width={500} height={300} alt='preview' />
+                  <Image priority src={'/assets/other/preview-top.svg'} width={500} height={300} alt='preview' />
                </div>
             </div>
             <div className='px-3 relative'>

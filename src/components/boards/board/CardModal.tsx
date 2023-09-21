@@ -58,7 +58,7 @@ function CardModal(props: Props) {
                </div>
                {cover.ntn > 0 && cover.type && (
                   <div className='w-full h-[400px] overflow-hidden flex items-center justify-center rounded-t-xl'>
-                     <Image width={1000} height={1000} className='h-full object-fill' src={`/assets/background/bg-${cover.type}/bg${cover.ntn}.jpg`} alt="" />
+                     <Image width={1000} height={1000} className='h-full object-fill' src={`/assets/background/bg-${cover.type}/bg${cover.ntn}.jpg`} alt="" priority />
                   </div>
                )
                }

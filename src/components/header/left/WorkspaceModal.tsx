@@ -42,11 +42,16 @@ function WorkspaceModal(props: Props) {
    })
    useEffect(() => {
       const getUser = async () => {
-         const data = await AsyncStorage.getItem('USER')
-         if (data) {
-            setUser(JSON.parse(data))
-         } else {
-            router.push('/')
+         try {
+            const data = await AsyncStorage.getItem('USER')
+            if (data) {
+               setUser(JSON.parse(data))
+            } else {
+               router.push('/')
+            }
+
+         } catch (error) {
+
          }
       }
       getUser()
@@ -100,7 +105,7 @@ function WorkspaceModal(props: Props) {
                   />
                   <span className='text-xs mt-2'>This is the name of your company, team or organization.</span>
                   <label htmlFor="workspace" className='font-bold text-xs mt-3 mb-2'>Workspace type</label>
-                  <select 
+                  <select
                      value={workspace}
                      onChange={(e) => {
                         setWorkspace(e.target.value)
@@ -135,8 +140,9 @@ function WorkspaceModal(props: Props) {
             </div>
             <div className=' lg:col-span-1 col-span-2 flex items-center justify-center md:order-2 order-1 z-0'>
                <div className='relative'>
-                  <Image src={'/assets/other/preview-workspace-modal.svg'} width={400} height={400} alt='preview' />
+                  <Image priority src={'/assets/other/preview-workspace-modal.svg'} width={400} height={400} alt='preview' />
                   <Image
+                  priority
                      className='absolute left-[20px] bottom-[10px]'
                      src={'/assets/other/preview-workspace-modal-face.svg'} width={100} height={100} alt='preview' />
                </div>

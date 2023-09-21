@@ -55,11 +55,16 @@ function Login() {
    }
 
    const addUser = async (email: any) => {
-      const setUser = async(user: any)=>{
-         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(user)) : undefined;
+      const setUser = async (user: any) => {
+         try {
+            await AsyncStorage.setItem('USER', JSON.stringify(user))
+
+         } catch (error) {
+
+         }
       }
 
-      const addWorkspace = async(userId:string)=>{
+      const addWorkspace = async (userId: string) => {
          await addDoc(workspaceCollectionRef, {
             userId: userId,
             name: 'My Workspace',
@@ -92,10 +97,15 @@ function Login() {
    }
 
    const googleSignIn = () => {
-      const setUser = async(user: any)=>{
-         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(user)) : undefined;
+      const setUser = async (user: any) => {
+         try {
+            await AsyncStorage.setItem('USER', JSON.stringify(user))
+
+         } catch (error) {
+
+         }
       }
-       signInWithPopup(auth, googleProvider).then((result) => {
+      signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
          users.forEach((user) => {
             if (user.auth === 'google') {
@@ -134,7 +144,12 @@ function Login() {
       if (check === false) {
          setError({ show: true, message: 'This address is not exist!' })
       } else {
-         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(userLocal)) : undefined;
+         try {
+            await AsyncStorage.setItem('USER', JSON.stringify(userLocal))
+
+         } catch (error) {
+
+         }
          router.push('/boards')
       }
    }
@@ -149,7 +164,7 @@ function Login() {
             <SideImage src='/assets/login-right.jpg' />
          </div>
          <div className="flex items-center justify-center py-10">
-            <Image src={'/assets/trello-logo-blue.svg'} alt="logo" width={200} height={200} />
+            <Image priority src={'/assets/trello-logo-blue.svg'} alt="logo" width={200} height={200} />
          </div>
          <div>
             <div className='flex flex-col items-center justify-start mb-10 bg-white rounded-md form-shadow p-10'>
@@ -185,17 +200,17 @@ function Login() {
                {/* Authentication Button  */}
                <div onClick={googleSignIn}>
                   <AuthButton name='Google'>
-                     <Image src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
+                     <Image priority src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
                   </AuthButton>
                </div>
                <AuthButton name='Microsoft'>
-                  <Image src={'/assets/microsoft-icon.svg'} alt='google-icon' width={20} height={20} />
+                  <Image priority src={'/assets/microsoft-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>
                <AuthButton name='Apple'>
-                  <Image src={'/assets/apple-icon.svg'} alt='google-icon' width={20} height={20} />
+                  <Image priority src={'/assets/apple-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>
                <AuthButton name='Slack'>
-                  <Image src={'/assets/slack-icon.svg'} alt='google-icon' width={20} height={20} />
+                  <Image priority src={'/assets/slack-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>
                <hr className='w-[300px] mt-3' />
                <div className='flex items-center justify-center mt-4'>

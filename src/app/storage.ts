@@ -11,7 +11,7 @@ const getUser = async () => {
 const storeUser = async (value: any) => {
    try {
       const jsonValue = JSON.stringify(value);
-      window !== undefined ? await AsyncStorage.setItem('USER', jsonValue) : undefined;
+      await AsyncStorage.setItem('USER', jsonValue)
    } catch (e) {
    }
 };

@@ -26,6 +26,7 @@ function BoardLeftPreviewItem(props: Props) {
                height={30}
                alt='image'
                className='rounded-sm mr-2'
+               priority
             />
             <p className='block truncate max-w-[170px]'>{props.board?.title}</p>
          </div>

@@ -25,24 +25,28 @@ export default function WorkspacePage() {
   }, [])
 
   const getWorkspaces = async () => {
-    const data = await AsyncStorage.getItem('USER')
-    const userId = JSON.parse(data || '').id
-    await getDocs(workspaceCollectionRef).then((dataRef) => {
-      const newWorkspaces: WorkspaceType[] = []
-      dataRef.docs.forEach((doc) => {
-        if (doc.data().userId === userId) {
-          newWorkspaces.push({
-            id: doc.id,
-            userId: String(doc.data().userId),
-            name: String(doc.data().name),
-            type: String(doc.data().type),
-            boards: [...doc.data().boards],
-            description: String(doc.data().description)
-          })
-        }
-      })
-      setWorkspaces(newWorkspaces)
-    }).catch((err) => { })
+    try {
+      const data = await AsyncStorage.getItem('USER')
+      const userId = JSON.parse(data || '').id
+      await getDocs(workspaceCollectionRef).then((dataRef) => {
+        const newWorkspaces: WorkspaceType[] = []
+        dataRef.docs.forEach((doc) => {
+          if (doc.data().userId === userId) {
+            newWorkspaces.push({
+              id: doc.id,
+              userId: String(doc.data().userId),
+              name: String(doc.data().name),
+              type: String(doc.data().type),
+              boards: [...doc.data().boards],
+              description: String(doc.data().description)
+            })
+          }
+        })
+        setWorkspaces(newWorkspaces)
+      }).catch((err) => { })
+    } catch (error) {
+
+    }
   }
 
   const addBoard = async (selectBg: { ntn: number, type: string }, title: string, workspace: string) => {

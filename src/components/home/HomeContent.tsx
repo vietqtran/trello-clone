@@ -29,7 +29,7 @@ function HomeContent() {
             </form>
          </div >
          <div className='md:col-span-1 col-span-2 h-full flex items-center justify-center'>
-            <Image src='/assets/trello-home.webp' width={500} height={500} alt='home' />
+            <Image priority src='/assets/trello-home.webp' width={500} height={500} alt='home' />
          </div>
       </div >
    )

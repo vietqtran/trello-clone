@@ -24,24 +24,28 @@ export default function BoardDetailPage() {
   }, [])
 
   const getWorkspaces = async () => {
-    const data = await AsyncStorage.getItem('USER')
-    const userId = JSON.parse(data || '').id
-    await getDocs(workspaceCollectionRef).then((dataRef) => {
-      const newWorkspaces: WorkspaceType[] = []
-      dataRef.docs.forEach((doc) => {
-        if (doc.data().userId === userId) {
-          newWorkspaces.push({
-            id: doc.id,
-            userId: String(doc.data().userId),
-            name: String(doc.data().name),
-            type: String(doc.data().type),
-            boards: [...doc.data().boards],
-            description: String(doc.data().description)
-          })
-        }
-      })
-      setWorkspaces(newWorkspaces)
-    }).catch((err) => { })
+    try {
+      const data = await AsyncStorage.getItem('USER')
+      const userId = JSON.parse(data || '').id
+      await getDocs(workspaceCollectionRef).then((dataRef) => {
+        const newWorkspaces: WorkspaceType[] = []
+        dataRef.docs.forEach((doc) => {
+          if (doc.data().userId === userId) {
+            newWorkspaces.push({
+              id: doc.id,
+              userId: String(doc.data().userId),
+              name: String(doc.data().name),
+              type: String(doc.data().type),
+              boards: [...doc.data().boards],
+              description: String(doc.data().description)
+            })
+          }
+        })
+        setWorkspaces(newWorkspaces)
+      }).catch((err) => { })
+    } catch (error) {
+
+    }
   }
 
   const getStarredBoards = () => {
@@ -71,7 +75,7 @@ export default function BoardDetailPage() {
     workspaces.forEach((w) => {
       if (w.id === workspaceId) {
         const newBoard = w.boards?.find((b) => b.id === id)
-        if(!newBoard){
+        if (!newBoard) {
           router.push('/boards')
         }
         setBoard(newBoard)
@@ -154,12 +158,12 @@ export default function BoardDetailPage() {
     getWorkspaces()
   }
 
-  const updateColumn = async (column: ColumnType)=>{
+  const updateColumn = async (column: ColumnType) => {
     const workspace = getWorkspace(workspaceId || '')
     const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
       if (b.id === id) {
-        const newColumns = b.columns.map((c)=>{
-          if(c.id===column.id){
+        const newColumns = b.columns.map((c) => {
+          if (c.id === column.id) {
             return column
           }
           return c
@@ -177,11 +181,16 @@ export default function BoardDetailPage() {
 
   return (
     <div className={`relative max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh]`}>
-      <div className="w-full h-full absolute top-0 left-0 bottom-0 right-0 bg-black z-[-1]">
-        <Image width={2000} height={2000} src={`/assets/background/bg-${board?.background.type}/bg${board?.background.ntn}.jpg`} alt="bg" className="w-full h-full object-cover" />
-      </div>
-      <HeaderBoard addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />
-      <BoardContent updateColumn={updateColumn} reSetBoard={reSetBoard} renameBoard={renameBoard} getWorkspaces={getWorkspaces} starBoard={starBoard} board={board} workspaces={workspaces} boardId={pathName} />
+      {board &&
+        <>
+          <div className="w-full h-full absolute top-0 left-0 bottom-0 right-0 bg-black z-[-1]">
+
+            <Image width={2000} height={2000} src={`/assets/background/bg-${board?.background?.type}/bg${board?.background?.ntn}.jpg`} alt="bg" className="w-full h-full object-cover" />
+          </div>
+          <HeaderBoard addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />
+          <BoardContent updateColumn={updateColumn} reSetBoard={reSetBoard} renameBoard={renameBoard} getWorkspaces={getWorkspaces} starBoard={starBoard} board={board} workspaces={workspaces} boardId={pathName} />
+        </>
+      }
     </div>
   )
 }

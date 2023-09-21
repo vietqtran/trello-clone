@@ -4,28 +4,46 @@ import { Board } from './types'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export const addRecent = async (board: Board) => {
-    const data = await AsyncStorage.getItem('USER')
-    const user = JSON.parse(data || '')
-    const recent = [board, ...user.recentBoard]
-    if (recent.length > 10) {
-        recent.pop()
+    try {
+        const data = await AsyncStorage.getItem('USER')
+        const user = JSON.parse(data || '')
+        const newRecent: Board[] = []
+        user.recentBoard.forEach((b: Board) => {
+            return b.id !== board.id
+        })
+        console.log(newRecent)
+        const recent = [board, ...newRecent]
+        if (recent.length > 10) {
+            recent.pop()
+        }
+        console.log(recent)
+        const newUser = { ...user, recentBoard: [...recent] }
+        try {
+            await AsyncStorage.setItem('USER', JSON.stringify(newUser))
+        } catch (error) {
+
+        }
+        await updateDoc(doc(db, 'users', user.id), newUser)
+    } catch (error) {
+
     }
-    const newUser = { ...user, recentBoard: recent }
-    window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(newUser)) : undefined;
-    await updateDoc(doc(db, 'users', user.id), newUser)
 }
 
-export const changeStar = async(id:string)=>{
-    const data = await AsyncStorage.getItem('USER')
-    const user = JSON.parse(data || '')
-    const recent = [...user.recentBoard]
-    const newRecent = recent.map((r)=>{
-        if(r.id===id){
-            return {...r, star: !r.star}
-        }
-        return r
-    })
-    const newUser = { ...user, recentBoard: newRecent }
-    window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(newUser)) : undefined;
-    await updateDoc(doc(db, 'users', user.id), newUser)
+export const changeStar = async (id: string) => {
+    try {
+        const data = await AsyncStorage.getItem('USER')
+        const user = JSON.parse(data || '')
+        const recent = [...user.recentBoard]
+        const newRecent = recent.map((r) => {
+            if (r.id === id) {
+                return { ...r, star: !r.star }
+            }
+            return r
+        })
+        const newUser = { ...user, recentBoard: newRecent }
+        await AsyncStorage.setItem('USER', JSON.stringify(newUser))
+        await updateDoc(doc(db, 'users', user.id), newUser)
+    } catch (error) {
+
+    }
 }
