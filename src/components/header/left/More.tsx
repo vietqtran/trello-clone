@@ -2,9 +2,13 @@ import React, { useRef, useState } from "react"
 import { SlArrowDown } from "react-icons/sl"
 import { useOnClickOutside } from "usehooks-ts"
 import MoreDropdown from "./MoreDropdown"
+import { Board, WorkspaceType } from "@/types"
 
 type Props = {
    headerType: string
+   workspaces: WorkspaceType[]
+   starredBoards: Board[]
+   recentBoards: Board[]
 }
 
 function More(props: Props) {
@@ -41,6 +45,9 @@ function More(props: Props) {
 
          {showDropdown.show && (
             <MoreDropdown
+               workspaces={props.workspaces}
+               starredBoards={props.starredBoards}
+               recentBoards={props.recentBoards}
                showDropdown={showDropdown}
                setShowDropdown={setShowDropdown}
             />

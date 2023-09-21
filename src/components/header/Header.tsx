@@ -82,7 +82,12 @@ function Header(props: Props) {
                </div>
                {/* More, Create, Workspaces, Recent, Starred, and Templates links */}
                <div className='items-center justify-start md:hidden flex'>
-                  <More headerType={""} />
+                  <More
+                     workspaces={props.workspaces}
+                     starredBoards={props.starredBoards}
+                     recentBoards={user.recentBoard}
+                     headerType={""}
+                  />
                   <Create
                      workspaceId={props.workspaces[0]?.id}
                      addBoard={props.addBoard}

@@ -71,7 +71,12 @@ function HeaderBoard(props: Props) {
                   </Link>
                </div>
                <div className='items-center justify-start md:hidden flex'>
-                  <More headerType={"board"} />
+                  <More
+                     workspaces={props.workspaces}
+                     starredBoards={props.starredBoards}
+                     recentBoards={user.recentBoard}
+                     headerType={"board"}
+                  />
                   <Create
                      workspaceId={props.workspaces[0]?.id}
                      addBoard={props.addBoard}
