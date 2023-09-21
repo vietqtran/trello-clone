@@ -11,7 +11,7 @@ export const addRecent = async (board: Board) => {
         recent.pop()
     }
     const newUser = { ...user, recentBoard: recent }
-    await AsyncStorage.setItem('USER', JSON.stringify(newUser))
+    window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(newUser)) : undefined;
     await updateDoc(doc(db, 'users', user.id), newUser)
 }
 
@@ -26,6 +26,6 @@ export const changeStar = async(id:string)=>{
         return r
     })
     const newUser = { ...user, recentBoard: newRecent }
-    await AsyncStorage.setItem('USER', JSON.stringify(newUser))
+    window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(newUser)) : undefined;
     await updateDoc(doc(db, 'users', user.id), newUser)
 }

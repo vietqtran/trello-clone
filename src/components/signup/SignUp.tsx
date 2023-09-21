@@ -57,7 +57,7 @@ function SignUp() {
 
    const googleSignIn = () => {
       const setUser = async(user: any)=>{
-         await AsyncStorage.setItem('USER', JSON.stringify(user));
+         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(user)) : undefined;
       }
       signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
@@ -87,7 +87,7 @@ function SignUp() {
    
    const add = async (emailParam: string, passwordParam: string, auth: string) => {
       const setUser = async(user: any)=>{
-         await AsyncStorage.setItem('USER', JSON.stringify(user));
+         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(user)) : undefined;
       }
       const addWorkspace = async(userId:string)=>{
          await addDoc(workspaceCollectionRef, {

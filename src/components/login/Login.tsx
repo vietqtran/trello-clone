@@ -56,7 +56,7 @@ function Login() {
 
    const addUser = async (email: any) => {
       const setUser = async(user: any)=>{
-         await AsyncStorage.setItem('USER', JSON.stringify(user));
+         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(user)) : undefined;
       }
 
       const addWorkspace = async(userId:string)=>{
@@ -93,7 +93,7 @@ function Login() {
 
    const googleSignIn = () => {
       const setUser = async(user: any)=>{
-         await AsyncStorage.setItem('USER', JSON.stringify(user));
+         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(user)) : undefined;
       }
        signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
@@ -134,7 +134,7 @@ function Login() {
       if (check === false) {
          setError({ show: true, message: 'This address is not exist!' })
       } else {
-         await AsyncStorage.setItem('USER', JSON.stringify(userLocal));
+         window !== undefined ? await AsyncStorage.setItem('USER', JSON.stringify(userLocal)) : undefined;
          router.push('/boards')
       }
    }
