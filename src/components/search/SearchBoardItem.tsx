@@ -35,10 +35,10 @@ function SearchBoardItem(props: Props) {
          className='flex items-start justify-between mt-3 p-1 hover:bg-slate-100 rounded-md cursor-pointer'
       >
          {/* Board Background Image */}
-         <div className='flex items-center justify-start w-full'>
+         <div className='flex items-center justify-start w-fit'>
             <Image
                priority
-               className='rounded-md block w-full'
+               className='rounded-md block w-[50px] h-[40px] object-cover'
                src={`/assets/background/bg-${props.board.background.type}/bg${props.board.background.ntn}.jpg`}
                width={40}
                height={40}

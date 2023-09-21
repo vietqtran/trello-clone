@@ -25,7 +25,7 @@ function SearchBoard(props: Props) {
 
       props.workspaces?.forEach((w) => {
          w.boards?.forEach((b) => {
-            if (b.title.includes(props.input)) {
+            if (b.title.toLowerCase().includes(props.input.toLowerCase())) {
                newBoards.push({ board: b, workspace: w.name })
             }
          })
