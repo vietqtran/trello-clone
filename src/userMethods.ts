@@ -8,15 +8,19 @@ export const addRecent = async (board: Board) => {
         const data = await AsyncStorage.getItem('USER')
         const user = JSON.parse(data || '')
         const newRecent: Board[] = []
-        user.recentBoard.forEach((b: Board) => {
-            return b.id !== board.id
+        for (let i = 0; i < user.recentBoard.length; i++) {
+            if (user.recentBoard[i].id != board.id) {
+                newRecent.push(user.recentBoard[i])
+            }
+        }
+        let recent = newRecent.filter((b: Board, index) => {
+            return newRecent.indexOf(board) === index
         })
-        console.log(newRecent)
-        const recent = [board, ...newRecent]
+        recent = [board, ...newRecent]
+
         if (recent.length > 10) {
             recent.pop()
         }
-        console.log(recent)
         const newUser = { ...user, recentBoard: [...recent] }
         try {
             await AsyncStorage.setItem('USER', JSON.stringify(newUser))
