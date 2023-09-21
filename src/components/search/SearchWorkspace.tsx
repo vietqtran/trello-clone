@@ -11,7 +11,6 @@ function SearchWorkspace(props: Props) {
    const [searchWorkspaces, setSearchWorkspaces] = useState<WorkspaceType[]>([])
 
    useEffect(()=>{
-      console.log(searchWorkspaces)
       search()
    }, [props.input])
 

@@ -16,7 +16,6 @@ type Props = {
 
 function BoardRight(props: Props) {
 
-   console.log(props.board?.columns)
 
    const handleAddCard = (id: string, card: CardType) => {
       const newColumns = props.board?.columns.map((col) => {
@@ -50,7 +49,6 @@ function BoardRight(props: Props) {
             newColumns.splice(result.destination.index, 0, removed);
             props.reSetBoard(newColumns)
          } else {
-            console.log(result)
             if (result.destination.droppableId === result.source.droppableId) {
                const columnActive = props.board?.columns.find((col) => {
                   return col.id === result.source.droppableId
@@ -77,11 +75,9 @@ function BoardRight(props: Props) {
                const columnEnd = props.board?.columns.find((col) => {
                   return col.id === result.destination?.droppableId
                })
-               console.log(columnEnd)
                const columnStart = props.board?.columns.find((col) => {
                   return col.id === result.source.droppableId
                })
-               console.log(columnStart)
                if (cardSource) {
                   columnEnd?.cards.splice(result.destination.index, 0, cardSource)
                }

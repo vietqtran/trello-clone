@@ -92,7 +92,6 @@ export default function BoardDetailPage() {
         boardsUpdate.push(board)
       }
     })
-    console.log(workspaceUpdate)
     await updateDoc(doc(db, 'workspaces', workspaceId), {
       ...workspaceUpdate,
       boards: boardsUpdate,
@@ -133,7 +132,6 @@ export default function BoardDetailPage() {
       }
       return b
     })
-    console.log(newBoards)
     await updateDoc(doc(db, 'workspaces', workspace?.id || ''), {
       ...workspace,
       boards: newBoards,
@@ -142,7 +140,6 @@ export default function BoardDetailPage() {
   }
 
   const reSetBoard = async (columns: ColumnType[]) => {
-    console.log(board)
     const workspace = getWorkspace(workspaceId || '')
     const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
       if (b.id === id) {

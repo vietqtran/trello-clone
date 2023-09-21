@@ -19,7 +19,6 @@ export default function SearchPage() {
 
   useEffect(() => {
     getWorkspaces()
-    console.log(workspaces)
   }, [])
   useEffect(() => {
     getStarredBoards()

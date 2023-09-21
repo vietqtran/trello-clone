@@ -13,14 +13,12 @@ var uniqid = require('uniqid');
 export default function WorkspacePage() {
 
   const id = usePathname().split('/').at(-1)
-  console.log(id)
   const workspaceCollectionRef = collection(db, "workspaces")
   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
   const router = useRouter()
 
   useEffect(() => {
     getWorkspaces()
-    console.log(workspaces)
   }, [])
   useEffect(() => {
     getStarredBoards()
@@ -97,7 +95,6 @@ export default function WorkspacePage() {
       }
     }
     const workspace = workspaces?.find((w) => w.id === id)
-    console.log(workspace)
     return workspace
   }
 

@@ -38,7 +38,6 @@ function Login() {
 
    useEffect(() => {
       getUsers()
-      console.log(users)
    }, [])
 
    const getUsers = async () => {
@@ -125,7 +124,6 @@ function Login() {
             check = true
             if (password === user.password) {
                userLocal = { ...user }
-               console.log(user)
                dispatch(logIn(user))
             } else {
                setError({ show: true, message: 'Password is incorrect!' })
@@ -140,7 +138,6 @@ function Login() {
          router.push('/boards')
       }
    }
-   console.log(users)
 
 
    return (

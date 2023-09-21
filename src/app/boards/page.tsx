@@ -101,7 +101,6 @@ export default function BoardsPage() {
     })
     return newStarredBoards
   }
-  console.log(workspaces)
   return (
     <div>
       <Header addBoard={addBoard} starredBoards={getStarredBoards()} workspaces={workspaces} />
