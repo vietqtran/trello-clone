@@ -1,43 +1,71 @@
-import { Board, WorkspaceType } from '@/types'
-import { addRecent } from '@/userMethods'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import React, { memo } from 'react'
-import { AiOutlineStar } from 'react-icons/ai'
+import { Board } from "@/types"
+import { addRecent } from "@/userMethods"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import React, { memo } from "react"
 
+// Define props for the SearchBoardItem component
 type Props = {
-   board: Board,
+   board: Board
    workspace: string
 }
 
+// Create the SearchBoardItem component
 function SearchBoardItem(props: Props) {
    const router = useRouter()
-   const handleClick = ()=>{
-      addRecent(props.board || { id: '', background: { ntn: 0, type: '' }, columns: [], star: false, title: '', workspaceId: '' })
+
+   // Handle the click event to add the board to recent and navigate to the board
+   const handleClick = () => {
+      addRecent(
+         props.board || {
+            id: "",
+            background: { ntn: 0, type: "" },
+            columns: [],
+            star: false,
+            title: "",
+            workspaceId: "",
+         }
+      )
       router.push(`/boards/${props.workspace}/${props.board.id}`)
    }
+
    return (
-      <div 
+      <div
          onClick={handleClick}
-      className='flex items-start justify-between mt-3 p-1 hover:bg-slate-100 rounded-md cursor-pointer'>
-         <div className=' flex items-center justify-start w-full'>
+         className='flex items-start justify-between mt-3 p-1 hover:bg-slate-100 rounded-md cursor-pointer'
+      >
+         {/* Board Background Image */}
+         <div className='flex items-center justify-start w-full'>
             <Image
-            priority
+               priority
                className='rounded-md block w-full'
-               src={`/assets/background/bg-${props.board.background.type}/bg${props.board.background.ntn}.jpg`} width={40} height={40} alt='board-bg' />
+               src={`/assets/background/bg-${props.board.background.type}/bg${props.board.background.ntn}.jpg`}
+               width={40}
+               height={40}
+               alt='board-bg'
+            />
          </div>
+
+         {/* Board Details */}
          <div className='h-full leading-5 ml-3 flex-1'>
             <div className='flex items-center justify-between'>
                <div className='max-w-[200px] md:max-w-[450px] w-auto'>
-                  <p className='truncate whitespace-nowrap font-semibold text-sm'>{props.board?.title}</p>
+                  {/* Truncate and display the board title */}
+                  <p className='truncate whitespace-nowrap font-semibold text-sm'>
+                     {props.board?.title}
+                  </p>
                </div>
             </div>
             <div className='max-w-[200px]'>
-               <p className='truncate whitespace-nowrap text-xs'>{props.workspace}</p>
+               {/* Truncate and display the workspace name */}
+               <p className='truncate whitespace-nowrap text-xs'>
+                  {props.workspace}
+               </p>
             </div>
          </div>
       </div>
    )
 }
 
+// Export the SearchBoardItem component as a memoized component
 export default memo(SearchBoardItem)

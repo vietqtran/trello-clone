@@ -1,6 +1,6 @@
-import React from 'react'
-import HomeHeader from './HomeHeader'
-import HomeContent from './HomeContent'
+import React from "react"
+import HomeHeader from "./HomeHeader"
+import HomeContent from "./HomeContent"
 
 function Home() {
    return (
