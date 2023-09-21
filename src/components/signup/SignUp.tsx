@@ -56,8 +56,13 @@ function SignUp() {
    }
 
    const googleSignIn = () => {
-      const setUser = async(user: any)=>{
-         await AsyncStorage.setItem('USER', JSON.stringify(user));
+      const setUser = async (user: any) => {
+         try {
+            await AsyncStorage.setItem('USER', JSON.stringify(user))
+
+         } catch (error) {
+
+         }
       }
       signInWithPopup(auth, googleProvider).then((result) => {
          let check = false
@@ -84,12 +89,17 @@ function SignUp() {
       })
    }
 
-   
+
    const add = async (emailParam: string, passwordParam: string, auth: string) => {
-      const setUser = async(user: any)=>{
-         await AsyncStorage.setItem('USER', JSON.stringify(user));
+      const setUser = async (user: any) => {
+         try {
+            await AsyncStorage.setItem('USER', JSON.stringify(user))
+
+         } catch (error) {
+
+         }
       }
-      const addWorkspace = async(userId:string)=>{
+      const addWorkspace = async (userId: string) => {
          await addDoc(workspaceCollectionRef, {
             userId: userId,
             name: 'My Workspace',
@@ -155,7 +165,7 @@ function SignUp() {
          </div>
 
          <div className="flex items-center justify-center py-10">
-            <Image src={'/assets/trello-logo-blue.svg'} alt="logo" width={200} height={200} />
+            <Image priority src={'/assets/trello-logo-blue.svg'} alt="logo" width={200} height={200} />
          </div>
 
          <div>
@@ -208,8 +218,8 @@ function SignUp() {
                            {(password.length >= 8 ?
                               <span className=''><AiFillCheckCircle /></span>
                               :
-                           <span><AiFillCloseCircle /></span>)}
-                        <span className='ml-2'>At least 8 characters</span>
+                              <span><AiFillCloseCircle /></span>)}
+                           <span className='ml-2'>At least 8 characters</span>
                         </>
                      }
                   </div>
@@ -229,12 +239,12 @@ function SignUp() {
                   <div className={`flex text-sm font-semibold items-center justify-start w-full  ${(password && confirm && password === confirm) ? 'text-green-500' : 'text-red-500'}`}>
                      {confirm.length > 0 &&
                         <>
-                        {(password && confirm && password === confirm) ?
-                           <span className=''><AiFillCheckCircle /></span>
-                           :
-                           <span><AiFillCloseCircle /></span>
-                        }
-                        <span className='ml-2'>Matched</span>   
+                           {(password && confirm && password === confirm) ?
+                              <span className=''><AiFillCheckCircle /></span>
+                              :
+                              <span><AiFillCloseCircle /></span>
+                           }
+                           <span className='ml-2'>Matched</span>
                         </>
                      }
                   </div>
@@ -247,17 +257,17 @@ function SignUp() {
                <span className='font-light text-xs my-5'>OR</span>
                <div onClick={googleSignIn}>
                   <AuthButton name='Google'>
-                     <Image src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
+                     <Image priority src={'/assets/google-icon.svg'} alt='google-icon' width={20} height={20} />
                   </AuthButton>
                </div>
                <AuthButton name='Microsoft'>
-                  <Image src={'/assets/microsoft-icon.svg'} alt='google-icon' width={20} height={20} />
+                  <Image priority src={'/assets/microsoft-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>
                <AuthButton name='Apple'>
-                  <Image src={'/assets/apple-icon.svg'} alt='google-icon' width={20} height={20} />
+                  <Image priority src={'/assets/apple-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>
                <AuthButton name='Slack'>
-                  <Image src={'/assets/slack-icon.svg'} alt='google-icon' width={20} height={20} />
+                  <Image priority src={'/assets/slack-icon.svg'} alt='google-icon' width={20} height={20} />
                </AuthButton>
                <hr className='w-[300px] mt-3' />
                <div className='flex items-center justify-center mt-4'>

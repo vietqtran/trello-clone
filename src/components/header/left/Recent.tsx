@@ -18,7 +18,10 @@ function Recent(props: Props) {
             <div className='w-full max-h-[50vh] overflow-y-auto'>
                {props.recentBoards?.length > 0 ? <div>
                   {props.recentBoards.map((board) => {
-                     return <RecentItem board={board} key={board.id} />
+                     if (board!==null) {
+                        return <RecentItem board={board} key={board.id} />
+                     }
+                     return null
                   })}
                </div> :
                   <div>No recent board</div>

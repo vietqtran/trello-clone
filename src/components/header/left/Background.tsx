@@ -25,6 +25,7 @@ function Background(props: Props) {
             width={200}
             height={100}
             alt='bg'
+            priority
          />
       </div>
    )

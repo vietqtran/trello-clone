@@ -32,11 +32,16 @@ function MoreDropdown(props: Props) {
 
    useEffect(() => {
       const getUser = async () => {
-         const data = await AsyncStorage.getItem('USER')
-         if (data) {
-            setUser(JSON.parse(data))
-         } else {
-            router.push('/')
+         try {
+            const data = await AsyncStorage.getItem('USER')
+            if (data) {
+               setUser(JSON.parse(data))
+            } else {
+               router.push('/')
+            }
+
+         } catch (error) {
+
          }
       }
       getUser()

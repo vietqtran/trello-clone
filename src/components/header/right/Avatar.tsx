@@ -27,7 +27,11 @@ function Avatar(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
 
    const removeUser = async () => {
-      await AsyncStorage.removeItem('USER')
+      try {
+         await AsyncStorage.removeItem('USER')
+      } catch (error) {
+
+      }
    }
 
    const handleLogOut = () => {

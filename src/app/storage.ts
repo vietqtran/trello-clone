@@ -11,7 +11,7 @@ const getUser = async () => {
 const storeUser = async (value: any) => {
    try {
       const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem('user', jsonValue);
+      await AsyncStorage.setItem('USER', jsonValue)
    } catch (e) {
    }
 };

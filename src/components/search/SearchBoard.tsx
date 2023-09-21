@@ -12,7 +12,6 @@ function SearchBoard(props: Props) {
    const [searchBoard, setSearchBoard] = useState<{board: Board, workspace: string}[]>([])
 
    useEffect(()=>{
-      console.log(searchBoard)
       search()
    }, [props.input])
 

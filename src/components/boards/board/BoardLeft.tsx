@@ -19,7 +19,6 @@ type Props = {
 function BoardLeft(props: Props) {
 
    const [tab, setTab] = useState('Boards')
-   console.log(props.board)
    return (
       <div>
          {props.showSideBar &&

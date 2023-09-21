@@ -37,35 +37,19 @@ function HeaderBoard(props: Props) {
 
    useEffect(() => {
       const getUser = async () => {
-         const data = await AsyncStorage.getItem('USER')
-         if (data) {
-            setUser(JSON.parse(data))
-         } else {
-            router.push('/')
+         try {
+            const data = await AsyncStorage.getItem('USER')
+            if (data) {
+               setUser(JSON.parse(data))
+            } else {
+               router.push('/')
+            }
+
+         } catch (error) {
+
          }
       }
       getUser()
-   }, [])
-   useEffect(() => {
-      const getRecentBoards = async () => {
-         const data = await AsyncStorage.getItem('USER')
-         const userId = JSON.parse(data || '').id
-         await getDocs(userCollectionRef).then((dataRef) => {
-            dataRef.docs.forEach((doc) => {
-               if (doc.id === userId) {
-                  const newUser: User = {
-                     id: doc.id,
-                     email: doc.data().email,
-                     password: doc.data().password,
-                     recentBoard: [...doc.data().recentBoard],
-                     auth: doc.data().auth
-                  }
-                  setUser(newUser)
-                  return
-               }
-            })
-         }).catch((err) => { })
-      }
    }, [])
 
    return (
@@ -81,13 +65,13 @@ function HeaderBoard(props: Props) {
                </div>
                <div className='items-center justify-start md:hidden flex'>
                   <More headerType={'board'} />
-                  <Create  workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
+                  <Create workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={''} setShowModal={setShowModal} />
                </div>
                <div className='items-center justify-start md:flex hidden'>
                   <Workspaces workspaces={props.workspaces} headerType={'board'} />
                   <Recent recentBoards={user.recentBoard} headerType={'board'} />
                   <Starred starredBoards={props.starredBoards} headerType={'board'} />
-                  <Create  workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
+                  <Create workspaceId={props.workspaces[0]?.id} addBoard={props.addBoard} workspaces={props.workspaces} headerType={'board'} setShowModal={setShowModal} />
                </div>
             </div>
             <div className='flex items-center justify-end'>

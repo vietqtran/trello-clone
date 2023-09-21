@@ -1,10 +1,7 @@
-import React, { memo, useEffect, useState } from 'react'
-import { db } from '@/firebase'
+import React from 'react'
 import { SlArrowDown } from 'react-icons/sl'
 import StarredItem from './StarredItem'
-import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
-import { Board, WorkspaceType } from '@/types'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Board } from '@/types'
 
 type Props = {
    headerType: string,

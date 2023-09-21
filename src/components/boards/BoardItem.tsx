@@ -46,6 +46,7 @@ function BoardItem(props: Props) {
             height={400}
             alt='bg'
             className='absolute w-full h-full object-cover z-10'
+            priority
          />
       </div>
    )

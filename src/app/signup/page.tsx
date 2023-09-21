@@ -7,9 +7,14 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter()
   const start = async () => {
-    const data = await AsyncStorage.getItem('USER')
-    if (data) {
-      router.push('/boards')
+    try {
+      const data = await AsyncStorage.getItem('USER')
+      if (data) {
+        router.push('/boards')
+      }
+
+    } catch (error) {
+
     }
   }
   start()
