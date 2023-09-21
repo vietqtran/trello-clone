@@ -210,7 +210,7 @@ function SignUp() {
                <div>
                   <input
                      required
-                     className='p-2 leading-none w-[300px] bg-slate-100 font-thin rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
+                     className='p-2 leading-none w-[300px] bg-slate-100 font-medium rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
                      placeholder='Enter email'
                      type='email'
                      value={emailInput}
@@ -251,7 +251,7 @@ function SignUp() {
                   <input
                      type={show ? "text" : "password"}
                      required
-                     className='p-2 leading-none w-[300px] bg-slate-100 pr-10 font-thin rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
+                     className='p-2 leading-none w-[300px] bg-slate-100 pr-10 font-medium rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
                      placeholder='Enter password'
                      value={password}
                      onChange={(e) => {
@@ -292,7 +292,7 @@ function SignUp() {
                   <input
                      type='password'
                      required
-                     className='p-2 leading-none w-[300px] bg-slate-100 pr-10 font-thin rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
+                     className='p-2 leading-none w-[300px] bg-slate-100 pr-10 font-medium rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
                      placeholder='Confirm password'
                      value={confirm}
                      onChange={(e) => {

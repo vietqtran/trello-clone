@@ -178,7 +178,7 @@ function Login() {
                      onChange={(e) => {
                         setEmailInput(e.target.value)
                      }}
-                     className='p-2 leading-none w-[300px] mb-3 bg-slate-100 font-thin rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
+                     className='p-2 leading-none w-[300px] mb-3 bg-slate-100 font-medium rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
                      placeholder='Enter email'
                      type='email'
                   />
@@ -190,7 +190,7 @@ function Login() {
                      onChange={(e) => {
                         setPassword(e.target.value)
                      }}
-                     className='p-2 leading-none w-[300px] bg-slate-100 pr-10 font-thin rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
+                     className='p-2 leading-none w-[300px] bg-slate-100 pr-10 font-medium rounded-md outline-none border-2 border-slate-300 focus:border-blue-400 ease-out duration-300'
                      placeholder='Enter password'
                   />
                   <div className='absolute right-0 top-[50%] translate-y-[-50%]'>
