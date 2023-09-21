@@ -1,5 +1,5 @@
-# [`Trello`]('https://trello-clone-ruby.vercel.app/').
-Clone by [`@vietqtran`]('https://github.com/vietqtran').
+# [`Trello`](https://trello-clone-ruby.vercel.app/).
+Clone by [`@vietqtran`](https://github.com/vietqtran).
 
 ## Getting Started
 
