@@ -22,7 +22,7 @@ function SearchWorkspace(props: Props) {
       const newWorkspaces: WorkspaceType[] = []
 
       props.workspaces?.forEach((w) => {
-         if (w.name.includes(props.input)) {
+         if (w.name.toLowerCase().includes(props.input.toLowerCase())) {
             newWorkspaces.push(w)
          }
       })
