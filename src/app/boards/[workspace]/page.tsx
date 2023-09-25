@@ -149,8 +149,12 @@ export default function WorkspacePage() {
 
    // Function to delete the current workspace
    const deleteWorkspace = async () => {
-      await deleteDoc(doc(db, "workspaces", id || ""))
+      if(workspaces.length==1){
+         alert(`Can't remove the last Workspace!`)
+      }else{
+         await deleteDoc(doc(db, "workspaces", id || ""))
       router.push("/boards")
+      }
    }
 
    return (

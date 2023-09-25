@@ -40,6 +40,7 @@ function ColumnOptions(props: Props) {
          <ul className='w-full text-sm'>
             <li
                onClick={() => {
+                  props.setShowActions({ show: false, tab: "" })
                   props.setShowInput(true)
                }}
                className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'
@@ -54,7 +55,12 @@ function ColumnOptions(props: Props) {
             >
                Copy list...
             </li>
-            <li className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'>
+            <li
+               onClick={() => {
+                  props.setShowActions({ show: true, tab: "move" })
+               }}
+               className='cursor-pointer w-full hover:bg-slate-200 py-1 px-4'
+            >
                Move list...
             </li>
             <li

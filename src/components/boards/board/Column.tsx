@@ -5,10 +5,11 @@ import { IoMdClose } from "react-icons/io"
 import Card from "./Card"
 import { useOnClickOutside } from "usehooks-ts"
 import ColumnOptions from "./ColumnOptions"
-import { CardType, ColumnType } from "@/types"
+import { CardType, ColumnType, WorkspaceType } from "@/types"
 import CopyList from "./CopyList"
 import { Draggable, Droppable } from "react-beautiful-dnd"
 import uuid from "react-uuid"
+import MoveList from "./MoveList"
 
 type Props = {
    column: ColumnType
@@ -19,6 +20,9 @@ type Props = {
    index: number
    handleDeleteList: Function
    updateColumn: Function
+   moveColumn: Function,
+   workspaces: WorkspaceType[]
+   workspace: WorkspaceType|undefined
 }
 
 function Column(props: Props) {
@@ -98,6 +102,15 @@ function Column(props: Props) {
                         handleAddList={props.handleAddList}
                         column={props.column}
                         setShowActions={setShowActions}
+                     />
+                  )}
+                  {showActions.show && showActions.tab === "move" && (
+                     <MoveList
+                        moveColumn={props.moveColumn}
+                        column={props.column}
+                        setShowActions={setShowActions}
+                        workspaces={props.workspaces}
+                        workspace={props.workspace}
                      />
                   )}
                </div>

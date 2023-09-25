@@ -5,13 +5,15 @@ import { Board, WorkspaceType } from "@/types"
 
 type Props = {
    boardId: string
-   workspaces: WorkspaceType[] | undefined
+   workspaces: WorkspaceType[]
    board: Board | undefined
    starBoard: Function
    getWorkspaces: Function
    renameBoard: Function
    reSetBoard: Function
-   updateColumn: Function
+   updateColumn: Function,
+   moveColumn:Function,
+   workspace: WorkspaceType|undefined
 }
 
 function BoardContent(props: Props) {
@@ -43,12 +45,15 @@ function BoardContent(props: Props) {
          </div>
          <div className='flex-1 h-[calc(100vh-55px)]'>
             <BoardRight
+               moveColumn={props.moveColumn}
                updateColumn={props.updateColumn}
                reSetBoard={props.reSetBoard}
                renameBoard={props.renameBoard}
                starBoard={props.starBoard}
                board={props.board}
                showSideBar={showSideBar}
+               workspaces={props.workspaces}
+               workspace={props.workspace}
             />
          </div>
       </div>

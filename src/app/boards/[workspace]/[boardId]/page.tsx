@@ -20,12 +20,10 @@ export default function BoardDetailPage() {
    const router = useRouter()
 
    useEffect(() => {
-      // Fetch user workspaces on component mount
       getWorkspaces()
    }, [])
 
    useEffect(() => {
-      // Fetch the selected board when workspaces change
       getBoard()
    }, [workspaces])
 
@@ -166,6 +164,13 @@ export default function BoardDetailPage() {
       getWorkspaces()
    }
 
+   const deleteColumn = (id: string) => {
+      const newList = board?.columns.filter((col) => {
+         return col.id !== id
+      })
+      reSetBoard(newList || [])
+   }
+
    const updateColumn = async (column: ColumnType) => {
       const workspace = getWorkspace(workspaceId || "")
       const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
@@ -187,6 +192,63 @@ export default function BoardDetailPage() {
       getWorkspaces()
    }
 
+   const moveColumn = async (
+      receiveWorkspaceId: string,
+      receiveBoardId: string,
+      receiveIndex: number,
+      column: ColumnType,
+      idDelete: string
+   ) => {
+      const receiveWorkspace: WorkspaceType = workspaces.find(
+         (w) => w.id === receiveWorkspaceId
+      ) || {
+         id: "",
+         userId: "",
+         name: "",
+         boards: [],
+         type: "",
+         description: "",
+      }
+      const receiveBoard: Board = receiveWorkspace.boards?.find(
+         (b) => b.id === receiveBoardId
+      ) || {
+         id: "",
+         workspaceId: "",
+         title: "",
+         columns: [],
+         star: false,
+         background: {
+            ntn: 0,
+            type: "",
+         },
+      }
+      const columns: ColumnType[] = [...receiveBoard.columns]
+      let newColumns: ColumnType[] = []
+      if (columns.length == 0) {
+         newColumns.push(column)
+      } else if (receiveIndex === columns.length) {
+         newColumns = [...columns, column]
+      } else {
+         columns.forEach((c, index) => {
+            if (index === receiveIndex) {
+               newColumns.push(column)
+            }
+            newColumns.push(c)
+         })
+      }
+      const newBoard = { ...receiveBoard, columns: newColumns }
+      const newBoards = receiveWorkspace.boards?.map((b) => {
+         if (b.id === newBoard.id) {
+            return newBoard
+         }
+         return b
+      })
+      receiveWorkspace.boards = newBoards
+      await updateDoc(doc(db, "workspaces", receiveWorkspaceId), receiveWorkspace)
+      deleteColumn(idDelete)
+   }
+
+   // TODO move with same board
    return (
       <div
          className={`relative max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh]`}
@@ -210,6 +272,7 @@ export default function BoardDetailPage() {
                   workspaces={workspaces}
                />
                <BoardContent
+                  moveColumn={moveColumn}
                   updateColumn={updateColumn}
                   reSetBoard={reSetBoard}
                   renameBoard={renameBoard}
@@ -218,6 +281,7 @@ export default function BoardDetailPage() {
                   board={board}
                   workspaces={workspaces}
                   boardId={pathName}
+                  workspace={getWorkspace(board.workspaceId)}
                />
             </>
          )}
