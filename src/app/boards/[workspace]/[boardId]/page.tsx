@@ -244,7 +244,10 @@ export default function BoardDetailPage() {
          return b
       })
       receiveWorkspace.boards = newBoards
-      await updateDoc(doc(db, "workspaces", receiveWorkspaceId), receiveWorkspace)
+      await updateDoc(
+         doc(db, "workspaces", receiveWorkspaceId),
+         receiveWorkspace
+      )
       deleteColumn(idDelete)
    }
 

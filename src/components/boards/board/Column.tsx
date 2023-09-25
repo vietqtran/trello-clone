@@ -5,7 +5,7 @@ import { IoMdClose } from "react-icons/io"
 import Card from "./Card"
 import { useOnClickOutside } from "usehooks-ts"
 import ColumnOptions from "./ColumnOptions"
-import { CardType, ColumnType, WorkspaceType } from "@/types"
+import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import CopyList from "./CopyList"
 import { Draggable, Droppable } from "react-beautiful-dnd"
 import uuid from "react-uuid"
@@ -23,6 +23,7 @@ type Props = {
    moveColumn: Function,
    workspaces: WorkspaceType[]
    workspace: WorkspaceType|undefined
+   board:Board|undefined
 }
 
 function Column(props: Props) {
@@ -111,6 +112,7 @@ function Column(props: Props) {
                         setShowActions={setShowActions}
                         workspaces={props.workspaces}
                         workspace={props.workspace}
+                        board={props.board}
                      />
                   )}
                </div>
