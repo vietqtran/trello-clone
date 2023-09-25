@@ -152,6 +152,7 @@ function BoardRight(props: Props) {
                                  key={col.id}
                                  index={index}
                                  handleAddList={handleAddList}
+                                 board={props.board}
                                  columns={props.board?.columns || []}
                                  column={col}
                                  handleAddCard={handleAddCard}

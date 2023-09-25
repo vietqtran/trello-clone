@@ -10,6 +10,7 @@ type Props = {
    moveColumn: Function
    workspaces: WorkspaceType[]
    workspace: WorkspaceType | undefined
+   board: Board | undefined
 }
 
 function MoveList(props: Props) {
@@ -38,12 +39,14 @@ function MoveList(props: Props) {
 
    const move = () => {
       if (board?.id !== "") {
-         props.moveColumn(board?.workspaceId, board?.id, index, {
-            ...props.column,
-            id: uniqid(),
-         }, props.column.id)
-      } else {
-         console.log("!oke")
+         if(board?.id!==props.board?.id){
+            props.moveColumn(board?.workspaceId, board?.id, index, {
+               ...props.column,
+               id: uniqid(),
+            }, props.column.id)
+         }else{
+            alert(`Can't move column within same board!\nPlease use drag-drop!`)
+         }
       }
    }
 
@@ -137,17 +140,6 @@ function MoveList(props: Props) {
                               >
                                  {index}
                               </span>
-                              {board.columns.length >= 1 && (
-                                 <span
-                                    onClick={() => {
-                                       setIndex(board.columns.length)
-                                       setShowSelectIndex(false)
-                                    }}
-                                    className='text-sm font-medium hover:bg-blue-500 hover:text-white pl-2'
-                                 >
-                                    {board.columns.length}
-                                 </span>
-                              )}
                            </>
                         )
                      })}
