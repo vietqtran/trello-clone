@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from "react"
 import BoardRightHeader from "./BoardRightHeader"
 import Column from "./Column"
 import AddAnotherListButton from "./AddAnotherListButton"
-import { Board, CardType, ColumnType } from "@/types"
+import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd"
 
 // Define the Props type for the BoardRight component
@@ -12,7 +12,10 @@ type Props = {
    starBoard: Function
    renameBoard: Function
    reSetBoard: Function
-   updateColumn: Function
+   updateColumn: Function,
+   moveColumn: Function
+   workspaces: WorkspaceType[]
+   workspace: WorkspaceType|undefined
 }
 
 function BoardRight(props: Props) {
@@ -155,6 +158,9 @@ function BoardRight(props: Props) {
                                  handleDeleteList={handleDeleteList}
                                  reSetBoard={props.reSetBoard}
                                  updateColumn={props.updateColumn}
+                                 moveColumn={props.moveColumn}
+                                 workspaces={props.workspaces}
+                                 workspace={props.workspace}
                               />
                            )
                         })}
