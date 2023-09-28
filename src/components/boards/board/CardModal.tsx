@@ -22,6 +22,9 @@ type Props = {
    moveCardBetweenWorkspaces: Function
    workspaces: WorkspaceType[]
    board: Board | undefined
+   moveCardWithinWorkspace: Function
+   workspace: WorkspaceType | undefined
+   moveCardWithinBoard: Function
 }
 
 function CardModal(props: Props) {
@@ -231,6 +234,11 @@ function CardModal(props: Props) {
                               card={props.card}
                               column={props.column}
                               deleteCard={props.deleteCard}
+                              moveCardWithinWorkspace={
+                                 props.moveCardWithinWorkspace
+                              }
+                              workspace={props.workspace}
+                              moveCardWithinBoard={props.moveCardWithinBoard}
                            />
                         )}
                      </div>

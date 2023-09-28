@@ -11,6 +11,9 @@ type Props = {
    card: CardType
    column: ColumnType
    deleteCard: Function
+   moveCardWithinWorkspace: Function
+   workspace: WorkspaceType | undefined
+   moveCardWithinBoard: Function
 }
 
 function CardMoveSelect(props: Props) {
@@ -20,14 +23,46 @@ function CardMoveSelect(props: Props) {
    const [position, setPosition] = useState<number>(NaN)
 
    const move = () => {
-      props.moveCardBetweenWorkspaces(
-         board,
-         column,
-         props.card,
-         position,
-         props.column,
-         props.board
-      )
+      if (
+         board &&
+         board?.id !== "" &&
+         column &&
+         column.id !== "" &&
+         !Number.isNaN(position)
+      ) {
+         if (props.board?.workspaceId !== board?.workspaceId) {
+            props.moveCardBetweenWorkspaces(
+               board,
+               column,
+               props.card,
+               position,
+               props.column,
+               props.board
+            )
+         } else {
+            if (props.board.id === board.id) {
+               props.moveCardWithinBoard(
+                  props.board,
+                  props.column,
+                  column,
+                  props.card,
+                  position
+               )
+            } else {
+               props.moveCardWithinWorkspace(
+                  props.workspace,
+                  props.board,
+                  board,
+                  props.column,
+                  column,
+                  props.card,
+                  position
+               )
+            }
+         }
+      } else {
+         alert("Please select all field!")
+      }
    }
 
    return (

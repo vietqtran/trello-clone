@@ -326,6 +326,99 @@ export default function BoardDetailPage() {
       getWorkspaces()
    }
 
+   const moveCardWithinWorkspace = async (
+      workspace: WorkspaceType,
+      sourceBoard: Board,
+      destinationBoard: Board,
+      sourceColumn: ColumnType,
+      destinationColumn: ColumnType,
+      card: CardType,
+      index: number
+   ) => {
+      const cardToMove = sourceColumn.cards.find((c) => c.id === card.id)
+      if (!cardToMove) {
+         return
+      }
+      const newSourceColumn: ColumnType = {
+         ...sourceColumn,
+         cards: sourceColumn.cards.filter((c) => c.id !== card.id),
+      }
+      const newDestinationColumn: ColumnType = {
+         ...destinationColumn,
+         cards: [
+            ...destinationColumn.cards.slice(0, index),
+            { ...cardToMove },
+            ...destinationColumn.cards.slice(index),
+         ],
+      }
+      const updatedSourceBoard: Board = {
+         ...sourceBoard,
+         columns: sourceBoard.columns.map((column) =>
+            column.id === newSourceColumn.id ? newSourceColumn : column
+         ),
+      }
+      const updatedDestinationBoard: Board = {
+         ...destinationBoard,
+         columns: destinationBoard.columns.map((column) =>
+            column.id === newDestinationColumn.id
+               ? newDestinationColumn
+               : column
+         ),
+      }
+      const updatedBoards: Board[] =
+         workspace.boards?.map((board) =>
+            board.id === updatedSourceBoard.id
+               ? updatedSourceBoard
+               : board.id === updatedDestinationBoard.id
+               ? updatedDestinationBoard
+               : board
+         ) || []
+      const updatedWorkspace: WorkspaceType = {
+         ...workspace,
+         boards: updatedBoards,
+      }
+      await updateDoc(
+         doc(db, "workspaces", updatedWorkspace.id),
+         updatedWorkspace
+      )
+      getWorkspaces()
+   }
+
+   const moveCardWithinBoard = (
+      board: Board,
+      sourceColumn: ColumnType,
+      destinationColumn: ColumnType,
+      card: CardType,
+      index: number
+   ) => {
+      const newSourceColumn: ColumnType = {
+         ...sourceColumn,
+         cards: sourceColumn.cards.filter((c) => c.id !== card.id),
+      }
+
+      const newCards: CardType[] = []
+      destinationColumn.cards.forEach((c, i) => {
+         if (i === index) {
+            newCards.push({ ...card, id: uniqid() })
+         }
+         newCards.push(c)
+      })
+
+      const newDestinationColumn: ColumnType = {
+         ...destinationColumn,
+         cards: [...newCards],
+      }
+
+      const updatedColumns: ColumnType[] = board.columns.map((column) =>
+         column.id === newSourceColumn.id
+            ? newSourceColumn
+            : column.id === newDestinationColumn.id
+            ? newDestinationColumn
+            : column
+      )
+      reSetBoard(updatedColumns)
+   }
+
    return (
       <div
          className={`relative max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh]`}
@@ -360,6 +453,8 @@ export default function BoardDetailPage() {
                   boardId={pathName}
                   workspace={getWorkspace(board.workspaceId)}
                   moveCardBetweenWorkspaces={moveCardBetweenWorkspaces}
+                  moveCardWithinWorkspace={moveCardWithinWorkspace}
+                  moveCardWithinBoard={moveCardWithinBoard}
                />
             </>
          )}

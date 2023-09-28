@@ -15,6 +15,8 @@ type Props = {
    moveColumn: Function
    workspace: WorkspaceType | undefined
    moveCardBetweenWorkspaces: Function
+   moveCardWithinWorkspace: Function
+   moveCardWithinBoard: Function
 }
 
 function BoardContent(props: Props) {
@@ -56,6 +58,8 @@ function BoardContent(props: Props) {
                workspaces={props.workspaces}
                workspace={props.workspace}
                moveCardBetweenWorkspaces={props.moveCardBetweenWorkspaces}
+               moveCardWithinWorkspace={props.moveCardWithinWorkspace}
+               moveCardWithinBoard={props.moveCardWithinBoard}
             />
          </div>
       </div>
