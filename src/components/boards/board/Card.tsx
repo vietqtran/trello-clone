@@ -4,7 +4,7 @@ import { HiOutlinePencil } from "react-icons/hi"
 import CardLabels from "./CardLabels"
 import { Draggable } from "react-beautiful-dnd"
 import CardModal from "./CardModal"
-import { ColumnType } from "@/types"
+import { Board, ColumnType, WorkspaceType } from "@/types"
 
 type Props = {
    card: {
@@ -21,6 +21,12 @@ type Props = {
    setLabels: Function
    setCover: Function
    deleteCard: Function
+   moveCardBetweenWorkspaces: Function
+   workspaces: WorkspaceType[]
+   board: Board | undefined
+   moveCardWithinWorkspace: Function
+   workspace: WorkspaceType | undefined
+   moveCardWithinBoard: Function
 }
 
 function Card(props: Props) {
@@ -58,7 +64,7 @@ function Card(props: Props) {
                      <CardLabels labels={props.card.labels} />
                   )}
                   <div className='p-2'>
-                     <p className='text-sm break-words block w-full'>
+                     <p className='text-sm whitespace-normal truncate max-w-[239px] block w-full'>
                         {props.card.text}
                      </p>
                      <span
@@ -81,6 +87,12 @@ function Card(props: Props) {
                column={props.column}
                card={props.card}
                setShowModal={setShowModal}
+               moveCardBetweenWorkspaces={props.moveCardBetweenWorkspaces}
+               workspaces={props.workspaces}
+               board={props.board}
+               moveCardWithinWorkspace={props.moveCardWithinWorkspace}
+               workspace={props.workspace}
+               moveCardWithinBoard={props.moveCardWithinBoard}
             />
          )}
       </>

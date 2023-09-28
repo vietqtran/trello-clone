@@ -12,10 +12,13 @@ type Props = {
    starBoard: Function
    renameBoard: Function
    reSetBoard: Function
-   updateColumn: Function,
+   updateColumn: Function
    moveColumn: Function
    workspaces: WorkspaceType[]
-   workspace: WorkspaceType|undefined
+   workspace: WorkspaceType | undefined
+   moveCardBetweenWorkspaces: Function
+   moveCardWithinWorkspace: Function
+   moveCardWithinBoard: Function
 }
 
 function BoardRight(props: Props) {
@@ -162,6 +165,13 @@ function BoardRight(props: Props) {
                                  moveColumn={props.moveColumn}
                                  workspaces={props.workspaces}
                                  workspace={props.workspace}
+                                 moveCardBetweenWorkspaces={
+                                    props.moveCardBetweenWorkspaces
+                                 }
+                                 moveCardWithinWorkspace={
+                                    props.moveCardWithinWorkspace
+                                 }
+                                 moveCardWithinBoard={props.moveCardWithinBoard}
                               />
                            )
                         })}

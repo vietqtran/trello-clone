@@ -1,20 +1,16 @@
-import { CardType, ColumnType } from "@/types"
+import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import React, { useEffect, useRef, useState } from "react"
-import {
-   AiOutlineClose,
-   AiOutlineCopy,
-   AiOutlineDelete,
-   AiOutlineMenu,
-} from "react-icons/ai"
+import { AiOutlineClose, AiOutlineDelete, AiOutlineMenu } from "react-icons/ai"
 import { FaFlipboard } from "react-icons/fa"
 import { useOnClickOutside } from "usehooks-ts"
 import CardEdit from "./CardEdit"
 import { MdOutlineLabel } from "react-icons/md"
 import { BiImage } from "react-icons/bi"
-import { FiArrowRight } from "react-icons/fi"
 import CardLabelSelect from "./CardLabelSelect"
 import Image from "next/image"
 import CardCoverSelect from "./CardCoverSelect"
+import { IoIosArrowRoundForward } from "react-icons/io"
+import CardMoveSelect from "./CardMoveSelect"
 
 type Props = {
    setShowModal: Function
@@ -23,6 +19,12 @@ type Props = {
    setLabels: Function
    setCoverCard: Function
    deleteCard: Function
+   moveCardBetweenWorkspaces: Function
+   workspaces: WorkspaceType[]
+   board: Board | undefined
+   moveCardWithinWorkspace: Function
+   workspace: WorkspaceType | undefined
+   moveCardWithinBoard: Function
 }
 
 function CardModal(props: Props) {
@@ -36,6 +38,7 @@ function CardModal(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
    const [showSelectLabel, setShowSelectLabel] = useState(false)
    const [showSelectCover, setShowSelectCover] = useState(false)
+   const [showMoveSelect, setShowMoveSelect] = useState(false)
    const [labels, setLabels] = useState<string[]>([])
    const [cover, setCover] = useState<{ ntn: number; type: string }>({
       ntn: 0,
@@ -209,6 +212,35 @@ function CardModal(props: Props) {
                      </div>
                      <div>
                         <span className='text-xs font-medium'>Actions</span>
+                     </div>
+                     <div className='relative'>
+                        <div
+                           onClick={() => {
+                              setShowMoveSelect(!showMoveSelect)
+                           }}
+                        >
+                           <CardEdit type={"Move"}>
+                              <IoIosArrowRoundForward />
+                           </CardEdit>
+                        </div>
+                        {showMoveSelect && (
+                           <CardMoveSelect
+                              moveCardBetweenWorkspaces={
+                                 props.moveCardBetweenWorkspaces
+                              }
+                              setShowMoveSelect={setShowMoveSelect}
+                              workspaces={props.workspaces}
+                              board={props.board}
+                              card={props.card}
+                              column={props.column}
+                              deleteCard={props.deleteCard}
+                              moveCardWithinWorkspace={
+                                 props.moveCardWithinWorkspace
+                              }
+                              workspace={props.workspace}
+                              moveCardWithinBoard={props.moveCardWithinBoard}
+                           />
+                        )}
                      </div>
                      <div
                         onClick={() => {
