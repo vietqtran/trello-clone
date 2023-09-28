@@ -20,10 +20,11 @@ type Props = {
    index: number
    handleDeleteList: Function
    updateColumn: Function
-   moveColumn: Function,
+   moveColumn: Function
    workspaces: WorkspaceType[]
-   workspace: WorkspaceType|undefined
-   board:Board|undefined
+   workspace: WorkspaceType | undefined
+   board: Board | undefined
+   moveCardBetweenWorkspaces: Function
 }
 
 function Column(props: Props) {
@@ -137,6 +138,11 @@ function Column(props: Props) {
                                     key={card.id}
                                     index={index}
                                     card={card}
+                                    moveCardBetweenWorkspaces={
+                                       props.moveCardBetweenWorkspaces
+                                    }
+                                    workspaces={props.workspaces}
+                                    board={props.board}
                                  />
                               )
                            })}

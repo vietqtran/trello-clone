@@ -1,3 +1,12 @@
+export type CardType = {
+   id: string,
+   text: string,
+   labels: string[],
+   image: {
+      ntn: number,
+      type: string
+   }
+}
 export type Board = {
    id: string,
    workspaceId: string,
@@ -10,13 +19,6 @@ export type Board = {
    }
 }
 
-export type User = {
-   id: string,
-   email: string,
-   password: string,
-   recentBoard: Board[],
-   auth: string
-}
 
 export type WorkspaceType = {
    id: string,
@@ -33,12 +35,10 @@ export type ColumnType = {
    cards: CardType[]
 }
 
-export type CardType = {
+export type User = {
    id: string,
-   text: string,
-   labels: string[],
-   image: {
-      ntn: number,
-      type: string
-   }
+   email: string,
+   password: string,
+   recentBoard: Board[],
+   auth: string
 }

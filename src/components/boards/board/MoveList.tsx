@@ -39,12 +39,18 @@ function MoveList(props: Props) {
 
    const move = () => {
       if (board?.id !== "") {
-         if(board?.id!==props.board?.id){
-            props.moveColumn(board?.workspaceId, board?.id, index, {
-               ...props.column,
-               id: uniqid(),
-            }, props.column.id)
-         }else{
+         if (board?.id !== props.board?.id) {
+            props.moveColumn(
+               board?.workspaceId,
+               board?.id,
+               index,
+               {
+                  ...props.column,
+                  id: uniqid(),
+               },
+               props.column.id
+            )
+         } else {
             alert(`Can't move column within same board!\nPlease use drag-drop!`)
          }
       }
