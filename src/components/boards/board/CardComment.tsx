@@ -114,16 +114,16 @@ function CardComment(props: Props) {
                   <div>
                      <button
                         onClick={() => {
-                           props.updateComment({
-                              ...props.comment,
-                              content: editContent,
-                              time: `Edit at ${
-                                 months[date.getMonth()]
-                              } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${
-                                 date.getHours() >= 12 ? "PM" : "AM"
-                              }`,
-                           })
-                           setShowEdit(false)
+                           if (editContent !== "") {
+                              props.updateComment({
+                                 ...props.comment,
+                                 content: editContent,
+                                 time: `Edit at ${months[date.getMonth()]
+                                    } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"
+                                    }`,
+                              })
+                              setShowEdit(false)
+                           }
                         }}
                         className='py-1 mt-3 px-3 rounded-sm bg-blue-500 hover:bg-blue-600 text-white font-semibold mr-3'
                      >
