@@ -1,6 +1,7 @@
 import { Comment } from "@/types"
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { AiOutlineClose } from "react-icons/ai"
+import { useOnClickOutside } from "usehooks-ts"
 
 type Props = {
    comment: Comment
@@ -25,6 +26,13 @@ const months = [
 ]
 
 function CardComment(props: Props) {
+   const ref = useRef(null)
+   const handleClickOutside = () => {
+      setShowDelete(false)
+   }
+   const handleClickInside = () => {}
+   useOnClickOutside(ref, handleClickOutside)
+
    const [showEdit, setShowEdit] = useState(false)
    const [editContent, setEditContent] = useState(props.comment.content)
    const [showDelete, setShowDelete] = useState(false)
@@ -64,7 +72,11 @@ function CardComment(props: Props) {
                            Delete
                         </span>
                         {showDelete && (
-                           <div className='shadow-md w-[300px] left-0 bg-white rounded-md absolute top-[30px] delete-card-shadow z-50'>
+                           <div
+                              ref={ref}
+                              onClick={handleClickInside}
+                              className='shadow-md w-[300px] left-0 bg-white rounded-md absolute top-[30px] delete-card-shadow z-50'
+                           >
                               <div className='w-full flex p-3 items-center relative justify-center'>
                                  <span className='text-center text-sm font-semibold'>
                                     Delete comment?
@@ -118,9 +130,11 @@ function CardComment(props: Props) {
                               props.updateComment({
                                  ...props.comment,
                                  content: editContent,
-                                 time: `Edit at ${months[date.getMonth()]
-                                    } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"
-                                    }`,
+                                 time: `Edit at ${
+                                    months[date.getMonth()]
+                                 } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${
+                                    date.getHours() >= 12 ? "PM" : "AM"
+                                 }`,
                               })
                               setShowEdit(false)
                            }
