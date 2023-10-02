@@ -72,7 +72,7 @@ function CardModal(props: Props) {
             if (data) {
                setUser(JSON.parse(data))
             }
-         } catch (error) { }
+         } catch (error) {}
       }
       getUser()
    }, [])
@@ -85,7 +85,7 @@ function CardModal(props: Props) {
    const handleClickOutside = () => {
       props.setShowModal(false)
    }
-   const handleClickInside = () => { }
+   const handleClickInside = () => {}
    useOnClickOutside(ref, handleClickOutside)
    const [showSelectLabel, setShowSelectLabel] = useState(false)
    const [showSelectCover, setShowSelectCover] = useState(false)
@@ -111,9 +111,11 @@ function CardModal(props: Props) {
             cardId: props.card.id,
             sender: user.email,
             content: comment,
-            time: `${months[date.getMonth()]
-               } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"
-               }`,
+            time: `${
+               months[date.getMonth()]
+            } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${
+               date.getHours() >= 12 ? "PM" : "AM"
+            }`,
          }
          const newCard: CardType = {
             ...props.card,
@@ -184,10 +186,11 @@ function CardModal(props: Props) {
             >
                <div
                   onClick={handleClickOutside}
-                  className={`p-2 rounded-full bg-opacity-0 hover:bg-opacity-30 bg-slate-200 cursor-pointer absolute ${props.card?.image.type && props.card?.image.ntn
+                  className={`p-2 rounded-full bg-opacity-0 hover:bg-opacity-30 bg-slate-200 cursor-pointer absolute ${
+                     props.card?.image.type && props.card?.image.ntn
                         ? "text-white"
                         : "text-black"
-                     } text-xl right-[5px] top-[5px] hover:backdrop-blur-md bg-clip-padding backdrop-filter `}
+                  } text-xl right-[5px] top-[5px] hover:backdrop-blur-md bg-clip-padding backdrop-filter `}
                >
                   <AiOutlineClose />
                </div>
@@ -223,7 +226,7 @@ function CardModal(props: Props) {
                </div>
 
                <div className='grid grid-cols-5 gap-3 mt-2 p-3'>
-                  <div className='md:col-span-4 col-span-5 overflow-y-auto'>
+                  <div className='md:col-span-4 col-span-5'>
                      {props.card.labels.length > 0 && (
                         <div className='w-full mb-5 pl-10'>
                            <h2 className='font-medium text-sm'>Labels</h2>
@@ -336,7 +339,7 @@ function CardModal(props: Props) {
                            </>
                         )}
                      </div>
-                     <div className='w-full overflow-x-hidden'>
+                     <div className='w-full'>
                         {props.card.comments.map((c) => {
                            return (
                               <CardComment
