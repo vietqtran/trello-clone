@@ -72,7 +72,7 @@ function CardModal(props: Props) {
             if (data) {
                setUser(JSON.parse(data))
             }
-         } catch (error) {}
+         } catch (error) { }
       }
       getUser()
    }, [])
@@ -85,7 +85,7 @@ function CardModal(props: Props) {
    const handleClickOutside = () => {
       props.setShowModal(false)
    }
-   const handleClickInside = () => {}
+   const handleClickInside = () => { }
    useOnClickOutside(ref, handleClickOutside)
    const [showSelectLabel, setShowSelectLabel] = useState(false)
    const [showSelectCover, setShowSelectCover] = useState(false)
@@ -105,32 +105,32 @@ function CardModal(props: Props) {
    }, [props.card.image])
 
    const addComment = () => {
-      const newComment: Comment = {
-         id: uniqid(),
-         cardId: props.card.id,
-         sender: user.email,
-         content: comment,
-         time: `${
-            months[date.getMonth()]
-         } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${
-            date.getHours() >= 12 ? "PM" : "AM"
-         }`,
+      if (comment !== "") {
+         const newComment: Comment = {
+            id: uniqid(),
+            cardId: props.card.id,
+            sender: user.email,
+            content: comment,
+            time: `${months[date.getMonth()]
+               } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${date.getHours() >= 12 ? "PM" : "AM"
+               }`,
+         }
+         const newCard: CardType = {
+            ...props.card,
+            comments: [newComment, ...props.card.comments],
+         }
+         const newColumn: ColumnType = {
+            ...props.column,
+            cards: props.column.cards.map((c) => {
+               if (c.id === props.card.id) {
+                  return newCard
+               }
+               return c
+            }),
+         }
+         props.updateColumn(newColumn)
+         setComment("")
       }
-      const newCard: CardType = {
-         ...props.card,
-         comments: [newComment, ...props.card.comments],
-      }
-      const newColumn: ColumnType = {
-         ...props.column,
-         cards: props.column.cards.map((c) => {
-            if (c.id === props.card.id) {
-               return newCard
-            }
-            return c
-         }),
-      }
-      props.updateColumn(newColumn)
-      setComment("")
    }
 
    const updateComment = (comment: Comment) => {
@@ -184,11 +184,10 @@ function CardModal(props: Props) {
             >
                <div
                   onClick={handleClickOutside}
-                  className={`p-2 rounded-full bg-opacity-0 hover:bg-opacity-30 bg-slate-200 cursor-pointer absolute ${
-                     props.card?.image.type && props.card?.image.ntn
+                  className={`p-2 rounded-full bg-opacity-0 hover:bg-opacity-30 bg-slate-200 cursor-pointer absolute ${props.card?.image.type && props.card?.image.ntn
                         ? "text-white"
                         : "text-black"
-                  } text-xl right-[5px] top-[5px] hover:backdrop-blur-md bg-clip-padding backdrop-filter `}
+                     } text-xl right-[5px] top-[5px] hover:backdrop-blur-md bg-clip-padding backdrop-filter `}
                >
                   <AiOutlineClose />
                </div>
