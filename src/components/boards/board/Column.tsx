@@ -133,6 +133,7 @@ function Column(props: Props) {
                            {props.column.cards.map((card, index) => {
                               return (
                                  <Card
+                                    updateColumn={props.updateColumn}
                                     deleteCard={deleteCard}
                                     setCover={setCover}
                                     setLabels={setLabels}
@@ -202,6 +203,7 @@ function Column(props: Props) {
                                           ntn: 0,
                                           type: "",
                                        },
+                                       comments: [],
                                     })
                                  }
                                  setInput("")
