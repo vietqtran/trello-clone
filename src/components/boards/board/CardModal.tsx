@@ -1,4 +1,11 @@
-import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
+import {
+   Board,
+   CardType,
+   ColumnType,
+   Comment,
+   User,
+   WorkspaceType,
+} from "@/types"
 import React, { useEffect, useRef, useState } from "react"
 import { AiOutlineClose, AiOutlineDelete, AiOutlineMenu } from "react-icons/ai"
 import { FaFlipboard } from "react-icons/fa"
@@ -11,6 +18,11 @@ import Image from "next/image"
 import CardCoverSelect from "./CardCoverSelect"
 import { IoIosArrowRoundForward } from "react-icons/io"
 import CardMoveSelect from "./CardMoveSelect"
+import { RxActivityLog } from "react-icons/rx"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import CardComment from "./CardComment"
+import Column from "./Column"
+var uniqid = require("uniqid")
 
 type Props = {
    setShowModal: Function
@@ -25,10 +37,49 @@ type Props = {
    moveCardWithinWorkspace: Function
    workspace: WorkspaceType | undefined
    moveCardWithinBoard: Function
+   updateColumn: Function
 }
 
+const date = new Date()
+const months = [
+   "Jan",
+   "Feb",
+   "Mar",
+   "Apr",
+   "May",
+   "Jun",
+   "Jul",
+   "Aug",
+   "Sep",
+   "Oct",
+   "Nov",
+   "Dec",
+]
+
 function CardModal(props: Props) {
+   const [user, setUser] = useState<User>({
+      id: "123",
+      email: "viet",
+      password: "",
+      recentBoard: [],
+      auth: "",
+   })
+
+   useEffect(() => {
+      const getUser = async () => {
+         try {
+            const data = await AsyncStorage.getItem("USER")
+            if (data) {
+               setUser(JSON.parse(data))
+            }
+         } catch (error) {}
+      }
+      getUser()
+   }, [])
+
    const [showInput, setShowInput] = useState(false)
+   const [showComment, setShowComment] = useState(false)
+   const [comment, setComment] = useState("")
 
    const ref = useRef(null)
    const handleClickOutside = () => {
@@ -52,6 +103,76 @@ function CardModal(props: Props) {
    useEffect(() => {
       setCover({ ...props.card.image })
    }, [props.card.image])
+
+   const addComment = () => {
+      const newComment: Comment = {
+         id: uniqid(),
+         cardId: props.card.id,
+         sender: user.email,
+         content: comment,
+         time: `${
+            months[date.getMonth()]
+         } ${date.getDate()} at ${date.getHours()}:${date.getMinutes()} ${
+            date.getHours() >= 12 ? "PM" : "AM"
+         }`,
+      }
+      const newCard: CardType = {
+         ...props.card,
+         comments: [newComment, ...props.card.comments],
+      }
+      const newColumn: ColumnType = {
+         ...props.column,
+         cards: props.column.cards.map((c) => {
+            if (c.id === props.card.id) {
+               return newCard
+            }
+            return c
+         }),
+      }
+      props.updateColumn(newColumn)
+      setComment("")
+   }
+
+   const updateComment = (comment: Comment) => {
+      const newCard: CardType = {
+         ...props.card,
+         comments: props.card.comments.map((c) => {
+            if (c.id === comment.id) {
+               return comment
+            }
+            return c
+         }),
+      }
+      const newColumn: ColumnType = {
+         ...props.column,
+         cards: props.column.cards.map((c) => {
+            if (c.id === props.card.id) {
+               return newCard
+            }
+            return c
+         }),
+      }
+      props.updateColumn(newColumn)
+   }
+
+   const deleteComment = (id: string) => {
+      const newCard: CardType = {
+         ...props.card,
+         comments: props.card.comments.filter((c) => {
+            return c.id !== id
+         }),
+      }
+      const newColumn: ColumnType = {
+         ...props.column,
+         cards: props.column.cards.map((c) => {
+            if (c.id === props.card.id) {
+               return newCard
+            }
+            return c
+         }),
+      }
+      props.updateColumn(newColumn)
+   }
 
    return (
       <>
@@ -165,6 +286,68 @@ function CardModal(props: Props) {
                               </div>
                            </div>
                         )}
+                     </div>
+                     <div className='w-full flex items-center justify-start mt-5'>
+                        <div className='p-2 text-lg'>
+                           <RxActivityLog />
+                        </div>
+                        <div className='p-1'>
+                           <h2 className='text-lg font-medium'>Activities</h2>
+                        </div>
+                     </div>
+                     <div className='w-full mt-3 flex pb-5 items-start'>
+                        <div className='relative mr-3 p-4 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-indigo-500 w-fit'>
+                           <span className='absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] '>
+                              {user.email.toUpperCase().charAt(0)}
+                           </span>
+                        </div>
+                        {showComment && (
+                           <>
+                              <div className='w-full mr-3'>
+                                 <input
+                                    value={comment}
+                                    onChange={(e) => {
+                                       setComment(e.target.value)
+                                    }}
+                                    className='relative w-full rounded-[10px] card-shadow outline-none p-3'
+                                    placeholder='Write a comment...'
+                                    autoFocus
+                                 />
+                                 <button
+                                    onClick={addComment}
+                                    className='py-1 mt-3 px-3 rounded-sm bg-blue-500 hover:bg-blue-600 text-white font-semibold'
+                                 >
+                                    Save
+                                 </button>
+                              </div>
+                           </>
+                        )}
+                        {!showComment && (
+                           <>
+                              <div
+                                 onClick={() => {
+                                    setShowComment(true)
+                                 }}
+                                 className='relative w-full rounded-[10px] card-shadow p-4 mr-3 bg-white hover:bg-slate-50 cursor-pointer'
+                              >
+                                 <span className='absolute top-[50%] translate-y-[-50%] text-sm '>
+                                    Write a comment...
+                                 </span>
+                              </div>
+                           </>
+                        )}
+                     </div>
+                     <div className='w-full overflow-x-hidden'>
+                        {props.card.comments.map((c) => {
+                           return (
+                              <CardComment
+                                 updateComment={updateComment}
+                                 key={c.id}
+                                 comment={c}
+                                 deleteComment={deleteComment}
+                              />
+                           )
+                        })}
                      </div>
                   </div>
                   <div className='md:col-span-1 col-span-5'>

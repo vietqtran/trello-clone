@@ -6,7 +6,17 @@ export type CardType = {
       ntn: number,
       type: string
    }
+   comments: Comment[]
 }
+
+export type Comment = {
+   id: string,
+   cardId: string,
+   sender: string,
+   content: string,
+   time: string
+}
+
 export type Board = {
    id: string,
    workspaceId: string,
