@@ -1,3 +1,5 @@
+import React from "react"
+
 export type CardType = {
    id: string,
    text: string,
@@ -6,7 +8,9 @@ export type CardType = {
       ntn: number,
       type: string
    }
-   comments: Comment[]
+   comments: Comment[],
+   description: string,
+   fields: FieldType[]
 }
 
 export type Comment = {
@@ -52,3 +56,62 @@ export type User = {
    recentBoard: Board[],
    auth: string
 }
+
+
+/**
+ * * Field
+ */
+export type CheckboxField = {
+   id: string,
+   boardId: string,
+   title: string
+   type: string,
+   isChecked: boolean,
+}
+
+export type DateField = {
+   id: string,
+   boardId: string,
+   title: string,
+   type: string,
+   date: string,
+   time: string,
+   value: string
+}
+
+export type DropdownFieldItem = {
+   id: string,
+   color: string,
+   title: string
+}
+
+export type DropdownField = {
+   id: string,
+   boardId: string,
+   title: string,
+   type: string,
+   options: DropdownFieldItem[]
+}
+
+export type TextField = {
+   id: string,
+   boardId: string,
+   title: string,
+   value: string,
+   type: string,
+}
+
+export type NumberField = {
+   id: string,
+   boardId: string,
+   title: string,
+   value: number,
+   type: string,
+}
+
+export type FieldType =
+   | DropdownField
+   | CheckboxField
+   | DateField
+   | TextField
+   | NumberField

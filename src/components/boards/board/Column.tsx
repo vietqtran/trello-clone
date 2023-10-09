@@ -71,6 +71,17 @@ function Column(props: Props) {
       props.updateColumn(newColumn)
    }
 
+   const addCardDescription = (cardId: string, description: string) => {
+      const newCards = props.column.cards.map((c) => {
+         if (c.id === cardId) {
+            return { ...c, description: description }
+         }
+         return c
+      })
+      const newColumn = { ...props.column, cards: newCards }
+      props.updateColumn(newColumn)
+   }
+
    return (
       <Draggable draggableId={props.column.id} index={props.index}>
          {(provided, snapshot) => (
@@ -153,6 +164,7 @@ function Column(props: Props) {
                                     moveCardWithinBoard={
                                        props.moveCardWithinBoard
                                     }
+                                    addCardDescription={addCardDescription}
                                  />
                               )
                            })}
@@ -204,6 +216,8 @@ function Column(props: Props) {
                                           type: "",
                                        },
                                        comments: [],
+                                       description: "",
+                                       fields: [],
                                     })
                                  }
                                  setInput("")

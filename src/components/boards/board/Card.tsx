@@ -4,7 +4,7 @@ import { HiOutlinePencil } from "react-icons/hi"
 import CardLabels from "./CardLabels"
 import { Draggable } from "react-beautiful-dnd"
 import CardModal from "./CardModal"
-import { Board, ColumnType, Comment, WorkspaceType } from "@/types"
+import { Board, ColumnType, Comment, FieldType, WorkspaceType } from "@/types"
 import { PiChatThin } from "react-icons/pi"
 
 type Props = {
@@ -17,6 +17,8 @@ type Props = {
          type: string
       }
       comments: Comment[]
+      description: string
+      fields: FieldType[]
    }
    index: number
    column: ColumnType
@@ -30,6 +32,7 @@ type Props = {
    workspace: WorkspaceType | undefined
    moveCardWithinBoard: Function
    updateColumn: Function
+   addCardDescription: Function
 }
 
 function Card(props: Props) {
@@ -107,6 +110,7 @@ function Card(props: Props) {
                workspace={props.workspace}
                moveCardWithinBoard={props.moveCardWithinBoard}
                updateColumn={props.updateColumn}
+               addCardDescription={props.addCardDescription}
             />
          )}
       </>

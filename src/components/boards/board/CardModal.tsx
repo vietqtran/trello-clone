@@ -1,8 +1,13 @@
 import {
    Board,
    CardType,
+   CheckboxField,
    ColumnType,
    Comment,
+   DateField,
+   DropdownField,
+   NumberField,
+   TextField,
    User,
    WorkspaceType,
 } from "@/types"
@@ -21,8 +26,23 @@ import CardMoveSelect from "./CardMoveSelect"
 import { RxActivityLog } from "react-icons/rx"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import CardComment from "./CardComment"
-import Column from "./Column"
+import { CKEditor } from "@ckeditor/ckeditor5-react"
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
+import { LuRectangleHorizontal } from "react-icons/lu"
+import CardFieldsSelect from "./CardFieldsSelect"
+import { db } from "@/firebase"
+import { collection, addDoc, getDocs } from "@firebase/firestore"
+import FieldSelect from "./field/FieldSelect"
+import FieldPreview from "./field/FieldPreview"
+const renderHTML = require("react-render-html")
 var uniqid = require("uniqid")
+
+type FieldType =
+   | DropdownField
+   | CheckboxField
+   | DateField
+   | TextField
+   | NumberField
 
 type Props = {
    setShowModal: Function
@@ -38,6 +58,7 @@ type Props = {
    workspace: WorkspaceType | undefined
    moveCardWithinBoard: Function
    updateColumn: Function
+   addCardDescription: Function
 }
 
 const date = new Date()
@@ -57,6 +78,8 @@ const months = [
 ]
 
 function CardModal(props: Props) {
+   const fieldCollectionRef = collection(db, "fields")
+
    const [user, setUser] = useState<User>({
       id: "123",
       email: "viet",
@@ -80,6 +103,8 @@ function CardModal(props: Props) {
    const [showInput, setShowInput] = useState(false)
    const [showComment, setShowComment] = useState(false)
    const [comment, setComment] = useState("")
+   const [description, setDescription] = useState(props.card.description)
+   const [fields, setFields] = useState<FieldType[]>([])
 
    const ref = useRef(null)
    const handleClickOutside = () => {
@@ -89,6 +114,7 @@ function CardModal(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
    const [showSelectLabel, setShowSelectLabel] = useState(false)
    const [showSelectCover, setShowSelectCover] = useState(false)
+   const [showSelectFields, setShowSelectFields] = useState(false)
    const [showMoveSelect, setShowMoveSelect] = useState(false)
    const [labels, setLabels] = useState<string[]>([])
    const [cover, setCover] = useState<{ ntn: number; type: string }>({
@@ -103,6 +129,77 @@ function CardModal(props: Props) {
    useEffect(() => {
       setCover({ ...props.card.image })
    }, [props.card.image])
+
+   useEffect(() => {
+      getFields()
+   }, [])
+
+   const getFields = async () => {
+      await getDocs(fieldCollectionRef)
+         .then((dataRef) => {
+            const newFields: FieldType[] = []
+            dataRef.docs.forEach((doc) => {
+               if (props.board?.id != undefined) {
+                  if (doc.data().boardId === props.board.id) {
+                     switch (doc.data().type) {
+                        case "dropdown":
+                           newFields.push({
+                              id: doc.id,
+                              boardId: doc.data().boardId,
+                              options: [...doc.data().options],
+                              title: doc.data().title,
+                              type: doc.data().type,
+                           } as DropdownField)
+                           break
+                        case "text":
+                           newFields.push({
+                              id: doc.id,
+                              boardId: doc.data().boardId,
+                              title: doc.data().title,
+                              type: doc.data().type,
+                           } as TextField)
+                           break
+                        case "number":
+                           newFields.push({
+                              id: doc.id,
+                              boardId: doc.data().boardId,
+                              title: doc.data().title,
+                              value: Number(doc.data().title),
+                              type: doc.data().type,
+                           } as NumberField)
+                           break
+                        case "date":
+                           newFields.push({
+                              id: doc.id,
+                              boardId: doc.data().boardId,
+                              date: doc.data().date,
+                              time: doc.data().time,
+                              title: doc.data().title,
+                              type: doc.data().type,
+                              value: doc.data().value,
+                           } as DateField)
+                           break
+                        case "checkbox":
+                           newFields.push({
+                              id: doc.id,
+                              boardId: doc.data().boardId,
+                              isChecked: Boolean(doc.data().isChecked),
+                              title: doc.data().title,
+                              type: doc.data().type,
+                           } as CheckboxField)
+                           break
+                        default:
+                           break
+                     }
+                  }
+               }
+            })
+            setFields(newFields)
+         })
+         .catch((err) => {})
+   }
+
+   useEffect(() => {}, [props.card.fields])
 
    const addComment = () => {
       if (comment !== "") {
@@ -176,6 +273,13 @@ function CardModal(props: Props) {
       props.updateColumn(newColumn)
    }
 
+   const addField = async (field: any) => {
+      if (props.board?.id !== undefined) {
+         const newField = { ...field, boardId: props.board.id }
+         await addDoc(fieldCollectionRef, newField)
+      }
+      getFields()
+   }
    return (
       <>
          <div className=' z-40 overflow-y-auto w-full h-full min-h-[100vh] min-w-[100vw] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start pt-20 pb-10 justify-center'>
@@ -253,7 +357,17 @@ function CardModal(props: Props) {
                         </div>
                      </div>
                      <div className='w-full pl-10'>
-                        {!showInput && (
+                        {!showInput && description !== "" && (
+                           <div
+                              onClick={() => {
+                                 setShowInput(true)
+                              }}
+                              className='cursor-pointer w-full p-3 bg-slate-50'
+                           >
+                              {renderHTML(description)}
+                           </div>
+                        )}
+                        {!showInput && description === "" && (
                            <div
                               onClick={() => {
                                  setShowInput(true)
@@ -266,15 +380,27 @@ function CardModal(props: Props) {
                            </div>
                         )}
                         {showInput && (
-                           <div className='w-full'>
-                              <textarea
-                                 autoFocus
-                                 rows={10}
-                                 className='mb-2  w-full bg-slate-100 outline-none p-2 border-2 border-blue-500'
-                                 placeholder={`Pro tip: Hit 'Enter' for a new paragraph, and 'Shift + Enter for a simple line break.`}
-                              ></textarea>
-                              <div>
-                                 <button className='py-2 px-3 bg-blue-500 text-white mr-4 hover:bg-blue-600 rounded-sm text-sm font-medium'>
+                           <div className=''>
+                              {/* TODO  */}
+                              <CKEditor
+                                 editor={ClassicEditor}
+                                 data={description}
+                                 onChange={(event, editor) => {
+                                    const data = editor.getData()
+                                    setDescription(data)
+                                 }}
+                              />
+                              <div className='mt-5'>
+                                 <button
+                                    onClick={() => {
+                                       props.addCardDescription(
+                                          props.card.id,
+                                          description
+                                       )
+                                       setShowInput(false)
+                                    }}
+                                    className='py-2 px-3 bg-blue-500 text-white mr-4 hover:bg-blue-600 rounded-sm text-sm font-medium'
+                                 >
                                     Save
                                  </button>
                                  <button
@@ -289,6 +415,23 @@ function CardModal(props: Props) {
                            </div>
                         )}
                      </div>
+                     {fields.length > 0 && (
+                        <>
+                           <div className='p-1  flex items-center justify-start mt-5'>
+                              <div className='p-2 text-lg'>
+                                 <LuRectangleHorizontal />
+                              </div>
+                              <h2 className='text-lg font-medium'>
+                                 Custom Fields
+                              </h2>
+                           </div>
+                           <div className='w-full items-center justify-start mt-3 pl-10 grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3'>
+                              {fields.map((f, i) => {
+                                 return <FieldPreview key={i} field={f} />
+                              })}
+                           </div>
+                        </>
+                     )}
                      <div className='w-full flex items-center justify-start mt-5'>
                         <div className='p-2 text-lg'>
                            <RxActivityLog />
@@ -391,6 +534,25 @@ function CardModal(props: Props) {
                                  setCoverCard={props.setCoverCard}
                                  cover={cover}
                                  setShowSelectCover={setShowSelectCover}
+                              />
+                           )}
+                        </div>
+                        <div className='relative'>
+                           <div
+                              onClick={() => {
+                                 setShowSelectFields(!showSelectFields)
+                              }}
+                           >
+                              <CardEdit type={"Custom Fields"}>
+                                 <LuRectangleHorizontal />
+                              </CardEdit>
+                           </div>
+                           {showSelectFields && (
+                              <CardFieldsSelect
+                                 addField={addField}
+                                 boardId={props.board?.id}
+                                 showSelectFields={showSelectFields}
+                                 setShowSelectFields={setShowSelectFields}
                               />
                            )}
                         </div>
