@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^40.0.0",
+    "@ckeditor/ckeditor5-react": "^6.1.0",
     "@react-native-async-storage/async-storage": "^1.19.3",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/node": "20.5.1",
@@ -41,6 +43,7 @@
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-click-outside": "^3.0.3",
     "encoding": "^0.1.13",
+    "react-render-html": "^0.6.0",
     "uuid": "^9.0.0"
   }
 }
