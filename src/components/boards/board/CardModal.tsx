@@ -1,13 +1,14 @@
 import {
    Board,
    CardType,
-   CheckboxField,
+   CheckboxFieldType,
    ColumnType,
    Comment,
-   DateField,
-   DropdownField,
-   NumberField,
-   TextField,
+   DateFieldType,
+   DropdownFieldType,
+   FieldType,
+   NumberFieldType,
+   TextFieldType,
    User,
    WorkspaceType,
 } from "@/types"
@@ -32,17 +33,10 @@ import { LuRectangleHorizontal } from "react-icons/lu"
 import CardFieldsSelect from "./CardFieldsSelect"
 import { db } from "@/firebase"
 import { collection, addDoc, getDocs } from "@firebase/firestore"
-import FieldSelect from "./field/FieldSelect"
 import FieldPreview from "./field/FieldPreview"
+import AddField from "./field/AddField"
 const renderHTML = require("react-render-html")
 var uniqid = require("uniqid")
-
-type FieldType =
-   | DropdownField
-   | CheckboxField
-   | DateField
-   | TextField
-   | NumberField
 
 type Props = {
    setShowModal: Function
@@ -114,7 +108,10 @@ function CardModal(props: Props) {
    useOnClickOutside(ref, handleClickOutside)
    const [showSelectLabel, setShowSelectLabel] = useState(false)
    const [showSelectCover, setShowSelectCover] = useState(false)
-   const [showSelectFields, setShowSelectFields] = useState(false)
+   const [showSelectFields, setShowSelectFields] = useState({
+      show: false,
+      tab: "",
+   })
    const [showMoveSelect, setShowMoveSelect] = useState(false)
    const [labels, setLabels] = useState<string[]>([])
    const [cover, setCover] = useState<{ ntn: number; type: string }>({
@@ -149,7 +146,7 @@ function CardModal(props: Props) {
                               options: [...doc.data().options],
                               title: doc.data().title,
                               type: doc.data().type,
-                           } as DropdownField)
+                           } as DropdownFieldType)
                            break
                         case "text":
                            newFields.push({
@@ -157,7 +154,7 @@ function CardModal(props: Props) {
                               boardId: doc.data().boardId,
                               title: doc.data().title,
                               type: doc.data().type,
-                           } as TextField)
+                           } as TextFieldType)
                            break
                         case "number":
                            newFields.push({
@@ -166,7 +163,7 @@ function CardModal(props: Props) {
                               title: doc.data().title,
                               value: Number(doc.data().title),
                               type: doc.data().type,
-                           } as NumberField)
+                           } as NumberFieldType)
                            break
                         case "date":
                            newFields.push({
@@ -177,7 +174,7 @@ function CardModal(props: Props) {
                               title: doc.data().title,
                               type: doc.data().type,
                               value: doc.data().value,
-                           } as DateField)
+                           } as DateFieldType)
                            break
                         case "checkbox":
                            newFields.push({
@@ -186,7 +183,7 @@ function CardModal(props: Props) {
                               isChecked: Boolean(doc.data().isChecked),
                               title: doc.data().title,
                               type: doc.data().type,
-                           } as CheckboxField)
+                           } as CheckboxFieldType)
                            break
                         default:
                            break
@@ -381,7 +378,6 @@ function CardModal(props: Props) {
                         )}
                         {showInput && (
                            <div className=''>
-                              {/* TODO  */}
                               <CKEditor
                                  editor={ClassicEditor}
                                  data={description}
@@ -425,7 +421,8 @@ function CardModal(props: Props) {
                                  Custom Fields
                               </h2>
                            </div>
-                           <div className='w-full items-center justify-start mt-3 pl-10 grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3'>
+                           <div className='w-full items-center justify-start mt-3 pl-10 grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4'>
+                              {/* TODO  */}
                               {fields.map((f, i) => {
                                  return <FieldPreview key={i} field={f} />
                               })}
@@ -540,21 +537,34 @@ function CardModal(props: Props) {
                         <div className='relative'>
                            <div
                               onClick={() => {
-                                 setShowSelectFields(!showSelectFields)
+                                 setShowSelectFields({
+                                    show: !showSelectFields.show,
+                                    tab: "",
+                                 })
                               }}
                            >
                               <CardEdit type={"Custom Fields"}>
                                  <LuRectangleHorizontal />
                               </CardEdit>
                            </div>
-                           {showSelectFields && (
-                              <CardFieldsSelect
-                                 addField={addField}
-                                 boardId={props.board?.id}
-                                 showSelectFields={showSelectFields}
-                                 setShowSelectFields={setShowSelectFields}
-                              />
-                           )}
+                           {showSelectFields.show &&
+                              showSelectFields.tab === "" && (
+                                 <CardFieldsSelect
+                                    fields={fields}
+                                    addField={addField}
+                                    boardId={props.board?.id}
+                                    showSelectFields={showSelectFields}
+                                    setShowSelectFields={setShowSelectFields}
+                                 />
+                              )}
+                           {showSelectFields.show &&
+                              showSelectFields.tab === "addField" && (
+                                 <AddField
+                                    showSelectFields={showSelectFields}
+                                    setShowSelectFields={setShowSelectFields}
+                                    addField={addField}
+                                 />
+                              )}
                         </div>
                      </div>
                      <div>
