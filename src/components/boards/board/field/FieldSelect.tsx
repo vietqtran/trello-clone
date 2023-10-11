@@ -11,7 +11,7 @@ type Props = {
 }
 function FieldSelect(props: Props) {
    return (
-      <div className='flex items-center justify-between text-xs bg-slate-100 hover:bg-slate-200 p-[10px] rounded-sm cursor-pointer'>
+      <div className='flex items-center justify-between text-xs bg-slate-100 hover:bg-slate-200 p-[10px] rounded-sm cursor-pointer mb-2'>
          <div className='flex items-center justify-start text-xs'>
             <span className='text-sm'>
                <RiDraggable />

@@ -61,7 +61,7 @@ export type User = {
 /**
  * * Field
  */
-export type CheckboxField = {
+export type CheckboxFieldType = {
    id: string,
    boardId: string,
    title: string
@@ -69,7 +69,7 @@ export type CheckboxField = {
    isChecked: boolean,
 }
 
-export type DateField = {
+export type DateFieldType = {
    id: string,
    boardId: string,
    title: string,
@@ -85,7 +85,7 @@ export type DropdownFieldItem = {
    title: string
 }
 
-export type DropdownField = {
+export type DropdownFieldType = {
    id: string,
    boardId: string,
    title: string,
@@ -93,7 +93,7 @@ export type DropdownField = {
    options: DropdownFieldItem[]
 }
 
-export type TextField = {
+export type TextFieldType = {
    id: string,
    boardId: string,
    title: string,
@@ -101,7 +101,7 @@ export type TextField = {
    type: string,
 }
 
-export type NumberField = {
+export type NumberFieldType = {
    id: string,
    boardId: string,
    title: string,
@@ -110,8 +110,8 @@ export type NumberField = {
 }
 
 export type FieldType =
-   | DropdownField
-   | CheckboxField
-   | DateField
-   | TextField
-   | NumberField
+   | DropdownFieldType
+   | CheckboxFieldType
+   | DateFieldType
+   | TextFieldType
+   | NumberFieldType
