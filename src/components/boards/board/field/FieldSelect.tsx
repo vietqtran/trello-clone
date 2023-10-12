@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { AiOutlineCheckCircle } from "react-icons/ai"
 import { FaFlipboard, FaHashtag } from "react-icons/fa"
 import { MdDateRange, MdOutlineKeyboardArrowRight } from "react-icons/md"
@@ -8,10 +8,19 @@ import { SlArrowRight } from "react-icons/sl"
 
 type Props = {
    field: any
+   setTab: Function
+   setField: Function
 }
 function FieldSelect(props: Props) {
+   const [editTab, setEditTab] = useState("")
    return (
-      <div className='flex items-center justify-between text-xs bg-slate-100 hover:bg-slate-200 p-[10px] rounded-sm cursor-pointer mb-2'>
+      <div
+         onClick={() => {
+            props.setField(props.field)
+            props.setTab(props.field.type)
+         }}
+         className='flex items-center justify-between text-xs bg-slate-100 hover:bg-slate-200 p-[10px] rounded-sm cursor-pointer mb-2'
+      >
          <div className='flex items-center justify-start text-xs'>
             <span className='text-sm'>
                <RiDraggable />
@@ -24,9 +33,6 @@ function FieldSelect(props: Props) {
                {props.field.type === "date" && <MdDateRange />}
             </span>
             <span>{props.field.title}</span>
-         </div>
-         <div>
-            <SlArrowRight />
          </div>
       </div>
    )

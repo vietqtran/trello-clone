@@ -4,14 +4,20 @@ import {
    NumberFieldType,
    TextFieldType,
    FieldType,
+   CheckboxFieldType,
+   DateFieldType,
 } from "@/types"
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import { AiOutlineClose } from "react-icons/ai"
 import { BsPlusLg } from "react-icons/bs"
 import { useOnClickOutside } from "usehooks-ts"
-import SuggestField from "./field/SuggestField"
 import FieldSelect from "./field/FieldSelect"
 import FieldPreview from "./field/FieldPreview"
+import EditDropdownField from "./editField/EditDropdownField"
+import EditCheckboxField from "./editField/EditCheckboxField"
+import EditDateField from "./editField/EditDateField"
+import EditTextField from "./editField/EditTextField"
+import EditNumberField from "./editField/EditNumberField"
 
 type Props = {
    showSelectFields: { show: boolean; tab: string }
@@ -22,6 +28,9 @@ type Props = {
 }
 
 function CardFieldsSelect(props: Props) {
+   const [tab, setTab] = useState("")
+   const [field, setField] = useState<FieldType>()
+
    const ref = useRef(null)
    const handleClickOutside = () => {
       props.setShowSelectFields({ show: false, tab: "" })
@@ -29,43 +38,94 @@ function CardFieldsSelect(props: Props) {
    const handleClickInside = () => {}
    useOnClickOutside(ref, handleClickOutside)
    return (
-      <div
-         onClick={handleClickInside}
-         ref={ref}
-         className='z-10 bg-white right-0 drop-menu-shadow rounded-md p-2 absolute w-[330px]'
-      >
-         <div className='w-full relative'>
-            <h1 className='w-full text-center text-sm font-semibold py-2'>
-               Custom Fields
-            </h1>
-            <div
-               onClick={handleClickOutside}
-               className='absolute rounded-md right-0 top-0 p-2 text-sm hover:bg-slate-100 cursor-pointer '
-            >
-               <AiOutlineClose />
-            </div>
+      <>
+         <div
+            onClick={handleClickInside}
+            ref={ref}
+            className='drop-menu-shadow absolute right-0 z-10 w-[330px] rounded-md bg-white p-2'
+         >
+            {tab === "" && (
+               <>
+                  <div className='relative w-full'>
+                     <h1 className='w-full py-2 text-center text-sm font-semibold'>
+                        Custom Fields
+                     </h1>
+                     <div
+                        onClick={handleClickOutside}
+                        className='absolute right-0 top-0 cursor-pointer rounded-md p-2 text-sm hover:bg-slate-100'
+                     >
+                        <AiOutlineClose />
+                     </div>
+                  </div>
+                  <div className='mt-2 px-2 pb-5'>
+                     <div>
+                        <div className='mb-5'>
+                           {props.fields?.map((f) => {
+                              return (
+                                 <FieldSelect
+                                    setField={setField}
+                                    setTab={setTab}
+                                    key={f.id}
+                                    field={f}
+                                 />
+                              )
+                           })}
+                        </div>
+                     </div>
+                     <button
+                        onClick={() => {
+                           props.setShowSelectFields({
+                              show: true,
+                              tab: "addField",
+                           })
+                        }}
+                        className='flex w-full items-center justify-center rounded-md bg-slate-100 py-2 text-sm font-semibold hover:bg-slate-200'
+                     >
+                        <span className='mr-2'>
+                           <BsPlusLg />
+                        </span>
+                        <span>New field</span>
+                     </button>
+                  </div>
+               </>
+            )}
+            {tab === "dropdown" && (
+               <EditDropdownField
+                  setShowSelectFields={props.setShowSelectFields}
+                  setTab={setTab}
+                  field={field as DropdownFieldType}
+               />
+            )}
+            {tab === "checkbox" && (
+               <EditCheckboxField
+                  setShowSelectFields={props.setShowSelectFields}
+                  setTab={setTab}
+                  field={field as CheckboxFieldType}
+               />
+            )}
+            {tab === "date" && (
+               <EditDateField
+                  setShowSelectFields={props.setShowSelectFields}
+                  setTab={setTab}
+                  field={field as DateFieldType}
+               />
+            )}
+            {tab === "text" && (
+               <EditTextField
+                  setShowSelectFields={props.setShowSelectFields}
+                  setTab={setTab}
+                  field={field as DateFieldType}
+               />
+            )}
+            {tab === "number" && (
+               <EditNumberField
+                  setShowSelectFields={props.setShowSelectFields}
+                  setTab={setTab}
+                  field={field as DateFieldType}
+               />
+            )}
          </div>
-         <div className='px-2 mt-2 pb-5'>
-            <div>
-               <div className='mb-5'>
-                  {props.fields?.map((f) => {
-                     return <FieldSelect key={f.id} field={f} />
-                  })}
-               </div>
-            </div>
-            <button
-               onClick={() => {
-                  props.setShowSelectFields({ show: true, tab: "addField" })
-               }}
-               className='w-full text-sm flex items-center justify-center rounded-md bg-slate-100 hover:bg-slate-200 py-2 font-semibold'
-            >
-               <span className='mr-2'>
-                  <BsPlusLg />
-               </span>
-               <span>New field</span>
-            </button>
-         </div>
-      </div>
+      </>
    )
 }
 
