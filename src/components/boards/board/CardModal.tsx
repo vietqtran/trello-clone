@@ -35,6 +35,7 @@ import { db } from "@/firebase"
 import { collection, addDoc, getDocs } from "@firebase/firestore"
 import FieldPreview from "./field/FieldPreview"
 import AddField from "./field/AddField"
+import EditDropdownField from "./editField/EditDropdownField"
 const renderHTML = require("react-render-html")
 var uniqid = require("uniqid")
 
