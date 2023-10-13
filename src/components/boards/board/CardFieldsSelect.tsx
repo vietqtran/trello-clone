@@ -12,7 +12,6 @@ import { AiOutlineClose } from "react-icons/ai"
 import { BsPlusLg } from "react-icons/bs"
 import { useOnClickOutside } from "usehooks-ts"
 import FieldSelect from "./field/FieldSelect"
-import FieldPreview from "./field/FieldPreview"
 import EditDropdownField from "./editField/EditDropdownField"
 import EditCheckboxField from "./editField/EditCheckboxField"
 import EditDateField from "./editField/EditDateField"
@@ -114,14 +113,14 @@ function CardFieldsSelect(props: Props) {
                <EditTextField
                   setShowSelectFields={props.setShowSelectFields}
                   setTab={setTab}
-                  field={field as DateFieldType}
+                  field={field as TextFieldType}
                />
             )}
             {tab === "number" && (
                <EditNumberField
                   setShowSelectFields={props.setShowSelectFields}
                   setTab={setTab}
-                  field={field as DateFieldType}
+                  field={field as NumberFieldType}
                />
             )}
          </div>
