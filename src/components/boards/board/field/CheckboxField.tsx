@@ -11,11 +11,7 @@ type Props = {
 }
 
 function CheckboxField(props: Props) {
-   const [check, setCheck] = useState(
-      props.card.fields?.filter((f) => {
-         f.id === props.field.id
-      }) !== null
-   )
+   const isChecked = !!props.card.fields.find((f) => f.id === props.field.id)
 
    const handleCheckboxChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -27,10 +23,8 @@ function CheckboxField(props: Props) {
             ...props.field,
             isChecked: true,
          } as CheckboxFieldType)
-         setCheck(true)
       } else {
          props.removeField(props.columnId, props.card.id, props.field.id)
-         setCheck(false)
       }
    }
 
@@ -44,7 +38,7 @@ function CheckboxField(props: Props) {
          </div>
          <div className={` w-full rounded-md overflow-hidden py-2`}>
             <input
-               checked={check}
+               checked={isChecked}
                type='checkbox'
                onChange={handleCheckboxChange}
             />

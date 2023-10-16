@@ -9,7 +9,7 @@ type Props = {
 function CheckboxField(props: Props) {
    return (
       <div className='text-xs flex items-center justify-start pr-2'>
-         <span className='block'>
+         <span className='block pr-1'>
             <AiOutlineCheckCircle />
          </span>
          <span className='block'>{props.field.title}</span>

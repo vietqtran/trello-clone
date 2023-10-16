@@ -1,13 +1,34 @@
-import { TextFieldType } from "@/types"
+import { CardType, TextFieldType } from "@/types"
 import React, { useState } from "react"
 import { BiText } from "react-icons/bi"
+import { text } from "stream/consumers"
 
 type Props = {
    field: TextFieldType
+   addField: Function
+   card: CardType
+   columnId: string
+   removeField: Function
+   updateOrAddField: Function
 }
 
 function TextField(props: Props) {
-   const [value, setValue] = useState("")
+   const cardField = props.card.fields.find(
+      (f) => f.id === props.field.id
+   ) as TextFieldType
+
+   const [value, setValue] = useState(cardField?.value || "")
+
+   const handleBlur = () => {
+      if (value.length === 0) {
+         props.removeField(props.columnId, props.card.id, props.field.id)
+      } else {
+         props.updateOrAddField(props.columnId, props.card.id, {
+            ...props.field,
+            value: value,
+         } as TextFieldType)
+      }
+   }
 
    return (
       <div className='text-sm w-full relative rounded-md'>
@@ -24,6 +45,7 @@ function TextField(props: Props) {
                   onChange={(e) => {
                      setValue(e.target.value)
                   }}
+                  onBlur={handleBlur}
                   type='text'
                   placeholder={`Add ${props.field.title}...`}
                   className='rounded-md p-2 py-[6px] text-sm font-semibold border-2 border-slate-100 hover:bg-slate-200 hover:border-slate-200 outline-none block w-full bg-slate-100 focus:border-blue-500 focus:bg-white placeholder:text-gray-800'

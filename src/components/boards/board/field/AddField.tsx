@@ -37,6 +37,7 @@ function AddField(props: Props) {
                   title: title,
                   options: [],
                   boardId: "",
+                  selected: { color: "", id: "", title: "" },
                   id: uniqid(),
                } as DropdownFieldType)
                break

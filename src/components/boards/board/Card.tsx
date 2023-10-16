@@ -51,6 +51,7 @@ type Props = {
    addCardDescription: Function
    addField: Function
    removeField: Function
+   updateOrAddField: Function
 }
 
 function Card(props: Props) {
@@ -120,22 +121,37 @@ function Card(props: Props) {
                               case "dropdown":
                                  return (
                                     <DropdownField
+                                       key={f.id}
                                        field={f as DropdownFieldType}
                                     />
                                  )
                               case "checkbox":
                                  return (
                                     <CheckboxField
+                                       key={f.id}
                                        field={f as CheckboxFieldType}
                                     />
                                  )
                               case "date":
-                                 return <DateField field={f as DateFieldType} />
+                                 return (
+                                    <DateField
+                                       key={f.id}
+                                       field={f as DateFieldType}
+                                    />
+                                 )
                               case "text":
-                                 return <TextField field={f as TextFieldType} />
+                                 return (
+                                    <TextField
+                                       key={f.id}
+                                       field={f as TextFieldType}
+                                    />
+                                 )
                               case "number":
                                  return (
-                                    <NumberField field={f as NumberFieldType} />
+                                    <NumberField
+                                       key={f.id}
+                                       field={f as NumberFieldType}
+                                    />
                                  )
                               default:
                                  return null
@@ -164,6 +180,7 @@ function Card(props: Props) {
                addCardDescription={props.addCardDescription}
                addField={props.addField}
                removeField={props.removeField}
+               updateOrAddField={props.updateOrAddField}
             />
          )}
       </>

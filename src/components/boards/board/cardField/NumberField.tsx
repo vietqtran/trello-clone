@@ -6,7 +6,11 @@ type Props = {
 }
 
 function NumberField(props: Props) {
-   return <div>NumberField</div>
+   return (
+      <div className='text-xs pr-2'>
+         {props.field.title}: {props.field.value.toLocaleString()}
+      </div>
+   )
 }
 
 export default NumberField

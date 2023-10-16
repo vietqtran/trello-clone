@@ -5,7 +5,15 @@ import { IoMdClose } from "react-icons/io"
 import Card from "./Card"
 import { useOnClickOutside } from "usehooks-ts"
 import ColumnOptions from "./ColumnOptions"
-import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
+import {
+   Board,
+   CardType,
+   ColumnType,
+   FieldType,
+   NumberFieldType,
+   TextFieldType,
+   WorkspaceType,
+} from "@/types"
 import CopyList from "./CopyList"
 import { Draggable, Droppable } from "react-beautiful-dnd"
 import uuid from "react-uuid"
@@ -95,6 +103,44 @@ function Column(props: Props) {
          }),
       }
       props.updateColumn(newColumn)
+   }
+
+   function updateOrAddField(
+      columnId: string,
+      cardId: string,
+      newField: TextFieldType | NumberFieldType
+   ) {
+      const column = props.columns.find((c) => c.id === columnId)
+      if (!column) return
+      const card = column.cards.find((c) => c.id === cardId)
+      if (!card) return
+      const existingField = card.fields.find((f) => f.id === newField.id)
+      if (existingField) {
+         // update existing field
+         const updatedField: FieldType = { ...existingField, ...newField }
+         const updatedFields = card.fields.map((f) =>
+            f.id === existingField.id ? updatedField : f
+         )
+         const updatedCard: CardType = { ...card, fields: updatedFields }
+         const updatedColumn: ColumnType = {
+            ...column,
+            cards: column.cards.map((c) =>
+               c.id === card.id ? updatedCard : c
+            ),
+         }
+         props.updateColumn(updatedColumn)
+      } else {
+         // add new field
+         const newFields: FieldType[] = [...card.fields, newField]
+         const updatedCard: CardType = { ...card, fields: newFields }
+         const updatedColumn: ColumnType = {
+            ...column,
+            cards: column.cards.map((c) =>
+               c.id === card.id ? updatedCard : c
+            ),
+         }
+         props.updateColumn(updatedColumn)
+      }
    }
 
    const removeField = (columnId: string, cardId: string, fieldId: string) => {
@@ -197,6 +243,7 @@ function Column(props: Props) {
                                     addCardDescription={addCardDescription}
                                     addField={addField}
                                     removeField={removeField}
+                                    updateOrAddField={updateOrAddField}
                                  />
                               )
                            })}

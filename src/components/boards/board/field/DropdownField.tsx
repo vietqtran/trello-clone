@@ -1,15 +1,24 @@
-import { DropdownFieldType, FieldType } from "@/types"
+import { CardType, DropdownFieldType, FieldType } from "@/types"
 import React, { useState } from "react"
 import { MdKeyboardArrowDown } from "react-icons/md"
 import { RxDropdownMenu } from "react-icons/rx"
 
 type Props = {
    field: DropdownFieldType
+   addField: Function
+   card: CardType
+   columnId: string
+   removeField: Function
+   updateOrAddField: Function
 }
 
 function DropdownField(props: Props) {
-   const [bg, setBg] = useState("bg-slate-100")
-   const [title, setTitle] = useState("Status")
+   const cardField = props.card.fields.find(
+      (f) => f.id === props.field.id
+   ) as DropdownFieldType
+
+   const [bg, setBg] = useState(cardField?.selected?.color || "bg-slate-100")
+   const [title, setTitle] = useState(cardField?.selected?.title || "Status")
 
    const handleSelect = (e: any) => {
       const option = props.field.options.filter((o) => (o.id = e.target.value))
