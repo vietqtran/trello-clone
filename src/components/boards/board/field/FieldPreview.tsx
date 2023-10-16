@@ -1,4 +1,5 @@
 import {
+   CardType,
    CheckboxFieldType,
    DateFieldType,
    DropdownFieldType,
@@ -15,6 +16,10 @@ import CheckboxField from "./CheckboxField"
 
 type Props = {
    field: FieldType
+   addField: Function
+   card: CardType
+   columnId: string
+   removeField: Function
 }
 
 function FieldPreview(props: Props) {
@@ -33,7 +38,13 @@ function FieldPreview(props: Props) {
             <DateField field={props.field as DateFieldType} />
          )}
          {props.field.type === "checkbox" && (
-            <CheckboxField field={props.field as CheckboxFieldType} />
+            <CheckboxField
+               addField={props.addField}
+               removeField={props.removeField}
+               card={props.card}
+               field={props.field as CheckboxFieldType}
+               columnId={props.columnId}
+            />
          )}
       </div>
    )

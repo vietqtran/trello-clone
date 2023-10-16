@@ -1,11 +1,27 @@
 import Image from "next/image"
 import React, { memo, useState } from "react"
-import { HiOutlinePencil } from "react-icons/hi"
+import { HiOutlineMenuAlt2, HiOutlinePencil } from "react-icons/hi"
 import CardLabels from "./CardLabels"
 import { Draggable } from "react-beautiful-dnd"
 import CardModal from "./CardModal"
-import { Board, ColumnType, Comment, FieldType, WorkspaceType } from "@/types"
+import {
+   Board,
+   CheckboxFieldType,
+   ColumnType,
+   Comment,
+   DateFieldType,
+   DropdownFieldType,
+   FieldType,
+   NumberFieldType,
+   TextFieldType,
+   WorkspaceType,
+} from "@/types"
 import { PiChatThin } from "react-icons/pi"
+import DropdownField from "./cardField/DropdownField"
+import CheckboxField from "./cardField/CheckboxField"
+import DateField from "./cardField/DateField"
+import TextField from "./cardField/TextField"
+import NumberField from "./cardField/NumberField"
 
 type Props = {
    card: {
@@ -33,6 +49,8 @@ type Props = {
    moveCardWithinBoard: Function
    updateColumn: Function
    addCardDescription: Function
+   addField: Function
+   removeField: Function
 }
 
 function Card(props: Props) {
@@ -81,16 +99,49 @@ function Card(props: Props) {
                      >
                         <HiOutlinePencil />
                      </span>
-                     {props.card.comments?.length > 0 && (
-                        <div className='mt-1'>
-                           <span className='flex items-center'>
-                              <PiChatThin />
-                              <span className='text-xs ml-1'>
-                                 {props.card.comments.length}
+                     <div className='flex flex-wrap items-center mt-1 text-opacity-70 text-gray-800 max-w-[239px]'>
+                        {props.card.description !== "" && (
+                           <div className='text-xs pr-2 block'>
+                              <HiOutlineMenuAlt2 />
+                           </div>
+                        )}
+                        {props.card.comments?.length > 0 && (
+                           <div className=''>
+                              <span className='flex items-center'>
+                                 <PiChatThin />
+                                 <span className='text-xs pr-1'>
+                                    {props.card.comments.length}
+                                 </span>
                               </span>
-                           </span>
-                        </div>
-                     )}
+                           </div>
+                        )}
+                        {props.card.fields.map((f) => {
+                           switch (f.type) {
+                              case "dropdown":
+                                 return (
+                                    <DropdownField
+                                       field={f as DropdownFieldType}
+                                    />
+                                 )
+                              case "checkbox":
+                                 return (
+                                    <CheckboxField
+                                       field={f as CheckboxFieldType}
+                                    />
+                                 )
+                              case "date":
+                                 return <DateField field={f as DateFieldType} />
+                              case "text":
+                                 return <TextField field={f as TextFieldType} />
+                              case "number":
+                                 return (
+                                    <NumberField field={f as NumberFieldType} />
+                                 )
+                              default:
+                                 return null
+                           }
+                        })}
+                     </div>
                   </div>
                </div>
             )}
@@ -111,6 +162,8 @@ function Card(props: Props) {
                moveCardWithinBoard={props.moveCardWithinBoard}
                updateColumn={props.updateColumn}
                addCardDescription={props.addCardDescription}
+               addField={props.addField}
+               removeField={props.removeField}
             />
          )}
       </>

@@ -54,6 +54,8 @@ type Props = {
    moveCardWithinBoard: Function
    updateColumn: Function
    addCardDescription: Function
+   addField: Function
+   removeField: Function
 }
 
 const date = new Date()
@@ -425,7 +427,16 @@ function CardModal(props: Props) {
                            <div className='w-full items-center justify-start mt-3 pl-10 grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4'>
                               {/* TODO  */}
                               {fields.map((f, i) => {
-                                 return <FieldPreview key={i} field={f} />
+                                 return (
+                                    <FieldPreview
+                                       columnId={props.column.id}
+                                       addField={props.addField}
+                                       removeField={props.removeField}
+                                       card={props.card}
+                                       key={i}
+                                       field={f}
+                                    />
+                                 )
                               })}
                            </div>
                         </>
