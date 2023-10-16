@@ -20,19 +20,41 @@ type Props = {
    card: CardType
    columnId: string
    removeField: Function
+   updateOrAddField: Function
 }
 
 function FieldPreview(props: Props) {
    return (
       <div className='col-span-1'>
          {props.field.type === "dropdown" && (
-            <DropdownField field={props.field as DropdownFieldType} />
+            <DropdownField
+               addField={props.addField}
+               updateOrAddField={props.updateOrAddField}
+               removeField={props.removeField}
+               card={props.card}
+               columnId={props.columnId}
+               field={props.field as DropdownFieldType}
+            />
          )}
          {props.field.type === "text" && (
-            <TextField field={props.field as TextFieldType} />
+            <TextField
+               addField={props.addField}
+               updateOrAddField={props.updateOrAddField}
+               removeField={props.removeField}
+               card={props.card}
+               columnId={props.columnId}
+               field={props.field as TextFieldType}
+            />
          )}
          {props.field.type === "number" && (
-            <NumberField field={props.field as NumberFieldType} />
+            <NumberField
+               addField={props.addField}
+               updateOrAddField={props.updateOrAddField}
+               removeField={props.removeField}
+               card={props.card}
+               columnId={props.columnId}
+               field={props.field as NumberFieldType}
+            />
          )}
          {props.field.type === "date" && (
             <DateField field={props.field as DateFieldType} />
@@ -42,8 +64,8 @@ function FieldPreview(props: Props) {
                addField={props.addField}
                removeField={props.removeField}
                card={props.card}
-               field={props.field as CheckboxFieldType}
                columnId={props.columnId}
+               field={props.field as CheckboxFieldType}
             />
          )}
       </div>

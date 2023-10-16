@@ -5,6 +5,7 @@ import {
    ColumnType,
    Comment,
    DateFieldType,
+   DropdownFieldItem,
    DropdownFieldType,
    FieldType,
    NumberFieldType,
@@ -36,6 +37,7 @@ import { collection, addDoc, getDocs } from "@firebase/firestore"
 import FieldPreview from "./field/FieldPreview"
 import AddField from "./field/AddField"
 import EditDropdownField from "./editField/EditDropdownField"
+import { updateDoc, doc } from "firebase/firestore"
 const renderHTML = require("react-render-html")
 var uniqid = require("uniqid")
 
@@ -56,6 +58,7 @@ type Props = {
    addCardDescription: Function
    addField: Function
    removeField: Function
+   updateOrAddField: Function
 }
 
 const date = new Date()
@@ -149,6 +152,7 @@ function CardModal(props: Props) {
                               options: [...doc.data().options],
                               title: doc.data().title,
                               type: doc.data().type,
+                              selected: { ...doc.data().selected },
                            } as DropdownFieldType)
                            break
                         case "text":
@@ -278,6 +282,18 @@ function CardModal(props: Props) {
          const newField = { ...field, boardId: props.board.id }
          await addDoc(fieldCollectionRef, newField)
       }
+      getFields()
+   }
+
+   const addOption = async (fieldId: string, option: DropdownFieldItem) => {
+      const field = fields.filter(
+         (f) => f.id === fieldId
+      )[0] as DropdownFieldType
+      const newField: DropdownFieldType = {
+         ...field,
+         options: [...field.options, option],
+      }
+      await updateDoc(doc(db, "fields", newField.id), newField)
       getFields()
    }
    return (
@@ -435,6 +451,7 @@ function CardModal(props: Props) {
                                        card={props.card}
                                        key={i}
                                        field={f}
+                                       updateOrAddField={props.updateOrAddField}
                                     />
                                  )
                               })}
@@ -567,6 +584,7 @@ function CardModal(props: Props) {
                                     boardId={props.board?.id}
                                     showSelectFields={showSelectFields}
                                     setShowSelectFields={setShowSelectFields}
+                                    addOption={addOption}
                                  />
                               )}
                            {showSelectFields.show &&

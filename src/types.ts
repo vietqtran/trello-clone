@@ -90,7 +90,8 @@ export type DropdownFieldType = {
    boardId: string,
    title: string,
    type: string,
-   options: DropdownFieldItem[]
+   options: DropdownFieldItem[],
+   selected: DropdownFieldItem
 }
 
 export type TextFieldType = {

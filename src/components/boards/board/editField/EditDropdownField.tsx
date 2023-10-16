@@ -1,17 +1,26 @@
-import { DropdownFieldType, FieldType } from "@/types"
+import { DropdownFieldItem, DropdownFieldType, FieldType } from "@/types"
 import React, { useState } from "react"
 import { MdClose, MdOutlineArrowBackIosNew } from "react-icons/md"
 import DropdownOption from "../field/DropdownOption"
+import uuid from "react-uuid"
 
 type Props = {
    setTab: Function
    field: DropdownFieldType | undefined
    setShowSelectFields: Function
+   addOption: Function
 }
 
 function EditDropdownField(props: Props) {
    const [title, setTitle] = useState(props.field?.title)
    const [itemName, setItemName] = useState("")
+   const handleAdd = () => {
+      props.addOption(props.field?.id, {
+         id: uuid(),
+         color: "#f1f2f4",
+         title: "Not sure",
+      } as DropdownFieldItem)
+   }
    return (
       <div>
          <div className='flex items-center justify-between'>
@@ -75,6 +84,7 @@ function EditDropdownField(props: Props) {
                   }}
                />
                <button
+                  onClick={handleAdd}
                   className={`block h-full rounded-sm py-2 px-3 ml-2 font-semibold border-2 ${
                      itemName !== ""
                         ? "bg-blue-600 hover:bg-blue-500 border-blue-600 hover:border-blue-500 text-white"

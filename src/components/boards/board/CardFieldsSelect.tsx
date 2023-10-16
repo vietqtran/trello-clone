@@ -24,6 +24,7 @@ type Props = {
    boardId: string | undefined
    addField: Function
    fields: FieldType[]
+   addOption: Function
 }
 
 function CardFieldsSelect(props: Props) {
@@ -93,6 +94,7 @@ function CardFieldsSelect(props: Props) {
                   setShowSelectFields={props.setShowSelectFields}
                   setTab={setTab}
                   field={field as DropdownFieldType}
+                  addOption={props.addOption}
                />
             )}
             {tab === "checkbox" && (

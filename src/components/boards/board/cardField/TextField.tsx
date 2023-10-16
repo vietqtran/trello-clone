@@ -6,7 +6,11 @@ type Props = {
 }
 
 function TextField(props: Props) {
-   return <div>Text</div>
+   return (
+      <div className='text-xs pr-2'>
+         {props.field.title}: {props.field.value}
+      </div>
+   )
 }
 
 export default TextField
