@@ -82,6 +82,36 @@ function Column(props: Props) {
       props.updateColumn(newColumn)
    }
 
+   const addField = (columnId: string, cardId: string, field: any) => {
+      const col = props.columns.filter((c) => c.id === columnId)[0]
+      const newColumn: ColumnType = {
+         ...col,
+         cards: col.cards.map((c) => {
+            if (c.id === cardId) {
+               return { ...c, fields: [...c.fields, field] }
+            } else {
+               return c
+            }
+         }),
+      }
+      props.updateColumn(newColumn)
+   }
+
+   const removeField = (columnId: string, cardId: string, fieldId: string) => {
+      const col = props.columns.filter((c) => c.id === columnId)[0]
+      const newColumn: ColumnType = {
+         ...col,
+         cards: col.cards.map((c) => {
+            if (c.id === cardId) {
+               return { ...c, fields: c.fields.filter((f) => f.id !== fieldId) }
+            } else {
+               return c
+            }
+         }),
+      }
+      props.updateColumn(newColumn)
+   }
+
    return (
       <Draggable draggableId={props.column.id} index={props.index}>
          {(provided, snapshot) => (
@@ -165,6 +195,8 @@ function Column(props: Props) {
                                        props.moveCardWithinBoard
                                     }
                                     addCardDescription={addCardDescription}
+                                    addField={addField}
+                                    removeField={removeField}
                                  />
                               )
                            })}
