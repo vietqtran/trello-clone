@@ -45,6 +45,7 @@ type Props = {
    setShowModal: Function
    card: CardType
    column: ColumnType
+   columns: ColumnType[]
    setLabels: Function
    setCoverCard: Function
    deleteCard: Function
@@ -59,6 +60,7 @@ type Props = {
    addField: Function
    removeField: Function
    updateOrAddField: Function
+   reSetBoard: Function
 }
 
 const date = new Date()
@@ -203,8 +205,6 @@ function CardModal(props: Props) {
          .catch((err) => {})
    }
 
-   useEffect(() => {}, [props.card.fields])
-
    const addComment = () => {
       if (comment !== "") {
          const newComment: Comment = {
@@ -296,6 +296,29 @@ function CardModal(props: Props) {
       await updateDoc(doc(db, "fields", newField.id), newField)
       getFields()
    }
+
+   const renameField = async (field: FieldType, newName: string) => {
+      await updateDoc(doc(db, "fields", field.id), { ...field, title: newName })
+      getFields()
+      const newColumns = props.columns.map((col) => {
+         return {
+            ...col,
+            cards: col.cards.map((c) => {
+               return {
+                  ...c,
+                  fields: c.fields.map((f) => {
+                     if (f.id === field.id) {
+                        return { ...field, title: newName }
+                     }
+                     return f
+                  }),
+               }
+            }),
+         }
+      })
+      props.reSetBoard(newColumns)
+   }
+
    return (
       <>
          <div className=' z-40 overflow-y-auto w-full h-full min-h-[100vh] min-w-[100vw] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start pt-20 pb-10 justify-center'>
@@ -585,6 +608,7 @@ function CardModal(props: Props) {
                                     showSelectFields={showSelectFields}
                                     setShowSelectFields={setShowSelectFields}
                                     addOption={addOption}
+                                    renameField={renameField}
                                  />
                               )}
                            {showSelectFields.show &&

@@ -225,6 +225,7 @@ function Column(props: Props) {
                                     setCover={setCover}
                                     setLabels={setLabels}
                                     column={props.column}
+                                    columns={props.columns}
                                     key={card.id}
                                     index={index}
                                     card={card}
@@ -244,6 +245,7 @@ function Column(props: Props) {
                                     addField={addField}
                                     removeField={removeField}
                                     updateOrAddField={updateOrAddField}
+                                    reSetBoard={props.reSetBoard}
                                  />
                               )
                            })}

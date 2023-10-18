@@ -25,6 +25,7 @@ type Props = {
    addField: Function
    fields: FieldType[]
    addOption: Function
+   renameField: Function
 }
 
 function CardFieldsSelect(props: Props) {
@@ -63,6 +64,11 @@ function CardFieldsSelect(props: Props) {
                            {props.fields?.map((f) => {
                               return (
                                  <FieldSelect
+                                    renameField={props.renameField}
+                                    setShowSelectFields={
+                                       props.setShowSelectFields
+                                    }
+                                    addOption={props.addOption}
                                     setField={setField}
                                     setTab={setTab}
                                     key={f.id}
@@ -88,42 +94,6 @@ function CardFieldsSelect(props: Props) {
                      </button>
                   </div>
                </>
-            )}
-            {tab === "dropdown" && (
-               <EditDropdownField
-                  setShowSelectFields={props.setShowSelectFields}
-                  setTab={setTab}
-                  field={field as DropdownFieldType}
-                  addOption={props.addOption}
-               />
-            )}
-            {tab === "checkbox" && (
-               <EditCheckboxField
-                  setShowSelectFields={props.setShowSelectFields}
-                  setTab={setTab}
-                  field={field as CheckboxFieldType}
-               />
-            )}
-            {tab === "date" && (
-               <EditDateField
-                  setShowSelectFields={props.setShowSelectFields}
-                  setTab={setTab}
-                  field={field as DateFieldType}
-               />
-            )}
-            {tab === "text" && (
-               <EditTextField
-                  setShowSelectFields={props.setShowSelectFields}
-                  setTab={setTab}
-                  field={field as TextFieldType}
-               />
-            )}
-            {tab === "number" && (
-               <EditNumberField
-                  setShowSelectFields={props.setShowSelectFields}
-                  setTab={setTab}
-                  field={field as NumberFieldType}
-               />
             )}
          </div>
       </>

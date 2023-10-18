@@ -5,10 +5,11 @@ import DropdownOption from "../field/DropdownOption"
 import uuid from "react-uuid"
 
 type Props = {
-   setTab: Function
+   setEditTab: Function
    field: DropdownFieldType | undefined
    setShowSelectFields: Function
    addOption: Function
+   renameField: Function
 }
 
 function EditDropdownField(props: Props) {
@@ -18,8 +19,9 @@ function EditDropdownField(props: Props) {
       props.addOption(props.field?.id, {
          id: uuid(),
          color: "#f1f2f4",
-         title: "Not sure",
+         title: itemName,
       } as DropdownFieldItem)
+      setItemName("")
    }
    return (
       <div>
@@ -27,7 +29,8 @@ function EditDropdownField(props: Props) {
             <div
                className='cursor-pointer rounded-sm p-2 text-sm hover:bg-slate-100'
                onClick={() => {
-                  props.setTab("")
+                  console.log("oke")
+                  props.setEditTab("")
                }}
             >
                <MdOutlineArrowBackIosNew />
@@ -70,7 +73,7 @@ function EditDropdownField(props: Props) {
             <span className='mt-2 block text-sm font-semibold'>Options</span>
             <div className='mb-2 mt-1 w-full'>
                {props.field?.options.map((o, i) => {
-                  return <DropdownOption key={i} />
+                  return <DropdownOption option={o} key={i} />
                })}
             </div>
             <div className='flex w-full items-center justify-between text-sm'>

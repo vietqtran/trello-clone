@@ -2,8 +2,9 @@ import { TextFieldType } from "@/types"
 import React, { useState } from "react"
 import { MdClose, MdOutlineArrowBackIosNew } from "react-icons/md"
 type Props = {
-   setTab: Function
+   setEditTab: Function
    field: TextFieldType | undefined
+   renameField: Function
    setShowSelectFields: Function
 }
 function EditTextField(props: Props) {
@@ -15,7 +16,7 @@ function EditTextField(props: Props) {
             <div
                className='cursor-pointer rounded-sm p-2 text-sm hover:bg-slate-100'
                onClick={() => {
-                  props.setTab("")
+                  props.setEditTab("")
                }}
             >
                <MdOutlineArrowBackIosNew />

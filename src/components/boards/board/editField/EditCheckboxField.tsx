@@ -2,20 +2,26 @@ import { CheckboxFieldType } from "@/types"
 import React, { useState } from "react"
 import { MdClose, MdOutlineArrowBackIosNew } from "react-icons/md"
 type Props = {
-   setTab: Function
+   setEditTab: Function
    field: CheckboxFieldType | undefined
+   renameField: Function
    setShowSelectFields: Function
 }
 function EditCheckboxField(props: Props) {
    const [title, setTitle] = useState(props.field?.title)
-
+   const changeTitle = () => {
+      console.log("oke")
+      if (title !== "") {
+         props.renameField(props.field, title)
+      }
+   }
    return (
       <div>
          <div className='flex items-center justify-between'>
             <div
                className='cursor-pointer rounded-sm p-2 text-sm hover:bg-slate-100'
                onClick={() => {
-                  props.setTab("")
+                  props.setEditTab("")
                }}
             >
                <MdOutlineArrowBackIosNew />
@@ -39,6 +45,11 @@ function EditCheckboxField(props: Props) {
                value={title}
                onChange={(e) => {
                   setTitle(e.target.value)
+               }}
+               onBlur={() => {
+                  if (title !== "") {
+                     props.renameField(props.field, title)
+                  }
                }}
                id='title'
                type='text'

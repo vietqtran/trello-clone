@@ -38,6 +38,7 @@ type Props = {
    }
    index: number
    column: ColumnType
+   columns: ColumnType[]
    setLabels: Function
    setCover: Function
    deleteCard: Function
@@ -52,6 +53,7 @@ type Props = {
    addField: Function
    removeField: Function
    updateOrAddField: Function
+   reSetBoard: Function
 }
 
 function Card(props: Props) {
@@ -181,6 +183,8 @@ function Card(props: Props) {
                addField={props.addField}
                removeField={props.removeField}
                updateOrAddField={props.updateOrAddField}
+               reSetBoard={props.reSetBoard}
+               columns={props.columns}
             />
          )}
       </>
