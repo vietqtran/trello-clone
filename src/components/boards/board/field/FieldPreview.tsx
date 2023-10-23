@@ -57,7 +57,14 @@ function FieldPreview(props: Props) {
             />
          )}
          {props.field.type === "date" && (
-            <DateField field={props.field as DateFieldType} />
+            <DateField
+               addField={props.addField}
+               updateOrAddField={props.updateOrAddField}
+               removeField={props.removeField}
+               card={props.card}
+               columnId={props.columnId}
+               field={props.field as DateFieldType}
+            />
          )}
          {props.field.type === "checkbox" && (
             <CheckboxField

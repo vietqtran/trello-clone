@@ -76,7 +76,6 @@ export type DateFieldType = {
    type: string,
    date: string,
    time: string,
-   value: string
 }
 
 export type DropdownFieldItem = {

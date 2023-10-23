@@ -38,7 +38,7 @@ function BoardContent(props: Props) {
 
    return (
       <div className={`flex min-w-full max-w-full max-h-full min-h-full`}>
-         <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)] bg-transparent text-inherit bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
+         <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)] bg-transparent text-inherit glassmorphism'>
             <BoardLeft
                workspace={workspace}
                board={props.board}

@@ -5,6 +5,7 @@ type Props = {
    setEditTab: Function
    field: NumberFieldType | undefined
    renameField: Function
+   deleteField: Function
    setShowSelectFields: Function
 }
 function EditNumberField(props: Props) {
@@ -40,6 +41,11 @@ function EditNumberField(props: Props) {
                value={title}
                onChange={(e) => {
                   setTitle(e.target.value)
+               }}
+               onBlur={() => {
+                  if (title !== "") {
+                     props.renameField(props.field, title)
+                  }
                }}
                id='title'
                type='text'

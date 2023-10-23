@@ -8,7 +8,7 @@ type Props = {
 
 function CheckboxField(props: Props) {
    return (
-      <div className='text-xs flex items-center justify-start pr-2'>
+      <div className='text-xs flex items-center justify-start pr-2 mt-1'>
          <span className='block pr-1'>
             <AiOutlineCheckCircle />
          </span>

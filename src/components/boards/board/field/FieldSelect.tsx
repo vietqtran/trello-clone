@@ -19,6 +19,10 @@ type Props = {
    addOption: Function
    setShowSelectFields: Function
    renameField: Function
+   changeTitleOption: Function
+   changeBgOption: Function
+   deleteOption: Function
+   deleteField: Function
 }
 function FieldSelect(props: Props) {
    const [editTab, setEditTab] = useState("")
@@ -67,6 +71,10 @@ function FieldSelect(props: Props) {
                      field={props.field}
                      setShowSelectFields={props.setShowSelectFields}
                      setEditTab={setEditTab}
+                     changeBgOption={props.changeBgOption}
+                     changeTitleOption={props.changeTitleOption}
+                     deleteField={props.deleteField}
+                     deleteOption={props.deleteOption}
                   />
                )}
                {editTab === "checkbox" && (
@@ -74,6 +82,7 @@ function FieldSelect(props: Props) {
                      renameField={props.renameField}
                      field={props.field}
                      setShowSelectFields={props.setShowSelectFields}
+                     deleteField={props.deleteField}
                      setEditTab={setEditTab}
                   />
                )}
@@ -82,6 +91,7 @@ function FieldSelect(props: Props) {
                      renameField={props.renameField}
                      field={props.field}
                      setShowSelectFields={props.setShowSelectFields}
+                     deleteField={props.deleteField}
                      setEditTab={setEditTab}
                   />
                )}
@@ -90,6 +100,7 @@ function FieldSelect(props: Props) {
                      renameField={props.renameField}
                      field={props.field}
                      setShowSelectFields={props.setShowSelectFields}
+                     deleteField={props.deleteField}
                      setEditTab={setEditTab}
                   />
                )}
@@ -98,6 +109,7 @@ function FieldSelect(props: Props) {
                      renameField={props.renameField}
                      field={props.field}
                      setShowSelectFields={props.setShowSelectFields}
+                     deleteField={props.deleteField}
                      setEditTab={setEditTab}
                   />
                )}

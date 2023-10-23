@@ -7,7 +7,7 @@ type Props = {
    currentLength: string
    handleAddList: Function
 }
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 function AddAnotherListButton(props: Props) {
    const ref = useRef(null)
@@ -23,7 +23,7 @@ function AddAnotherListButton(props: Props) {
    return (
       <div
          className='
-      bg-black bg-clip-padding backdrop-filter backdrop-blur-sm hover:bg-opacity-70 bg-opacity-40
+      bg-black glassmorphism
       rightboard flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 rounded-md min-w-[271px]'
       >
          {!showInput && (
@@ -31,7 +31,7 @@ function AddAnotherListButton(props: Props) {
                onClick={() => {
                   setShowInput(true)
                }}
-               className='text-white w-full cursor-pointer flex items-center justify-start rounded-md hover:bg-slate-700 bg-opacity-30 p-2'
+               className='text-white w-full cursor-pointer flex items-center justify-start rounded-md p-2'
             >
                <span className='mr-3'>
                   <BsPlusLg />
@@ -59,7 +59,7 @@ function AddAnotherListButton(props: Props) {
                      onClick={() => {
                         if (input != "") {
                            props.handleAddList({
-                              id: uniqid(),
+                              id: nanoid(),
                               name: input,
                               cards: [],
                            })

@@ -1,36 +1,51 @@
-import { DateFieldType } from "@/types"
+import { CardType, DateFieldType } from "@/types"
 import React, { ChangeEvent, useRef, useState } from "react"
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai"
 import { MdDateRange } from "react-icons/md"
 import { useOnClickOutside } from "usehooks-ts"
 
 type Props = {
+   addField: Function
+   updateOrAddField: Function
+   removeField: Function
+   card: CardType
+   columnId: string
    field: DateFieldType
 }
 
 function DateField(props: Props) {
-   const now = new Date()
-   const currentDate = now.toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-   })
-   const currentTime = now.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-   })
+   const existField: DateFieldType = props.card.fields.find(
+      (f) => f?.id === props.field.id
+   ) as DateFieldType
 
-   const [date, setDate] = useState<string>(currentDate)
-   const [time, setTime] = useState<string>(currentTime)
+   const formatDate = () => {
+      if (existField !== undefined) {
+         const dateFormat = new Date(existField.date)
+         const monthName = dateFormat.toLocaleString("default", {
+            month: "long",
+         })
+         const day = dateFormat.getDate()
+         const monthAbbrev = monthName.substring(0, 3)
+         const formatted = `${monthAbbrev} ${day}`
 
-   const handleDateChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setDate(event.target.value)
+         const [hours, minutes] = existField.time.split(":")
+         const hours12 = Number(hours) % 12 || 12
+         const ampm = Number(hours) < 12 ? "AM" : "PM"
+         const timeFormat = `${hours12}:${minutes} ${ampm}`
+
+         return formatted + " at " + timeFormat
+      } else {
+         return (
+            <span className='flex items-center opacity-70'>
+               <AiOutlinePlus />
+               Add date...
+            </span>
+         )
+      }
    }
 
-   const handleTimeChange = (event: ChangeEvent<HTMLInputElement>) => {
-      setTime(event.target.value)
-   }
+   const [date, setDate] = useState<string>(existField ? existField.date : "")
+   const [time, setTime] = useState<string>(existField ? existField.time : "")
 
    const [showSelectDate, setShowSelectDate] = useState(false)
    const ref = useRef(null)
@@ -39,13 +54,27 @@ function DateField(props: Props) {
    }
    const handleClickInside = () => {}
    useOnClickOutside(ref, handleClickOutside)
+
+   const save = () => {
+      if (date !== "" && time !== "") {
+         props.updateOrAddField(props.columnId, props.card.id, {
+            ...props.field,
+            date: date,
+            time: time,
+         } as DateFieldType)
+      }
+      setShowSelectDate(false)
+   }
+
    return (
       <div className='text-sm w-full relative rounded-md'>
          <div className='flex items-center justify-start'>
             <span className='mr-2'>
                <MdDateRange />
             </span>
-            <span className='text-xs font-medium'>{props.field.title}</span>
+            <span className='text-xs font-medium truncate block w-full'>
+               {props.field.title}
+            </span>
          </div>
          <div
             onClick={() => {
@@ -54,10 +83,7 @@ function DateField(props: Props) {
             className={`w-full bg-slate-100 hover:bg-slate-200 rounded-md overflow-hidden cursor-pointer`}
          >
             <div className='w-full h-full top-0 left-0 bg-transparent hover:bg-slate-200 text-gray-800 flex items-center justify-start p-2 cursor-pointer'>
-               <span>
-                  <AiOutlinePlus />
-               </span>
-               <span className='font-semibold'>Add date...</span>
+               <span className='font-semibold'>{formatDate()}</span>
             </div>
          </div>
          {showSelectDate && (
@@ -81,7 +107,9 @@ function DateField(props: Props) {
                   <div className='col-span-1'>
                      <div className='text-sm font-semibold'>Date</div>
                      <input
-                        onChange={handleDateChange}
+                        onChange={(e) => {
+                           setDate(e.target.value)
+                        }}
                         value={date}
                         type='date'
                         className='block w-full outline-none border-2 border-slate-300 focus:border-blue-500 rounded-sm p-1'
@@ -90,7 +118,9 @@ function DateField(props: Props) {
                   <div className='col-span-1'>
                      <div className='text-sm font-semibold'>Time</div>
                      <input
-                        onChange={handleTimeChange}
+                        onChange={(e) => {
+                           setTime(e.target.value)
+                        }}
                         value={time}
                         type='time'
                         className='block w-full outline-none border-2 border-slate-300 focus:border-blue-500 rounded-sm p-1'
@@ -98,7 +128,10 @@ function DateField(props: Props) {
                   </div>
                </div>
                <div className='mt-3 flex items-center justify-between'>
-                  <button className='text-sm font-semibold py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md'>
+                  <button
+                     onClick={save}
+                     className='text-sm font-semibold py-2 px-3 bg-blue-600 hover:bg-blue-500 text-white rounded-md'
+                  >
                      Save
                   </button>
                   <button className='text-sm font-semibold py-2 px-3 bg-red-600 hover:bg-red-500 text-white rounded-md'>

@@ -2,7 +2,7 @@ import { ColumnType } from "@/types"
 import React, { useRef, useState } from "react"
 import { RiArrowLeftSLine, RiCloseLine } from "react-icons/ri"
 import { useOnClickOutside } from "usehooks-ts"
-import uuid from "react-uuid"
+import { nanoid } from "nanoid"
 
 type Props = {
    setShowActions: Function
@@ -25,10 +25,10 @@ function CopyList(props: Props) {
          const newCards = props.column.cards.map((card) => {
             return {
                ...card,
-               id: uuid(),
+               id: nanoid(),
             }
          })
-         props.handleAddList({ id: uuid(), name: name, cards: newCards })
+         props.handleAddList({ id: nanoid(), name: name, cards: newCards })
       }
    }
    return (

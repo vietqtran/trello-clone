@@ -14,7 +14,7 @@ import {
 } from "@firebase/firestore"
 import { Board, WorkspaceType } from "@/types"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 export default function WorkspacePage() {
    // Extract the workspace ID from the URL path
@@ -75,7 +75,7 @@ export default function WorkspacePage() {
       workspace: string
    ) => {
       const boardCreate: Board = {
-         id: uniqid(),
+         id: nanoid(),
          background: { ...selectBg },
          columns: [],
          star: false,
@@ -149,11 +149,11 @@ export default function WorkspacePage() {
 
    // Function to delete the current workspace
    const deleteWorkspace = async () => {
-      if(workspaces.length==1){
+      if (workspaces.length == 1) {
          alert(`Can't remove the last Workspace!`)
-      }else{
+      } else {
          await deleteDoc(doc(db, "workspaces", id || ""))
-      router.push("/boards")
+         router.push("/boards")
       }
    }
 

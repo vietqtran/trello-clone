@@ -13,7 +13,7 @@ import {
    updateDoc,
 } from "@firebase/firestore"
 import { useRouter } from "next/navigation"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 type Props = {
    workspace: WorkspaceType | undefined

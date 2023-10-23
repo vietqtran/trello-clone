@@ -5,10 +5,11 @@ type Props = {
    setEditTab: Function
    field: DateFieldType | undefined
    renameField: Function
+   deleteField: Function
    setShowSelectFields: Function
 }
 function EditDateField(props: Props) {
-   const [title, setTitle] = useState(props.field?.title)
+   const [title, setTitle] = useState(props.field?.title || "")
 
    return (
       <div>
@@ -40,6 +41,11 @@ function EditDateField(props: Props) {
                value={title}
                onChange={(e) => {
                   setTitle(e.target.value)
+               }}
+               onBlur={() => {
+                  if (title !== "") {
+                     props.renameField(props.field, title)
+                  }
                }}
                id='title'
                type='text'

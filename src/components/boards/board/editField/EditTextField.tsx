@@ -4,6 +4,7 @@ import { MdClose, MdOutlineArrowBackIosNew } from "react-icons/md"
 type Props = {
    setEditTab: Function
    field: TextFieldType | undefined
+   deleteField: Function
    renameField: Function
    setShowSelectFields: Function
 }
@@ -40,6 +41,11 @@ function EditTextField(props: Props) {
                value={title}
                onChange={(e) => {
                   setTitle(e.target.value)
+               }}
+               onBlur={() => {
+                  if (title !== "") {
+                     props.renameField(props.field, title)
+                  }
                }}
                id='title'
                type='text'

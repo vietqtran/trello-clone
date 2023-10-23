@@ -26,6 +26,10 @@ type Props = {
    fields: FieldType[]
    addOption: Function
    renameField: Function
+   changeTitleOption: Function
+   changeBgOption: Function
+   deleteField: Function
+   deleteOption: Function
 }
 
 function CardFieldsSelect(props: Props) {
@@ -73,6 +77,10 @@ function CardFieldsSelect(props: Props) {
                                     setTab={setTab}
                                     key={f.id}
                                     field={f}
+                                    changeBgOption={props.changeBgOption}
+                                    changeTitleOption={props.changeTitleOption}
+                                    deleteField={props.deleteField}
+                                    deleteOption={props.deleteOption}
                                  />
                               )
                            })}

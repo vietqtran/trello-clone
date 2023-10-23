@@ -9,6 +9,7 @@ import {
    Board,
    CardType,
    ColumnType,
+   DateFieldType,
    FieldType,
    NumberFieldType,
    TextFieldType,
@@ -16,7 +17,7 @@ import {
 } from "@/types"
 import CopyList from "./CopyList"
 import { Draggable, Droppable } from "react-beautiful-dnd"
-import uuid from "react-uuid"
+import { nanoid } from "nanoid"
 import MoveList from "./MoveList"
 
 type Props = {
@@ -108,19 +109,22 @@ function Column(props: Props) {
    function updateOrAddField(
       columnId: string,
       cardId: string,
-      newField: TextFieldType | NumberFieldType
+      newField: FieldType
    ) {
+      console.log(newField)
       const column = props.columns.find((c) => c.id === columnId)
       if (!column) return
       const card = column.cards.find((c) => c.id === cardId)
       if (!card) return
-      const existingField = card.fields.find((f) => f.id === newField.id)
+      const existingField = card.fields.find((f) => f?.id === newField.id)
       if (existingField) {
-         // update existing field
-         const updatedField: FieldType = { ...existingField, ...newField }
-         const updatedFields = card.fields.map((f) =>
-            f.id === existingField.id ? updatedField : f
-         )
+         const updatedFields = card.fields.map((f) => {
+            if (f?.id === existingField.id) {
+               return newField
+            } else {
+               return f
+            }
+         })
          const updatedCard: CardType = { ...card, fields: updatedFields }
          const updatedColumn: ColumnType = {
             ...column,
@@ -130,7 +134,6 @@ function Column(props: Props) {
          }
          props.updateColumn(updatedColumn)
       } else {
-         // add new field
          const newFields: FieldType[] = [...card.fields, newField]
          const updatedCard: CardType = { ...card, fields: newFields }
          const updatedColumn: ColumnType = {
@@ -215,7 +218,7 @@ function Column(props: Props) {
                         <div
                            {...droppableProvided.droppableProps}
                            ref={droppableProvided.innerRef}
-                           className='column w-full overflow-y-auto px-2'
+                           className='column w-full overflow-y-auto px-2 min-h-[1px]'
                         >
                            {props.column.cards.map((card, index) => {
                               return (
@@ -289,7 +292,7 @@ function Column(props: Props) {
                               onClick={() => {
                                  if (input.length > 0) {
                                     props.handleAddCard(props.column.id, {
-                                       id: uuid(),
+                                       id: nanoid(),
                                        text: input,
                                        labels: [],
                                        image: {

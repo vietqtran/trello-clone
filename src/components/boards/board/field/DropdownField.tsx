@@ -1,4 +1,9 @@
-import { CardType, DropdownFieldType, FieldType } from "@/types"
+import {
+   CardType,
+   DropdownFieldItem,
+   DropdownFieldType,
+   FieldType,
+} from "@/types"
 import React, { useState } from "react"
 import { MdKeyboardArrowDown } from "react-icons/md"
 import { RxDropdownMenu } from "react-icons/rx"
@@ -13,16 +18,30 @@ type Props = {
 }
 
 function DropdownField(props: Props) {
-   const cardField = props.card.fields.find(
-      (f) => f.id === props.field.id
+   const existCard = props.card.fields.find(
+      (f) => f?.id === props.field.id
    ) as DropdownFieldType
-
-   const [bg, setBg] = useState(cardField?.selected?.color || "bg-slate-100")
-   const [title, setTitle] = useState(cardField?.selected?.title || "Status")
+   const cardField: DropdownFieldType = {
+      boardId: "",
+      id: "",
+      options: existCard ? [...existCard.options] : [],
+      selected: existCard
+         ? existCard.selected
+         : { color: "#f1f2f4", id: "", title: "Status" },
+      title: "",
+      type: "dropdown",
+   }
+   const [selectedId, setSelectedId] = useState("")
 
    const handleSelect = (e: any) => {
-      const option = props.field.options.filter((o) => (o.id = e.target.value))
-      console.log(option)
+      setSelectedId(e.target.value)
+      const option = props.field.options.filter(
+         (o) => o.id === e.target.value
+      )[0]
+      props.updateOrAddField(props.columnId, props.card.id, {
+         ...props.field,
+         selected: option,
+      } as DropdownFieldType)
    }
 
    return (
@@ -31,29 +50,41 @@ function DropdownField(props: Props) {
             <span className='mr-2'>
                <RxDropdownMenu />
             </span>
-            <span className='text-xs font-medium'>{props.field.title}</span>
+            <span className='text-xs font-medium truncate block w-full'>
+               {props.field.title}
+            </span>
          </div>
          <div
-            className={`relative w-full ${bg} ${
-               bg === "bg-slate-100" ? "hover:bg-slate-200" : ""
+            style={{ backgroundColor: cardField?.selected?.color }}
+            className={`relative w-full ${
+               cardField?.selected?.color === "#f1f5f9"
+                  ? "hover:bg-slate-200"
+                  : ""
             } rounded-md overflow-hidden cursor-pointer`}
          >
-            <div className='absolute w-full h-full top-0 left-0 bg-transparent  text-gray-800 flex items-center justify-between px-2 py-1'>
-               <span className='font-semibold'>{title}</span>
+            <div
+               className={`absolute w-full h-full top-0 left-0 bg-transparent  text-gray-800 flex items-center justify-between px-2 py-1 ${
+                  cardField?.selected?.title === "Status" ? "opacity-70" : ""
+               }`}
+            >
+               <span className={`font-semibold `}>
+                  {cardField?.selected?.title}
+               </span>
                <span>
                   <MdKeyboardArrowDown />
                </span>
             </div>
             <select
+               value={selectedId}
                onChange={(e) => {
                   handleSelect(e)
                }}
                className='block w-full bg-slate-50 outline-none p-2 opacity-0'
             >
-               <option selected disabled>
+               <option value={""} disabled>
                   --
                </option>
-               {props.field.options.map((o) => {
+               {props.field.options.map((o, i) => {
                   return (
                      <option key={o.id} value={o.id}>
                         {o.title}

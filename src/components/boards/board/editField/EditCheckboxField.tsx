@@ -5,16 +5,12 @@ type Props = {
    setEditTab: Function
    field: CheckboxFieldType | undefined
    renameField: Function
+   deleteField: Function
    setShowSelectFields: Function
 }
 function EditCheckboxField(props: Props) {
    const [title, setTitle] = useState(props.field?.title)
-   const changeTitle = () => {
-      console.log("oke")
-      if (title !== "") {
-         props.renameField(props.field, title)
-      }
-   }
+
    return (
       <div>
          <div className='flex items-center justify-between'>
