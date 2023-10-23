@@ -104,12 +104,12 @@ function Card(props: Props) {
                      </span>
                      <div className='flex flex-wrap items-center mt-1 text-opacity-90 text-gray-800 max-w-[239px]'>
                         {props.card.description !== "" && (
-                           <div className='text-xs pr-2 block'>
+                           <div className='text-xs pr-2 block mt-1'>
                               <HiOutlineMenuAlt2 />
                            </div>
                         )}
                         {props.card.comments?.length > 0 && (
-                           <div className=''>
+                           <div className='mt-1'>
                               <span className='flex items-center'>
                                  <PiChatThin />
                                  <span className='text-xs pr-1'>
