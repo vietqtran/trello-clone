@@ -38,6 +38,7 @@ type Props = {
    }
    index: number
    column: ColumnType
+   columns: ColumnType[]
    setLabels: Function
    setCover: Function
    deleteCard: Function
@@ -52,6 +53,7 @@ type Props = {
    addField: Function
    removeField: Function
    updateOrAddField: Function
+   reSetBoard: Function
 }
 
 function Card(props: Props) {
@@ -70,7 +72,7 @@ function Card(props: Props) {
                   {...provided.draggableProps}
                   data-is-dragging={snapshot.isDragging}
                   {...provided.dragHandleProps}
-                  className='relative group w-full bg-white hover:bg-slate-100 rounded-lg overflow-hidden card-shadow my-1 cursor-pointer'
+                  className='relative group w-full bg-white rounded-lg overflow-hidden card-shadow my-2 cursor-pointer hover:outline-2 hover:outline-black hover:outline'
                >
                   {props?.card?.image.ntn !== 0 &&
                      props?.card?.image.type !== "" && (
@@ -100,7 +102,7 @@ function Card(props: Props) {
                      >
                         <HiOutlinePencil />
                      </span>
-                     <div className='flex flex-wrap items-center mt-1 text-opacity-70 text-gray-800 max-w-[239px]'>
+                     <div className='flex flex-wrap items-center mt-1 text-opacity-90 text-gray-800 max-w-[239px]'>
                         {props.card.description !== "" && (
                            <div className='text-xs pr-2 block'>
                               <HiOutlineMenuAlt2 />
@@ -117,7 +119,7 @@ function Card(props: Props) {
                            </div>
                         )}
                         {props.card.fields.map((f) => {
-                           switch (f.type) {
+                           switch (f?.type) {
                               case "dropdown":
                                  return (
                                     <DropdownField
@@ -181,6 +183,8 @@ function Card(props: Props) {
                addField={props.addField}
                removeField={props.removeField}
                updateOrAddField={props.updateOrAddField}
+               reSetBoard={props.reSetBoard}
+               columns={props.columns}
             />
          )}
       </>

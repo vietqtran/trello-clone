@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { collection, getDocs } from "@firebase/firestore"
 import { db } from "@/firebase"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 export default function SearchPage() {
    const [starredBoards, setStarredBoards] = useState<Board[]>([])
@@ -81,7 +81,7 @@ export default function SearchPage() {
       workspace: string
    ) => {
       const boardCreate: Board = {
-         id: uniqid(),
+         id: nanoid(),
          background: { ...selectBg },
          columns: [],
          star: false,

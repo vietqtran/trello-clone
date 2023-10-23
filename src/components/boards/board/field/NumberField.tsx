@@ -13,7 +13,7 @@ type Props = {
 
 function NumberField(props: Props) {
    const cardField = props.card.fields.find(
-      (f) => f.id === props.field.id
+      (f) => f?.id === props.field.id
    ) as NumberFieldType
 
    const [value, setValue] = useState(cardField?.value || "")
@@ -40,7 +40,9 @@ function NumberField(props: Props) {
             <span className='mr-2'>
                <MdOutlineNumbers />
             </span>
-            <span className='text-xs font-medium'>{props.field.title}</span>
+            <span className='text-xs font-medium truncate block w-full'>
+               {props.field.title}
+            </span>
          </div>
          <div
             className={`w-full bg-slate-100 rounded-md overflow-hidden cursor-pointer`}
@@ -52,7 +54,7 @@ function NumberField(props: Props) {
                   onBlur={handleBlur}
                   type='text'
                   placeholder={`Add ${props.field.title}...`}
-                  className='rounded-md p-2 py-[6px] text-sm font-semibold border-2 border-slate-100 hover:border-slate-200 outline-none block w-full bg-slate-100 hover:bg-slate-200 focus:border-blue-500 focus:bg-white placeholder:text-gray-800'
+                  className='rounded-md p-2 py-[6px] text-sm font-semibold border-2 border-slate-100 hover:border-slate-200 outline-none block w-full bg-slate-100 hover:bg-slate-200 focus:border-blue-500 focus:bg-white placeholder:text-gray-800 placeholder:opacity-70'
                />
             </div>
          </div>

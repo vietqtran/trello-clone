@@ -8,7 +8,7 @@ import { collection, getDocs, doc, updateDoc } from "@firebase/firestore"
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Image from "next/image"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 export default function BoardDetailPage() {
    const pathName = usePathname()
@@ -112,7 +112,7 @@ export default function BoardDetailPage() {
       workspace: string
    ) => {
       const boardCreate: Board = {
-         id: uniqid(),
+         id: nanoid(),
          background: { ...selectBg },
          columns: [],
          star: false,
@@ -282,7 +282,7 @@ export default function BoardDetailPage() {
          (w) => w.id === destinationBoard.workspaceId
       )
       const newDestinationCards: CardType[] = [...destinationColumn.cards]
-      newDestinationCards.splice(index, 0, { ...card, id: uniqid() })
+      newDestinationCards.splice(index, 0, { ...card, id: nanoid() })
       const newColumn: ColumnType = {
          ...destinationColumn,
          cards: newDestinationCards,
@@ -399,7 +399,7 @@ export default function BoardDetailPage() {
       const newCards: CardType[] = []
       destinationColumn.cards.forEach((c, i) => {
          if (i === index) {
-            newCards.push({ ...card, id: uniqid() })
+            newCards.push({ ...card, id: nanoid() })
          }
          newCards.push(c)
       })

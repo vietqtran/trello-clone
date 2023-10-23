@@ -2,7 +2,7 @@ import { Board, ColumnType, WorkspaceType } from "@/types"
 import React, { useEffect, useRef, useState } from "react"
 import { RiArrowLeftSLine, RiCloseLine } from "react-icons/ri"
 import { useOnClickOutside } from "usehooks-ts"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 type Props = {
    column: ColumnType
@@ -46,7 +46,7 @@ function MoveList(props: Props) {
                index,
                {
                   ...props.column,
-                  id: uniqid(),
+                  id: nanoid(),
                },
                props.column.id
             )

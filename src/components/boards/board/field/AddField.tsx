@@ -9,7 +9,7 @@ import React, { useRef, useState } from "react"
 import { AiOutlineClose } from "react-icons/ai"
 import { SlArrowLeft } from "react-icons/sl"
 import { useOnClickOutside } from "usehooks-ts"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 type Props = {
    showSelectFields: { show: boolean; tab: string }
@@ -38,7 +38,7 @@ function AddField(props: Props) {
                   options: [],
                   boardId: "",
                   selected: { color: "", id: "", title: "" },
-                  id: uniqid(),
+                  id: nanoid(),
                } as DropdownFieldType)
                break
             case "checkbox":
@@ -46,7 +46,7 @@ function AddField(props: Props) {
                   type: type,
                   title: title,
                   boardId: "",
-                  id: uniqid(),
+                  id: nanoid(),
                   isChecked: false,
                } as CheckboxFieldType)
                break
@@ -55,7 +55,7 @@ function AddField(props: Props) {
                   type: type,
                   title: title,
                   boardId: "",
-                  id: uniqid(),
+                  id: nanoid(),
                   date: "",
                   time: "",
                   value: "",
@@ -65,7 +65,7 @@ function AddField(props: Props) {
                   type: type,
                   title: title,
                   boardId: "",
-                  id: uniqid(),
+                  id: nanoid(),
                   value: "",
                } as TextFieldType)
                break
@@ -74,7 +74,7 @@ function AddField(props: Props) {
                   type: type,
                   title: title,
                   boardId: "",
-                  id: uniqid(),
+                  id: nanoid(),
                   value: NaN,
                } as NumberFieldType)
                break

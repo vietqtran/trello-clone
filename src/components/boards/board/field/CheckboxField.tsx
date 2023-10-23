@@ -11,7 +11,7 @@ type Props = {
 }
 
 function CheckboxField(props: Props) {
-   const isChecked = !!props.card.fields.find((f) => f.id === props.field.id)
+   const isChecked = !!props.card.fields.find((f) => f?.id === props.field.id)
 
    const handleCheckboxChange = (
       event: React.ChangeEvent<HTMLInputElement>
@@ -34,7 +34,9 @@ function CheckboxField(props: Props) {
             <span className='mr-2'>
                <AiOutlineCheckCircle />
             </span>
-            <span className='text-xs font-medium'>{props.field.title}</span>
+            <span className='text-xs font-medium truncate block w-full'>
+               {props.field.title}
+            </span>
          </div>
          <div className={` w-full rounded-md overflow-hidden py-2`}>
             <input

@@ -37,14 +37,15 @@ import { collection, addDoc, getDocs } from "@firebase/firestore"
 import FieldPreview from "./field/FieldPreview"
 import AddField from "./field/AddField"
 import EditDropdownField from "./editField/EditDropdownField"
-import { updateDoc, doc } from "firebase/firestore"
+import { updateDoc, doc, deleteDoc } from "firebase/firestore"
 const renderHTML = require("react-render-html")
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 type Props = {
    setShowModal: Function
    card: CardType
    column: ColumnType
+   columns: ColumnType[]
    setLabels: Function
    setCoverCard: Function
    deleteCard: Function
@@ -59,6 +60,7 @@ type Props = {
    addField: Function
    removeField: Function
    updateOrAddField: Function
+   reSetBoard: Function
 }
 
 const date = new Date()
@@ -180,7 +182,6 @@ function CardModal(props: Props) {
                               time: doc.data().time,
                               title: doc.data().title,
                               type: doc.data().type,
-                              value: doc.data().value,
                            } as DateFieldType)
                            break
                         case "checkbox":
@@ -203,12 +204,10 @@ function CardModal(props: Props) {
          .catch((err) => {})
    }
 
-   useEffect(() => {}, [props.card.fields])
-
    const addComment = () => {
       if (comment !== "") {
          const newComment: Comment = {
-            id: uniqid(),
+            id: nanoid(),
             cardId: props.card.id,
             sender: user.email,
             content: comment,
@@ -286,6 +285,7 @@ function CardModal(props: Props) {
    }
 
    const addOption = async (fieldId: string, option: DropdownFieldItem) => {
+      console.log(option)
       const field = fields.filter(
          (f) => f.id === fieldId
       )[0] as DropdownFieldType
@@ -293,9 +293,163 @@ function CardModal(props: Props) {
          ...field,
          options: [...field.options, option],
       }
+      console.log(newField)
       await updateDoc(doc(db, "fields", newField.id), newField)
       getFields()
    }
+
+   const renameField = async (field: FieldType, newName: string) => {
+      const newColumns = props.columns.map((col) => {
+         return {
+            ...col,
+            cards: col.cards.map((c) => {
+               return {
+                  ...c,
+                  fields: c.fields.map((f) => {
+                     if (f.id === field.id) {
+                        return { ...f, title: newName }
+                     }
+                     return f
+                  }),
+               }
+            }),
+         }
+      })
+      await updateDoc(doc(db, "fields", field.id), { ...field, title: newName })
+      props.reSetBoard(newColumns)
+      getFields()
+   }
+
+   const changeTitleOption = async (
+      field: DropdownFieldType,
+      optionId: string,
+      newTitle: string
+   ) => {
+      const newOptions = field.options.map((o) => {
+         if (o.id === optionId) {
+            return { ...o, title: newTitle }
+         }
+         return o
+      })
+      await updateDoc(doc(db, "fields", field.id), {
+         ...field,
+         options: [...newOptions],
+      })
+      getFields()
+      const newColumns = props.columns.map((col) => {
+         return {
+            ...col,
+            cards: col.cards.map((c) => {
+               return {
+                  ...c,
+                  fields: c.fields.map((f) => {
+                     if (f?.id === field.id) {
+                        const dropField = f as DropdownFieldType
+                        if (dropField.selected.id === optionId) {
+                           return {
+                              ...f,
+                              title: newTitle,
+                           }
+                        }
+                     }
+                     return f
+                  }),
+               }
+            }),
+         }
+      })
+      props.reSetBoard(newColumns)
+   }
+
+   const changeBgOption = async (
+      field: DropdownFieldType,
+      optionId: string,
+      newBg: string
+   ) => {
+      const newOptions = field.options.map((o) => {
+         if (o.id === optionId) {
+            return { ...o, color: newBg }
+         }
+         return o
+      })
+      await updateDoc(doc(db, "fields", field.id), {
+         ...field,
+         options: [...newOptions],
+      })
+      getFields()
+      const newColumns = props.columns.map((col) => {
+         return {
+            ...col,
+            cards: col.cards.map((c) => {
+               return {
+                  ...c,
+                  fields: c.fields.map((f) => {
+                     if (f?.id === field.id) {
+                        const dropField = f as DropdownFieldType
+                        if (dropField.selected.id === optionId) {
+                           return {
+                              ...f,
+                              selected: { ...dropField.selected, color: newBg },
+                           }
+                        }
+                     }
+                     return f
+                  }),
+               }
+            }),
+         }
+      })
+      props.reSetBoard(newColumns)
+   }
+
+   const deleteOption = async (field: DropdownFieldType, optionId: string) => {
+      const newOptions = field.options.filter((o) => o.id !== optionId)
+      await updateDoc(doc(db, "fields", field.id), {
+         ...field,
+         options: [...newOptions],
+      })
+      getFields()
+      const newColumns = props.columns.map((col) => {
+         return {
+            ...col,
+            cards: col.cards.map((c) => {
+               return {
+                  ...c,
+                  fields: c.fields.map((f) => {
+                     if (f?.id !== field.id) {
+                        return f
+                     }
+                     return null
+                  }),
+               }
+            }),
+         }
+      })
+      props.reSetBoard(newColumns)
+   }
+
+   const deleteField = async (field: FieldType) => {
+      await deleteDoc(doc(db, "fields", field.id))
+      getFields()
+      const newColumns = props.columns.map((col) => {
+         return {
+            ...col,
+            cards: col.cards.map((c) => {
+               return {
+                  ...c,
+                  fields: c.fields.map((f) => {
+                     if (f.id !== field.id) {
+                        return f
+                     }
+                     return null
+                  }),
+               }
+            }),
+         }
+      })
+      props.reSetBoard(newColumns)
+   }
+
    return (
       <>
          <div className=' z-40 overflow-y-auto w-full h-full min-h-[100vh] min-w-[100vw] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start pt-20 pb-10 justify-center'>
@@ -585,6 +739,11 @@ function CardModal(props: Props) {
                                     showSelectFields={showSelectFields}
                                     setShowSelectFields={setShowSelectFields}
                                     addOption={addOption}
+                                    renameField={renameField}
+                                    changeBgOption={changeBgOption}
+                                    changeTitleOption={changeTitleOption}
+                                    deleteField={deleteField}
+                                    deleteOption={deleteOption}
                                  />
                               )}
                            {showSelectFields.show &&

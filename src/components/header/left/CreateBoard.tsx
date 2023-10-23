@@ -12,7 +12,7 @@ import { Board, WorkspaceType } from "@/types"
 import { useAppSelector } from "@/app/redux/store"
 import { useRouter } from "next/navigation"
 import { addRecent } from "@/userMethods"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 type Props = {
    setShow: Function
@@ -210,7 +210,7 @@ function CreateBoard(props: Props) {
                   </select>
                   <button
                      onClick={() => {
-                        const id = uniqid()
+                        const id = nanoid()
                         addRecent({
                            id: id,
                            background: {

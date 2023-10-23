@@ -1,7 +1,6 @@
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import React, { memo, useRef, useState } from "react"
 import { GrClose } from "react-icons/gr"
-var uniqid = require("uniqid")
 
 type Props = {
    moveCardBetweenWorkspaces: Function

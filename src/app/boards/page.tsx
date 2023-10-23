@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useRouter } from "next/navigation"
-var uniqid = require("uniqid")
+import { nanoid } from "nanoid"
 
 export default function BoardsPage() {
    const workspaceCollectionRef = collection(db, "workspaces")
@@ -59,7 +59,7 @@ export default function BoardsPage() {
       workspace: string
    ) => {
       const boardCreate: Board = {
-         id: uniqid(),
+         id: nanoid(),
          background: { ...selectBg },
          columns: [],
          star: false,
