@@ -1,7 +1,7 @@
 import Image from "next/image"
 import React, { useEffect } from "react"
 import { SlArrowLeft } from "react-icons/sl"
-import { AiOutlineClose } from "react-icons/ai"
+import { AiOutlineClose, AiOutlineLock } from "react-icons/ai"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import Background from "./Background"
 import { useState } from "react"
@@ -13,6 +13,9 @@ import { useAppSelector } from "@/app/redux/store"
 import { useRouter } from "next/navigation"
 import { addRecent } from "@/userMethods"
 import { nanoid } from "nanoid"
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io"
+import { BsGlobeAsiaAustralia, BsPeople } from "react-icons/bs"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 type Props = {
    setShow: Function
@@ -23,9 +26,21 @@ type Props = {
 }
 
 function CreateBoard(props: Props) {
+   const [userId, setUserId] = useState("")
+
+   const getUser = async () => {
+      const data = await AsyncStorage.getItem("USER")
+      const user = JSON.parse(data || "")
+      setUserId(user?.id || "")
+   }
+   useEffect(() => {
+      getUser()
+   })
    const [selectBg, setSelectBg] = useState({ ntn: 1, type: "image" })
    const [showSelectBg, setShowSelectBg] = useState(false)
    const [title, setTitle] = useState("")
+   const [visibility, setVisibility] = useState("Workspace")
+   const [showVisibility, setShowVisibility] = useState(false)
    const [workspace, setWorkspace] = useState(props.workspaceId)
    const router = useRouter()
 
@@ -158,7 +173,7 @@ function CreateBoard(props: Props) {
                   />
                )}
 
-               <div>
+               <div className='pb-4'>
                   <label htmlFor='title' className='font-bold text-xs'>
                      Board title <span className='text-red-600'>*</span>
                   </label>
@@ -208,6 +223,91 @@ function CreateBoard(props: Props) {
                         )
                      })}
                   </select>
+                  <div className='my-4'>
+                     <span className='font-bold text-xs mt-3'>Visibility</span>
+                     <div className='w-full outline-none p-2 px-3 border-slate-400 border-2 rounded-md relative'>
+                        <div
+                           onClick={() => {
+                              setShowVisibility(!showVisibility)
+                           }}
+                           className='flex items-center justify-between w-full'
+                        >
+                           <span>{visibility}</span>
+                           <span className=''>
+                              <IoIosArrowDown />
+                           </span>
+                        </div>
+                        {showVisibility && (
+                           <div
+                              className={`absolute py-2 bg-white drop-menu-shadow text-xs left-0 top-[calc(100%+10px)] rounded-md`}
+                           >
+                              <div
+                                 onClick={() => {
+                                    setVisibility("Private")
+                                    setShowVisibility(false)
+                                 }}
+                                 className={`w-full flex items-center justify-between py-2 ${
+                                    visibility === "Private"
+                                       ? "text-blue-600 bg-blue-100"
+                                       : ""
+                                 }`}
+                              >
+                                 <span className='block p-5 text-base'>
+                                    <AiOutlineLock />
+                                 </span>
+                                 <span className='block flex-1'>
+                                    <span className='text-sm'>Private</span>
+                                    <br />
+                                    Only board members can see and edit this
+                                    board.
+                                 </span>
+                              </div>
+                              <div
+                                 onClick={() => {
+                                    setVisibility("Workspace")
+                                    setShowVisibility(false)
+                                 }}
+                                 className={`w-full flex items-center justify-between py-2 ${
+                                    visibility === "Workspace"
+                                       ? "text-blue-600 bg-blue-100"
+                                       : ""
+                                 }`}
+                              >
+                                 <span className='block p-5 text-base'>
+                                    <BsPeople />
+                                 </span>
+                                 <span className='block flex-1'>
+                                    <span className='text-sm'>Workspace</span>
+                                    <br />
+                                    All members of the Project Workspace can see
+                                    and edit this board.
+                                 </span>
+                              </div>
+                              <div
+                                 onClick={() => {
+                                    setVisibility("Public")
+                                    setShowVisibility(false)
+                                 }}
+                                 className={`w-full flex items-center justify-between py-2 ${
+                                    visibility === "Public"
+                                       ? "text-blue-600 bg-blue-100"
+                                       : ""
+                                 }`}
+                              >
+                                 <span className='block p-5 text-base'>
+                                    <BsGlobeAsiaAustralia />
+                                 </span>
+                                 <span className='block flex-1'>
+                                    <span className='text-sm'>Public</span>
+                                    <br />
+                                    Anyone on the internet can see this board.
+                                    Only board members can edit.
+                                 </span>
+                              </div>
+                           </div>
+                        )}
+                     </div>
+                  </div>
                   <button
                      onClick={() => {
                         const id = nanoid()
@@ -221,9 +321,12 @@ function CreateBoard(props: Props) {
                            star: false,
                            title: title,
                            workspaceId: props.workspaceId,
+                           visibility: visibility,
+                           members: [userId],
                         })
-                        props.addBoard(selectBg, title, workspace)
+                        props.addBoard(selectBg, title, workspace, visibility)
                         router.push(`/boards/${props.workspaceId}/${id}`)
+                        return
                      }}
                      className={`w-full py-2 rounded-md mt-3 ${
                         title

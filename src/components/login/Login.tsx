@@ -94,6 +94,7 @@ function Login() {
          })
          .then((userCreate) => {
             router.push("/boards")
+            return
          })
    }
 
@@ -120,6 +121,7 @@ function Login() {
             } else {
                router.push("/boards")
                setError({ show: false, message: "" })
+               return
             }
          })
          .catch((err) => {})
@@ -147,6 +149,7 @@ function Login() {
             await AsyncStorage.setItem("USER", JSON.stringify(userLocal))
          } catch (error) {}
          router.push("/boards")
+         return
       }
    }
 

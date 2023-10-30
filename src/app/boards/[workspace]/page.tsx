@@ -72,26 +72,34 @@ export default function WorkspacePage() {
    const addBoard = async (
       selectBg: { ntn: number; type: string },
       title: string,
-      workspace: string
+      workspace: string,
+      visibility: string
    ) => {
-      const boardCreate: Board = {
-         id: nanoid(),
-         background: { ...selectBg },
-         columns: [],
-         star: false,
-         title: title,
-         workspaceId: workspace,
-      }
-      const workspaceUpdate = workspaces?.find((w) => {
-         return w.id === workspace
-      })
-      const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
-      await updateDoc(doc(db, "workspaces", workspace), {
-         boards: boardsUpdate,
-         ...workspaceUpdate,
-      })
-      getWorkspaces()
-      router.push(`/boards/${workspace}/${boardCreate.id}`)
+      try {
+         const data = await AsyncStorage.getItem("USER")
+         const userId = JSON.parse(data || "").id
+         const boardCreate: Board = {
+            id: nanoid(),
+            background: { ...selectBg },
+            columns: [],
+            star: false,
+            title: title,
+            workspaceId: workspace,
+            visibility: visibility,
+            members: [userId],
+         }
+         const workspaceUpdate = workspaces?.find((w) => {
+            return w.id === workspace
+         })
+         const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
+         await updateDoc(doc(db, "workspaces", workspace), {
+            boards: boardsUpdate,
+            ...workspaceUpdate,
+         })
+         getWorkspaces()
+         router.push(`/boards/${workspace}/${boardCreate.id}`)
+         return
+      } catch (error) {}
    }
 
    // Function to get starred boards
@@ -107,6 +115,8 @@ export default function WorkspacePage() {
                   columns: [...board.columns],
                   star: board.star,
                   background: { ...board.background },
+                  visibility: board.visibility,
+                  members: [...board.members],
                })
             }
          })
@@ -119,6 +129,7 @@ export default function WorkspacePage() {
       if (workspaces.length == 1) {
          if (workspaces[0].id != id) {
             router.push("/boards")
+            return
          } else {
             return workspaces[0]
          }
@@ -154,6 +165,7 @@ export default function WorkspacePage() {
       } else {
          await deleteDoc(doc(db, "workspaces", id || ""))
          router.push("/boards")
+         return
       }
    }
 

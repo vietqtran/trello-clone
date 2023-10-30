@@ -30,7 +30,9 @@ export type Board = {
    background: {
       ntn: number,
       type: string
-   }
+   },
+   visibility: string,
+   members: string[]
 }
 
 
@@ -40,7 +42,8 @@ export type WorkspaceType = {
    name: string,
    boards: Board[] | undefined,
    type: string,
-   description: string
+   description: string,
+   role: number
 }
 
 export type ColumnType = {

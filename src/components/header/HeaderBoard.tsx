@@ -49,6 +49,7 @@ function HeaderBoard(props: Props) {
                setUser(JSON.parse(data))
             } else {
                router.push("/")
+               return
             }
          } catch (error) {}
       }
@@ -56,7 +57,7 @@ function HeaderBoard(props: Props) {
    }, [])
 
    return (
-      <div className='z-30 w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
+      <div className='z-[10000] w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
          <div className='w-full text-white p-2 flex items-center justify-between'>
             <div className='flex items-center justify-start'>
                <div className='logo rounded-md w-fit bg-black bg-clip-padding backdrop-filter hover:backdrop-blur-sm bg-opacity-0 hover:bg-opacity-10'>

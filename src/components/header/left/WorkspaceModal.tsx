@@ -5,7 +5,7 @@ import { GrClose } from "react-icons/gr"
 import { db } from "@/firebase"
 import { collection, addDoc } from "@firebase/firestore"
 import { useRouter } from "next/navigation"
-import { User } from "@/types"
+import { User, WorkspaceType } from "@/types"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 type Props = {
@@ -45,6 +45,7 @@ function WorkspaceModal(props: Props) {
                setUser(JSON.parse(data))
             } else {
                router.push("/")
+               return
             }
          } catch (error) {}
       }
@@ -57,6 +58,7 @@ function WorkspaceModal(props: Props) {
    const [description, setDescription] = useState("")
 
    const workspaceCollectionRef = collection(db, "workspaces")
+
    const addWorkspace = async () => {
       await addDoc(workspaceCollectionRef, {
          name: title,
@@ -64,8 +66,10 @@ function WorkspaceModal(props: Props) {
          description: description,
          boards: [],
          userId: user.id,
+         role: 1,
       }).then((dataRef) => {
          router.push(`/boards/${dataRef.id}`)
+         return
       })
    }
 

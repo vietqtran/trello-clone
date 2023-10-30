@@ -14,6 +14,7 @@ function SearchWorkspaceItem(props: Props) {
    // Handle the click event to navigate to the workspace
    const handleClick = () => {
       router.push(`/boards/${props.workspace?.id}`)
+      return
    }
 
    return (

@@ -94,6 +94,7 @@ function SignUp() {
             } else {
                setUser(userLocal)
                router.push("/boards")
+               return
             }
          })
          .catch((err) => {})
@@ -142,6 +143,7 @@ function SignUp() {
          })
          .then((userCreate) => {
             router.push("/boards")
+            return
          })
    }
 

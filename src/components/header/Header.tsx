@@ -54,6 +54,7 @@ function Header(props: Props) {
             } else {
                // If no data found, navigate to the homepage
                router.push("/")
+               return
             }
          } catch (error) {}
       }

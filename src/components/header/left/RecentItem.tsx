@@ -15,6 +15,7 @@ function RecentItem(props: Props) {
       <div
          onClick={() => {
             router.push(`/boards/${props.board.workspaceId}/${props.board.id}`)
+            return
          }}
          className='p-1 hover:bg-slate-100 rounded-md w-full flex items-center justify-between'
       >

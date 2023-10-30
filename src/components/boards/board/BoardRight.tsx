@@ -136,7 +136,7 @@ function BoardRight(props: Props) {
                reorder(result)
             }}
          >
-            <div className='w-full h-auto'>
+            <div className='w-full h-auto z-0'>
                <Droppable direction='horizontal' droppableId='board'>
                   {(droppableProvided) => (
                      <div

@@ -72,7 +72,7 @@ function Card(props: Props) {
                   {...provided.draggableProps}
                   data-is-dragging={snapshot.isDragging}
                   {...provided.dragHandleProps}
-                  className='relative group w-full bg-white rounded-lg overflow-hidden card-shadow my-2 cursor-pointer hover:outline-2 hover:outline-black hover:outline'
+                  className='z-0 relative group w-full bg-white rounded-lg overflow-hidden card-shadow my-2 cursor-pointer hover:outline-2 hover:outline-black hover:outline'
                >
                   {props?.card?.image.ntn !== 0 &&
                      props?.card?.image.type !== "" && (

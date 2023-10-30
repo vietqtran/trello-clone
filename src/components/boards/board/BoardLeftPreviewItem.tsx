@@ -19,9 +19,12 @@ function BoardLeftPreviewItem(props: Props) {
             star: false,
             title: "",
             workspaceId: "",
+            visibility: "",
+            members: [],
          }
       )
       router.push(`/boards/${props.board?.workspaceId}/${props.board?.id}`)
+      return
    }
    return (
       <div

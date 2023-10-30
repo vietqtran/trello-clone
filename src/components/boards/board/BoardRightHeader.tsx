@@ -14,6 +14,7 @@ import BoardRightHeaderFeature from "./BoardRightHeaderFeature"
 import BoardRightHeaderFeatureButton from "./BoardRightHeaderFeatureButton"
 import { Board } from "@/types"
 import { usePathname } from "next/navigation"
+import ChangeBoardVisibility from "./ChangeBoardVisibility"
 
 type Props = {
    board: Board | undefined
@@ -41,7 +42,7 @@ function BoardRightHeader(props: Props) {
    const handleClickInside = () => {}
    useOnClickOutside(ref, handleClickOutside)
    return (
-      <div className='z-40 w-full px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
+      <div className='relative z-50 w-full px-4 py-2 flex flex-wrap items-center justify-between top-0 left-0 right-0 col-span-1 bg-black text-white bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10'>
          <div className='flex items-center justify-start'>
             <div>
                {showInput && (
@@ -90,7 +91,7 @@ function BoardRightHeader(props: Props) {
                )}
             </div>
             <BoardRightHeaderFeature>
-               <BiGroup />
+               <ChangeBoardVisibility />
             </BoardRightHeaderFeature>
             <BoardRightHeaderFeatureButton name={"Board"}>
                <LuTrello />

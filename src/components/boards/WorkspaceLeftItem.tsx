@@ -10,6 +10,7 @@ function WorkspaceLeftItem(props: Props) {
    const router = useRouter()
    const handleClick = () => {
       router.push(`/boards/${props.workspace.id}`)
+      return
    }
    return (
       <div

@@ -12,6 +12,7 @@ function WorkspaceItem(props: Props) {
       <div
          onClick={() => {
             router.push(`/boards/${props.workspace.id}`)
+            return
          }}
          className='relative flex items-center justify-start p-2 hover:bg-slate-100 rounded-md'
       >

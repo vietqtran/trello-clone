@@ -42,6 +42,7 @@ function Boards(props: Props) {
                setUser(JSON.parse(data))
             } else {
                router.push("/")
+               return
             }
          } catch (error) {}
       }

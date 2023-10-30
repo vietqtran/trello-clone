@@ -56,25 +56,33 @@ export default function BoardsPage() {
    const addBoard = async (
       selectBg: { ntn: number; type: string },
       title: string,
-      workspace: string
+      workspace: string,
+      visibility: string
    ) => {
-      const boardCreate: Board = {
-         id: nanoid(),
-         background: { ...selectBg },
-         columns: [],
-         star: false,
-         title: title,
-         workspaceId: workspace,
-      }
-      const workspaceUpdate = workspaces?.find((w) => {
-         return w.id === workspace
-      })
-      const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
-      await updateDoc(doc(db, "workspaces", workspace), {
-         boards: boardsUpdate,
-         ...workspaceUpdate,
-      })
-      router.push(`/boards/${workspace}/${boardCreate.id}`)
+      try {
+         const data = await AsyncStorage.getItem("USER")
+         const userId = JSON.parse(data || "").id
+         const boardCreate: Board = {
+            id: nanoid(),
+            background: { ...selectBg },
+            columns: [],
+            star: false,
+            title: title,
+            workspaceId: workspace,
+            visibility: visibility,
+            members: [userId],
+         }
+         const workspaceUpdate = workspaces?.find((w) => {
+            return w.id === workspace
+         })
+         const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
+         await updateDoc(doc(db, "workspaces", workspace), {
+            boards: boardsUpdate,
+            ...workspaceUpdate,
+         })
+         router.push(`/boards/${workspace}/${boardCreate.id}`)
+         return
+      } catch (error) {}
    }
 
    const changeStar = async (boardId: string, workspaceId: string) => {
@@ -108,6 +116,8 @@ export default function BoardsPage() {
                   columns: [...board.columns],
                   star: board.star,
                   background: { ...board.background },
+                  visibility: board.visibility,
+                  members: [...board.members],
                })
             }
          })

@@ -4,7 +4,13 @@ import BoardContent from "@/components/boards/board/Board"
 import HeaderBoard from "@/components/header/HeaderBoard"
 import { usePathname, useRouter } from "next/navigation"
 import { db } from "@/firebase"
-import { collection, getDocs, doc, updateDoc } from "@firebase/firestore"
+import {
+   collection,
+   getDocs,
+   doc,
+   updateDoc,
+   getDoc,
+} from "@firebase/firestore"
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Image from "next/image"
@@ -29,11 +35,8 @@ export default function BoardDetailPage() {
 
    const getWorkspaces = async () => {
       try {
-         // Get the user's data from AsyncStorage
          const data = await AsyncStorage.getItem("USER")
          const userId = JSON.parse(data || "").id
-
-         // Fetch workspaces from Firestore and filter by userId
          await getDocs(workspaceCollectionRef)
             .then((dataRef) => {
                const newWorkspaces: WorkspaceType[] = []
@@ -67,6 +70,8 @@ export default function BoardDetailPage() {
                   columns: [...board.columns],
                   star: board.star,
                   background: { ...board.background },
+                  visibility: board.visibility,
+                  members: [...board.members],
                })
             }
          })
@@ -74,17 +79,41 @@ export default function BoardDetailPage() {
       return newStarredBoards
    }
 
-   const getBoard = () => {
-      workspaces.forEach((w) => {
-         if (w.id === workspaceId) {
-            const newBoard = w.boards?.find((b) => b.id === id)
-            if (!newBoard) {
-               router.push("/boards")
+   const getBoard = async () => {
+      try {
+         const data = await AsyncStorage.getItem("USER")
+         const userId = JSON.parse(data || "").id
+         let check = false
+         workspaces.forEach((w) => {
+            if (w.id === workspaceId) {
+               check = true
+               const newBoard = w.boards?.find((b) => b.id === id)
+               if (!newBoard) {
+                  router.push("/boards")
+                  return
+               }
+               setBoard(newBoard)
+               return
             }
-            setBoard(newBoard)
-            return
+         })
+         if (check === false) {
+            const newWorkspaces: WorkspaceType[] = []
+            await getDocs(workspaceCollectionRef)
+               .then((dataRef) => {
+                  dataRef.docs.forEach((doc) => {
+                     newWorkspaces.push({
+                        id: doc.id,
+                        userId: String(doc.data().userId),
+                        name: String(doc.data().name),
+                        type: String(doc.data().type),
+                        boards: [...doc.data().boards],
+                        description: String(doc.data().description),
+                     })
+                  })
+               })
+               .catch((err) => {})
          }
-      })
+      } catch (error) {}
    }
 
    const starBoard = async (boardId: string, workspaceId: string) => {
@@ -109,25 +138,33 @@ export default function BoardDetailPage() {
    const addBoard = async (
       selectBg: { ntn: number; type: string },
       title: string,
-      workspace: string
+      workspace: string,
+      visibility: string
    ) => {
-      const boardCreate: Board = {
-         id: nanoid(),
-         background: { ...selectBg },
-         columns: [],
-         star: false,
-         title: title,
-         workspaceId: workspace,
-      }
-      const workspaceUpdate = workspaces?.find((w) => {
-         return w.id === workspace
-      })
-      const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
-      await updateDoc(doc(db, "workspaces", workspace), {
-         boards: boardsUpdate,
-         ...workspaceUpdate,
-      })
-      router.push(`/boards/${workspace}/${boardCreate.id}`)
+      try {
+         const data = await AsyncStorage.getItem("USER")
+         const userId = JSON.parse(data || "").id
+         const boardCreate: Board = {
+            id: nanoid(),
+            background: { ...selectBg },
+            columns: [],
+            star: false,
+            title: title,
+            workspaceId: workspace,
+            visibility: visibility,
+            members: [userId],
+         }
+         const workspaceUpdate = workspaces?.find((w) => {
+            return w.id === workspace
+         })
+         const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
+         await updateDoc(doc(db, "workspaces", workspace), {
+            boards: boardsUpdate,
+            ...workspaceUpdate,
+         })
+         router.push(`/boards/${workspace}/${boardCreate.id}`)
+         return
+      } catch (error) {}
    }
 
    const getWorkspace = (id: string) => {
@@ -222,6 +259,8 @@ export default function BoardDetailPage() {
             ntn: 0,
             type: "",
          },
+         visibility: "",
+         members: [],
       }
       const columns: ColumnType[] = [...receiveBoard.columns]
       let newColumns: ColumnType[] = []

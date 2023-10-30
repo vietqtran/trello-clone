@@ -22,9 +22,12 @@ function BoardItem(props: Props) {
             star: false,
             title: "",
             workspaceId: "",
+            visibility: "",
+            members: [],
          }
       )
       router.push(`/boards/${props.workspace}/${props.board?.id}`)
+      return
    }
 
    return (

@@ -167,7 +167,7 @@ function Column(props: Props) {
             <div
                ref={provided.innerRef}
                {...provided.draggableProps}
-               className='rightboard column-drag-handle relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pb-0 pr-0 rounded-xl min-w-[271px] bg-slate-100'
+               className=' rightboard column-drag-handle relative flex flex-col items-start justify-start max-h-[calc(100vh-150px)] mx-2 pb-0 pr-0 rounded-xl min-w-[271px] bg-slate-100'
             >
                <div
                   data-is-dragging={snapshot.isDragging}

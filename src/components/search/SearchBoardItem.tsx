@@ -27,6 +27,7 @@ function SearchBoardItem(props: Props) {
          }
       )
       router.push(`/boards/${props.board.workspaceId}/${props.board.id}`)
+      return
    }
 
    return (

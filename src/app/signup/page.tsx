@@ -11,6 +11,7 @@ export default function Home() {
          const data = await AsyncStorage.getItem("USER")
          if (data) {
             router.push("/boards")
+            return
          }
       } catch (error) {}
    }
