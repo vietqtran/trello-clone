@@ -118,7 +118,12 @@ function EditDropdownField(props: Props) {
                </button>
             </div>
             <div className='pt-4'>
-               <button className='text-sm font-semibold text-blue-500 hover:underline'>
+               <button
+                  onClick={() => {
+                     props.deleteField(props.field)
+                  }}
+                  className='text-sm font-semibold text-blue-500 hover:underline'
+               >
                   Delete field
                </button>
             </div>

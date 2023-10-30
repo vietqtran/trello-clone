@@ -306,7 +306,7 @@ function CardModal(props: Props) {
                return {
                   ...c,
                   fields: c.fields.map((f) => {
-                     if (f.id === field.id) {
+                     if (f?.id === field.id) {
                         return { ...f, title: newName }
                      }
                      return f
@@ -437,11 +437,8 @@ function CardModal(props: Props) {
             cards: col.cards.map((c) => {
                return {
                   ...c,
-                  fields: c.fields.map((f) => {
-                     if (f.id !== field.id) {
-                        return f
-                     }
-                     return null
+                  fields: c.fields.filter((f) => {
+                     return f?.id != field.id
                   }),
                }
             }),
