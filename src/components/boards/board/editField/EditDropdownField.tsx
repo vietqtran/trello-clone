@@ -21,7 +21,6 @@ function EditDropdownField(props: Props) {
    const [itemName, setItemName] = useState("")
    const handleAdd = () => {
       var randId = nanoid()
-      console.log(randId)
       props.addOption(props.field?.id, {
          id: randId,
          color: "#f1f2f4",
@@ -35,7 +34,6 @@ function EditDropdownField(props: Props) {
             <div
                className='cursor-pointer rounded-sm p-2 text-sm hover:bg-slate-100'
                onClick={() => {
-                  console.log("oke")
                   props.setEditTab("")
                }}
             >

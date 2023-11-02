@@ -111,7 +111,6 @@ function Column(props: Props) {
       cardId: string,
       newField: FieldType
    ) {
-      console.log(newField)
       const column = props.columns.find((c) => c.id === columnId)
       if (!column) return
       const card = column.cards.find((c) => c.id === cardId)

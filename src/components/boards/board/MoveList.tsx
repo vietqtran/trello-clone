@@ -24,6 +24,8 @@ function MoveList(props: Props) {
          ntn: 0,
          type: "",
       },
+      members: [],
+      visibility: "",
    })
    const [index, setIndex] = useState(0)
 
@@ -104,7 +106,6 @@ function MoveList(props: Props) {
                                     return (
                                        <span
                                           onClick={() => {
-                                             console.log(b)
                                              setBoard(b)
                                           }}
                                           key={b.id}

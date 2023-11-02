@@ -285,7 +285,6 @@ function CardModal(props: Props) {
    }
 
    const addOption = async (fieldId: string, option: DropdownFieldItem) => {
-      console.log(option)
       const field = fields.filter(
          (f) => f.id === fieldId
       )[0] as DropdownFieldType
@@ -293,7 +292,6 @@ function CardModal(props: Props) {
          ...field,
          options: [...field.options, option],
       }
-      console.log(newField)
       await updateDoc(doc(db, "fields", newField.id), newField)
       getFields()
    }
