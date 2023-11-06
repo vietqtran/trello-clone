@@ -28,9 +28,9 @@ export default function SearchPage() {
          const data = await AsyncStorage.getItem("USER")
          const userId = JSON.parse(data || "").id
          await getDocs(workspaceCollectionRef)
-            .then((dataRef) => {
+            .then((dataRef: any) => {
                const newWorkspaces: WorkspaceType[] = []
-               dataRef.docs.forEach((doc) => {
+               dataRef.docs.forEach((doc: any) => {
                   if (doc.data().userId === userId) {
                      newWorkspaces.push({
                         id: doc.id,
@@ -39,6 +39,7 @@ export default function SearchPage() {
                         type: String(doc.data().type),
                         boards: [...doc.data().boards],
                         description: String(doc.data().description),
+                        role: 1,
                      })
                   }
                })
@@ -67,7 +68,6 @@ export default function SearchPage() {
                               star: board.star,
                               background: { ...board.background },
                               visibility: board.visibility,
-                              members: [...board.members],
                            })
                         }
                      })
@@ -96,7 +96,6 @@ export default function SearchPage() {
             title: title,
             workspaceId: workspace,
             visibility: visibility,
-            members: [userId],
          }
          const workspaceUpdate = workspaces?.find((w) => {
             return w.id === workspace
@@ -113,13 +112,13 @@ export default function SearchPage() {
    }
 
    return (
-      <main>
+      <div>
          <Header
             addBoard={addBoard}
             starredBoards={starredBoards}
             workspaces={workspaces}
          />
          <Search workspaces={workspaces} />
-      </main>
+      </div>
    )
 }

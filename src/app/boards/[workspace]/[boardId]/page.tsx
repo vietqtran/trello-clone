@@ -31,7 +31,7 @@ export default function BoardDetailPage() {
 
    useEffect(() => {
       getBoard()
-   }, [workspaces])
+   }, [])
 
    const getWorkspaces = async () => {
       try {
@@ -41,17 +41,17 @@ export default function BoardDetailPage() {
             .then((dataRef) => {
                const newWorkspaces: WorkspaceType[] = []
                dataRef.docs.forEach((doc) => {
-                  if (doc.data().userId === userId) {
-                     newWorkspaces.push({
-                        id: doc.id,
-                        userId: String(doc.data().userId),
-                        name: String(doc.data().name),
-                        type: String(doc.data().type),
-                        boards: [...doc.data().boards],
-                        description: String(doc.data().description),
-                     })
-                  }
+                  newWorkspaces.push({
+                     id: doc.id,
+                     userId: String(doc.data().userId),
+                     name: String(doc.data().name),
+                     type: String(doc.data().type),
+                     boards: [...doc.data().boards],
+                     description: String(doc.data().description),
+                     role: 1,
+                  })
                })
+               console.log(newWorkspaces)
                setWorkspaces(newWorkspaces)
             })
             .catch((err) => {})
@@ -60,22 +60,31 @@ export default function BoardDetailPage() {
 
    const getStarredBoards = () => {
       const newStarredBoards: Board[] = []
-      workspaces.forEach((w) => {
-         w.boards?.forEach((board: Board) => {
-            if (board.star) {
-               newStarredBoards.push({
-                  id: board.id,
-                  workspaceId: board.workspaceId,
-                  title: board.title,
-                  columns: [...board.columns],
-                  star: board.star,
-                  background: { ...board.background },
-                  visibility: board.visibility,
-                  members: [...board.members],
+      let data = ""
+      const getLS = async () => {
+         data = (await AsyncStorage.getItem("USER")) || ""
+      }
+      getLS()
+      try {
+         const userId = JSON.parse(data || "").id
+         workspaces.forEach((w) => {
+            if (w.userId === userId) {
+               w.boards?.forEach((board: Board) => {
+                  if (board.star) {
+                     newStarredBoards.push({
+                        id: board.id,
+                        workspaceId: board.workspaceId,
+                        title: board.title,
+                        columns: [...board.columns],
+                        star: board.star,
+                        background: { ...board.background },
+                        visibility: board.visibility,
+                     })
+                  }
                })
             }
          })
-      })
+      } catch (err) {}
       return newStarredBoards
    }
 
@@ -92,27 +101,11 @@ export default function BoardDetailPage() {
                   router.push("/boards")
                   return
                }
+               console.log(newBoard)
                setBoard(newBoard)
                return
             }
          })
-         if (check === false) {
-            const newWorkspaces: WorkspaceType[] = []
-            await getDocs(workspaceCollectionRef)
-               .then((dataRef) => {
-                  dataRef.docs.forEach((doc) => {
-                     newWorkspaces.push({
-                        id: doc.id,
-                        userId: String(doc.data().userId),
-                        name: String(doc.data().name),
-                        type: String(doc.data().type),
-                        boards: [...doc.data().boards],
-                        description: String(doc.data().description),
-                     })
-                  })
-               })
-               .catch((err) => {})
-         }
       } catch (error) {}
    }
 
@@ -152,7 +145,6 @@ export default function BoardDetailPage() {
             title: title,
             workspaceId: workspace,
             visibility: visibility,
-            members: [userId],
          }
          const workspaceUpdate = workspaces?.find((w) => {
             return w.id === workspace
@@ -246,6 +238,7 @@ export default function BoardDetailPage() {
          boards: [],
          type: "",
          description: "",
+         role: 0,
       }
       const receiveBoard: Board = receiveWorkspace.boards?.find(
          (b) => b.id === receiveBoardId
@@ -260,7 +253,6 @@ export default function BoardDetailPage() {
             type: "",
          },
          visibility: "",
-         members: [],
       }
       const columns: ColumnType[] = [...receiveBoard.columns]
       let newColumns: ColumnType[] = []

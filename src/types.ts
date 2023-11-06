@@ -1,4 +1,3 @@
-import React from "react"
 
 export type CardType = {
    id: string,
@@ -32,7 +31,12 @@ export type Board = {
       type: string
    },
    visibility: string,
-   members: string[]
+}
+
+export type BoardMembers = {
+   id: string,
+   boardId: string,
+   boardMembers: string[]
 }
 
 

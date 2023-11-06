@@ -31,7 +31,6 @@ type Props = {
  */
 function HeaderBoard(props: Props) {
    const [showModal, setShowModal] = useState({ show: false, type: "" })
-   const userCollectionRef = collection(db, "users")
    const [user, setUser] = useState<User>({
       id: "123",
       email: "viet",

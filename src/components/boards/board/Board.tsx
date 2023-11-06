@@ -20,27 +20,12 @@ type Props = {
 }
 
 function BoardContent(props: Props) {
-   const [workspace, setWorkspace] = useState<WorkspaceType>()
-   const workspaceId = props.boardId.split("/").at(-2)
    const [showSideBar, setShowSideBar] = useState(true)
-
-   useEffect(() => {
-      const getWorkspace = () => {
-         props.workspaces?.forEach((w) => {
-            if (w.id === workspaceId) {
-               setWorkspace(w)
-               return
-            }
-         })
-      }
-      getWorkspace()
-   })
-
    return (
       <div className={`flex min-w-full max-w-full max-h-full min-h-full`}>
          <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)] bg-transparent text-inherit glassmorphism'>
             <BoardLeft
-               workspace={workspace}
+               workspace={props.workspace}
                board={props.board}
                showSideBar={showSideBar}
                setShowSideBar={setShowSideBar}

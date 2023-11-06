@@ -44,6 +44,7 @@ export default function BoardsPage() {
                         type: String(doc.data().type),
                         boards: [...doc.data().boards],
                         description: String(doc.data().description),
+                        role: 1,
                      })
                   }
                })
@@ -61,7 +62,6 @@ export default function BoardsPage() {
    ) => {
       try {
          const data = await AsyncStorage.getItem("USER")
-         const userId = JSON.parse(data || "").id
          const boardCreate: Board = {
             id: nanoid(),
             background: { ...selectBg },
@@ -70,7 +70,6 @@ export default function BoardsPage() {
             title: title,
             workspaceId: workspace,
             visibility: visibility,
-            members: [userId],
          }
          const workspaceUpdate = workspaces?.find((w) => {
             return w.id === workspace
@@ -117,7 +116,6 @@ export default function BoardsPage() {
                   star: board.star,
                   background: { ...board.background },
                   visibility: board.visibility,
-                  members: [...board.members],
                })
             }
          })

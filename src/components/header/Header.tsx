@@ -65,7 +65,6 @@ function Header(props: Props) {
    // Render the component's UI
    return (
       <>
-         {/* Header container */}
          <div className='z-30 sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
             {/* Left side of the header */}
             <div className='flex items-center justify-start'>
