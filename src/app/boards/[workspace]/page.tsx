@@ -51,17 +51,15 @@ export default function WorkspacePage() {
             .then((dataRef) => {
                const newWorkspaces: WorkspaceType[] = []
                dataRef.docs.forEach((doc) => {
-                  if (doc.data().userId === userId) {
-                     newWorkspaces.push({
-                        id: doc.id,
-                        userId: String(doc.data().userId),
-                        name: String(doc.data().name),
-                        type: String(doc.data().type),
-                        boards: [...doc.data().boards],
-                        description: String(doc.data().description),
-                        role: 1,
-                     })
-                  }
+                  newWorkspaces.push({
+                     id: doc.id,
+                     userId: String(doc.data().userId),
+                     name: String(doc.data().name),
+                     type: String(doc.data().type),
+                     boards: [...doc.data().boards],
+                     description: String(doc.data().description),
+                     role: 1,
+                  })
                })
                setWorkspaces(newWorkspaces)
             })

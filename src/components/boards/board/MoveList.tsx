@@ -24,7 +24,6 @@ function MoveList(props: Props) {
          ntn: 0,
          type: "",
       },
-      members: [],
       visibility: "",
    })
    const [index, setIndex] = useState(0)

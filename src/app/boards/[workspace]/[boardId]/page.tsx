@@ -89,24 +89,14 @@ export default function BoardDetailPage() {
    }
 
    const getBoard = async () => {
-      try {
-         const data = await AsyncStorage.getItem("USER")
-         const userId = JSON.parse(data || "").id
-         let check = false
-         workspaces.forEach((w) => {
-            if (w.id === workspaceId) {
-               check = true
-               const newBoard = w.boards?.find((b) => b.id === id)
-               if (!newBoard) {
-                  router.push("/boards")
-                  return
-               }
-               console.log(newBoard)
-               setBoard(newBoard)
-               return
-            }
-         })
-      } catch (error) {}
+      const workspaceSnapshot = await getDocs(workspaceCollectionRef)
+      const workspaces = workspaceSnapshot.docs.map((doc) => doc.data())
+      const workspace = workspaces.find((w) => w.id === workspaceId)
+      if (!workspace) {
+         return
+      }
+      const board = workspace.boards.find((b: Board) => b.id === id)
+      setBoard(board)
    }
 
    const starBoard = async (boardId: string, workspaceId: string) => {
@@ -180,13 +170,14 @@ export default function BoardDetailPage() {
 
    const reSetBoard = async (columns: ColumnType[]) => {
       const workspace = getWorkspace(workspaceId || "")
-      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
-         if (b.id === id) {
-            return { ...b, columns: [...columns] }
-         }
-         return b
-      })
-      await updateDoc(doc(db, "workspaces", workspace?.id || ""), {
+      const newBoards =
+         workspace?.boards?.map((b) => {
+            if (b.id === id) {
+               return { ...b, columns: [...columns] }
+            }
+            return b
+         }) || []
+      await updateDoc(doc(db, "workspaces", workspaceId || ""), {
          ...workspace,
          boards: newBoards,
       })

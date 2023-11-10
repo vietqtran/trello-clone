@@ -322,7 +322,6 @@ function CreateBoard(props: Props) {
                            title: title,
                            workspaceId: props.workspaceId,
                            visibility: visibility,
-                           members: [userId],
                         })
                         props.addBoard(selectBg, title, workspace, visibility)
                         router.push(`/boards/${props.workspaceId}/${id}`)

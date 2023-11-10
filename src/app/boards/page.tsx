@@ -24,6 +24,7 @@ export default function BoardsPage() {
    useEffect(() => {
       getWorkspaces()
    }, [])
+
    const getWorkspaces = async () => {
       try {
          const data = await AsyncStorage.getItem("USER")
@@ -36,23 +37,26 @@ export default function BoardsPage() {
             .then((dataRef) => {
                const newWorkspaces: WorkspaceType[] = []
                dataRef.docs.forEach((doc) => {
-                  if (doc.data().userId === userId) {
-                     newWorkspaces.push({
-                        id: doc.id,
-                        userId: String(doc.data().userId),
-                        name: String(doc.data().name),
-                        type: String(doc.data().type),
-                        boards: [...doc.data().boards],
-                        description: String(doc.data().description),
-                        role: 1,
-                     })
-                  }
+                  newWorkspaces.push({
+                     id: doc.id,
+                     userId: String(doc.data().userId),
+                     name: String(doc.data().name),
+                     type: String(doc.data().type),
+                     boards: [...doc.data().boards],
+                     description: String(doc.data().description),
+                     role: 1,
+                  })
                })
                setWorkspaces(newWorkspaces)
             })
-            .catch((err) => {})
-      } catch (error) {}
+            .catch((err) => {
+               console.log(err)
+            })
+      } catch (error) {
+         console.log(error)
+      }
    }
+   console.log(workspaces)
 
    const addBoard = async (
       selectBg: { ntn: number; type: string },
