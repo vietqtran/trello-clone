@@ -56,7 +56,7 @@ export default function WorkspacePage() {
                      userId: String(doc.data().userId),
                      name: String(doc.data().name),
                      type: String(doc.data().type),
-                     boards: [...doc.data().boards],
+                     boards: doc.data().boards,
                      description: String(doc.data().description),
                      role: 1,
                   })

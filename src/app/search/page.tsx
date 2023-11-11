@@ -36,7 +36,7 @@ export default function SearchPage() {
                      userId: String(doc.data().userId),
                      name: String(doc.data().name),
                      type: String(doc.data().type),
-                     boards: [...doc.data().boards],
+                     boards: doc.data().boards,
                      description: String(doc.data().description),
                      role: 1,
                   })
@@ -55,21 +55,19 @@ export default function SearchPage() {
             .then((dataRef) => {
                const newStarredBoards: Board[] = []
                dataRef.docs.forEach((doc) => {
-                  if (doc.data().userId === userId) {
-                     doc.data().boards?.forEach((board: Board) => {
-                        if (board.star) {
-                           newStarredBoards.push({
-                              id: board.id,
-                              workspaceId: board.workspaceId,
-                              title: board.title,
-                              columns: [...board.columns],
-                              star: board.star,
-                              background: { ...board.background },
-                              visibility: board.visibility,
-                           })
-                        }
-                     })
-                  }
+                  doc.data().boards?.forEach((board: Board) => {
+                     if (board.star) {
+                        newStarredBoards.push({
+                           id: board.id,
+                           workspaceId: board.workspaceId,
+                           title: board.title,
+                           columns: [...board.columns],
+                           star: board.star,
+                           background: { ...board.background },
+                           visibility: board.visibility,
+                        })
+                     }
+                  })
                })
                setStarredBoards(newStarredBoards)
             })
