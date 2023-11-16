@@ -16,6 +16,8 @@ export default function BoardDetailPage() {
    const workspaceId = pathName.split("/").at(-2)
    const workspaceCollectionRef = collection(db, "workspaces")
    const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
+   // Xác đinh xem là thao tác với 1 workspace duy nhất hay không, nếu thao tác với 1 workspace duy nhất thì nên tạo thêm 1 biến mới và truyền xuống
+   // const [currentWorkspace, setCurrentWorkspace] = useState<WorkspaceType>()
    const [board, setBoard] = useState<Board>()
    const router = useRouter()
 
@@ -27,6 +29,7 @@ export default function BoardDetailPage() {
       getBoard()
    }, [workspaces])
 
+   // hàm này dùng đi dùng lại khá nhiều lần, nên export ra và gọi vào các file cần dùng, như thế để tránh việc phải viết lại nhiều lần.
    const getWorkspaces = async () => {
       try {
          // Get the user's data from AsyncStorage
@@ -74,6 +77,10 @@ export default function BoardDetailPage() {
       return newStarredBoards
    }
 
+   const getWorkspace = (id: string) => {
+      return workspaces.find((w) => w.id === id)
+   }
+
    const getBoard = () => {
       workspaces.forEach((w) => {
          if (w.id === workspaceId) {
@@ -85,25 +92,6 @@ export default function BoardDetailPage() {
             return
          }
       })
-   }
-
-   const starBoard = async (boardId: string, workspaceId: string) => {
-      const workspaceUpdate = workspaces?.find((w) => {
-         return w.id === workspaceId
-      })
-      const boardsUpdate: Board[] = []
-      workspaceUpdate?.boards?.forEach((board) => {
-         if (board.id === boardId) {
-            boardsUpdate.push({ ...board, star: !board.star })
-         } else {
-            boardsUpdate.push(board)
-         }
-      })
-      await updateDoc(doc(db, "workspaces", workspaceId), {
-         ...workspaceUpdate,
-         boards: boardsUpdate,
-      })
-      getWorkspaces()
    }
 
    const addBoard = async (
@@ -123,6 +111,7 @@ export default function BoardDetailPage() {
          return w.id === workspace
       })
       const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
+      // Xem xet có viết lại được kiểu tổng quát không, nếu có thì nên viết lại, export ra để sử dụng ở nhiều chỗ
       await updateDoc(doc(db, "workspaces", workspace), {
          boards: boardsUpdate,
          ...workspaceUpdate,
@@ -130,10 +119,26 @@ export default function BoardDetailPage() {
       router.push(`/boards/${workspace}/${boardCreate.id}`)
    }
 
-   const getWorkspace = (id: string) => {
-      return workspaces.find((w) => w.id === id)
+   //Thay sử dụng hàm updateBoard để update lại board
+   const starBoard = async (boardId: string, workspaceId: string) => {
+      const workspaceUpdate = workspaces?.find((w) => {
+         return w.id === workspaceId
+      })
+      const boardsUpdate: Board[] = []
+      workspaceUpdate?.boards?.forEach((board) => {
+         if (board.id === boardId) {
+            boardsUpdate.push({ ...board, star: !board.star })
+         } else {
+            boardsUpdate.push(board)
+         }
+      })
+      await updateDoc(doc(db, "workspaces", workspaceId), {
+         ...workspaceUpdate,
+         boards: boardsUpdate,
+      })
+      getWorkspaces()
    }
-
+   //Thay sử dụng hàm updateBoard để update lại board
    const renameBoard = async (newName: string) => {
       const workspace = getWorkspace(workspaceId || "")
       const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
@@ -148,7 +153,7 @@ export default function BoardDetailPage() {
       })
       getWorkspaces()
    }
-
+   //Thay sử dụng hàm updateBoard để update lại board
    const reSetBoard = async (columns: ColumnType[]) => {
       const workspace = getWorkspace(workspaceId || "")
       const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
@@ -163,7 +168,7 @@ export default function BoardDetailPage() {
       })
       getWorkspaces()
    }
-
+   //Thay sử dụng hàm updateBoard để update lại board
    const deleteColumn = (id: string) => {
       const newList = board?.columns.filter((col) => {
          return col.id !== id
@@ -172,6 +177,7 @@ export default function BoardDetailPage() {
       getWorkspaces()
    }
 
+   //Thay sử dụng hàm updateBoard để update lại board
    const updateColumn = async (column: ColumnType) => {
       const workspace = getWorkspace(workspaceId || "")
       const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
@@ -209,7 +215,7 @@ export default function BoardDetailPage() {
          boards: [],
          type: "",
          description: "",
-      }
+      } // define 1 biến defaultColumn để dùng ko phải viết lại nhiều lần
       const receiveBoard: Board = receiveWorkspace.boards?.find(
          (b) => b.id === receiveBoardId
       ) || {
@@ -225,6 +231,12 @@ export default function BoardDetailPage() {
       }
       const columns: ColumnType[] = [...receiveBoard.columns]
       let newColumns: ColumnType[] = []
+      // Có thể sử dụng hàm splice
+      // if(columns.length === 0 || columns.length === receiveIndex) {
+      //    newColumns.push(column)
+      // } else {
+      //    newColumns.splice(receiveIndex, 0, column);
+      // }
       if (columns.length == 0) {
          newColumns.push(column)
       } else if (receiveIndex === columns.length) {
@@ -441,17 +453,19 @@ export default function BoardDetailPage() {
                   starredBoards={getStarredBoards()}
                   workspaces={workspaces}
                />
+               {/* Xem xem xét chỉ truyền xuống những props thực sự cần thiết thôi, tránh việc truyền quá sâu các props không cần thiết */}
+               {/* VD: currentWorkspace, getWorkspace*/}
                <BoardContent
-                  moveColumn={moveColumn}
-                  updateColumn={updateColumn}
-                  reSetBoard={reSetBoard}
-                  renameBoard={renameBoard}
+                  moveColumn={moveColumn} 
+                  updateColumn={updateColumn} // sau khi đã viết fuction dùng chung thì tạo ra 1 hook trong thư mục board, dùng fuction chung đã viết để xử lý luôn ở component cuối cùng
+                  reSetBoard={reSetBoard} // tương tự update
+                  renameBoard={renameBoard} // tương tự update
                   getWorkspaces={getWorkspaces}
-                  starBoard={starBoard}
-                  board={board}
-                  workspaces={workspaces}
+                  starBoard={starBoard}// tương tự update
+                  board={board} //Xem xét xem có xử lý ở 1 board duy nhất ko? nếu có thì truyền
+                  workspaces={workspaces} //xem xét xem có thực sự cần truyền phần này xuống ko?
                   boardId={pathName}
-                  workspace={getWorkspace(board.workspaceId)}
+                  workspace={getWorkspace(board.workspaceId)} // thay thế bằng currentWorkspace
                   moveCardBetweenWorkspaces={moveCardBetweenWorkspaces}
                   moveCardWithinWorkspace={moveCardWithinWorkspace}
                   moveCardWithinBoard={moveCardWithinBoard}
