@@ -18,12 +18,15 @@ type Props = {
    moveCardWithinWorkspace: Function
    moveCardWithinBoard: Function
 }
-
+//Xem xét lại cách tổ chức thư mục của phần component này.
 function BoardContent(props: Props) {
+   //WorkSpace đuọc truyền xuống đây rồi mà, viết phần này là thừa nha
    const [workspace, setWorkspace] = useState<WorkspaceType>()
+   // ko thực sự cần thiết lắm ???? (maybe)
    const workspaceId = props.boardId.split("/").at(-2)
    const [showSideBar, setShowSideBar] = useState(true)
 
+   // Phần này cũng ko cần thiết luôn
    useEffect(() => {
       const getWorkspace = () => {
          props.workspaces?.forEach((w) => {
