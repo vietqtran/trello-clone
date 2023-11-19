@@ -1,19 +1,20 @@
-import React, { useState } from "react"
-import { FiSearch } from "react-icons/fi"
-import { MdOutlineKeyboardArrowDown } from "react-icons/md"
-import CreateBoardButton from "../CreateBoardButton"
-import BoardItem from "../BoardItem"
 import { Board, WorkspaceType } from "@/types"
-import { db } from "@/firebase"
+import React, { useState } from "react"
 import {
-   collection,
-   getDocs,
    addDoc,
+   collection,
    doc,
+   getDocs,
    updateDoc,
 } from "@firebase/firestore"
-import { useRouter } from "next/navigation"
+
+import BoardItem from "../BoardItem"
+import CreateBoardButton from "../CreateBoardButton"
+import { FiSearch } from "react-icons/fi"
+import { MdOutlineKeyboardArrowDown } from "react-icons/md"
+import { db } from "../../../../utils/firebase"
 import { nanoid } from "nanoid"
+import { useRouter } from "next/navigation"
 
 type Props = {
    workspace: WorkspaceType | undefined

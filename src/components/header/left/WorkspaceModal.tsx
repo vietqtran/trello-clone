@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Image from "next/image"
 import React, { useState, useRef, useEffect } from "react"
 import { useOnClickOutside } from "usehooks-ts"
@@ -6,7 +7,18 @@ import { db } from "@/firebase"
 import { collection, addDoc } from "@firebase/firestore"
 import { useRouter } from "next/navigation"
 import { User, WorkspaceType } from "@/types"
+=======
+import React, { useEffect, useRef, useState } from "react"
+import { addDoc, collection } from "@firebase/firestore"
+
+>>>>>>> 535644d (change to redux)
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { GrClose } from "react-icons/gr"
+import Image from "next/image"
+import { User } from "@/types"
+import { db } from "../../../../utils/firebase"
+import { useOnClickOutside } from "usehooks-ts"
+import { useRouter } from "next/navigation"
 
 type Props = {
    setShowModal: Function

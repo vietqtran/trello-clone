@@ -1,25 +1,25 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import { BsTrello } from "react-icons/bs"
-import { HiTemplate, HiPlus } from "react-icons/hi"
-import { RiHomeFill } from "react-icons/ri"
-import WorkspaceLeftItem from "./WorkspaceLeftItem"
-import { AiOutlineStar, AiOutlineClockCircle } from "react-icons/ai"
-import BoardItem from "./BoardItem"
-import CreateBoardButton from "./CreateBoardButton"
-import { collection, addDoc, getDocs } from "@firebase/firestore"
-import { db } from "@/firebase"
-import { useRouter } from "next/navigation"
-import WorkspaceModal from "../header/left/WorkspaceModal"
+import { AiOutlineClockCircle, AiOutlineStar } from "react-icons/ai"
 import { Board, User, WorkspaceType } from "@/types"
+import { HiPlus, HiTemplate } from "react-icons/hi"
+import React, { useEffect, useState } from "react"
+import { addDoc, collection, getDocs } from "@firebase/firestore"
+
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import BoardItem from "./BoardItem"
+import { BsTrello } from "react-icons/bs"
+import CreateBoardButton from "./CreateBoardButton"
+import { RiHomeFill } from "react-icons/ri"
+import { RootState } from "../../../redux/reducers"
+import WorkspaceLeftItem from "./WorkspaceLeftItem"
+import WorkspaceModal from "../header/left/WorkspaceModal"
 import { changeStar } from "@/userMethods"
+import { db } from "../../../utils/firebase"
+import { useRouter } from "next/navigation"
+import { useSelector } from "react-redux"
 
 type Props = {
-   workspaces: WorkspaceType[]
-   starredBoards: Board[]
-   addBoard: Function
    changeStar: Function
 }
 
@@ -27,6 +27,7 @@ function Boards(props: Props) {
    const router = useRouter()
    const [tab, setTab] = useState("board")
    const [showModal, setShowModal] = useState({ show: false, type: "" })
+<<<<<<< HEAD
    const [user, setUser] = useState<User>({
       id: "123",
       email: "viet",
@@ -48,6 +49,15 @@ function Boards(props: Props) {
       }
       getUser()
    }, [])
+=======
+   const user: User = useSelector((state: RootState) => state.user)
+   const starredBoards: Board[] = useSelector(
+      (state: RootState) => state.board as Board[]
+   ).filter((b) => b.star)
+   const workspaces: WorkspaceType[] = useSelector(
+      (state: RootState) => state.workspaces as WorkspaceType[]
+   )
+>>>>>>> 535644d (change to redux)
 
    return (
       <div>
@@ -112,12 +122,9 @@ function Boards(props: Props) {
                            </h1>
                         </div>
                         <div className='max-h-[60vh] overflow-y-auto'>
-                           {props.workspaces?.map((workspace) => {
+                           {workspaces?.map((w) => {
                               return (
-                                 <WorkspaceLeftItem
-                                    key={workspace.id}
-                                    workspace={workspace}
-                                 />
+                                 <WorkspaceLeftItem key={w.id} workspace={w} />
                               )
                            })}
                         </div>
@@ -135,7 +142,7 @@ function Boards(props: Props) {
                         </span>
                      </h1>
                      <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                        {props.starredBoards.map((board) => {
+                        {starredBoards.map((board) => {
                            return (
                               <BoardItem
                                  changeStar={props.changeStar}
@@ -176,34 +183,29 @@ function Boards(props: Props) {
                   </div>
 
                   <h1 className='font-bold mb-5'>YOUR WORKSPACES</h1>
-                  {props.workspaces?.map((workspace) => {
+                  {workspaces?.map((w) => {
                      return (
-                        <div className='mb-10' key={workspace.id}>
+                        <div className='mb-10' key={w.id}>
                            <div className='flex items-center mb-4'>
                               <div className='relative p-5 mr-2 rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 w-fit'>
                                  <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>
-                                    {workspace.name.toUpperCase().charAt(0)}
+                                    {w.name.toUpperCase().charAt(0)}
                                  </span>
                               </div>
-                              <h1 className='font-bold'>{workspace.name}</h1>
+                              <h1 className='font-bold'>{w.name}</h1>
                            </div>
                            <div className='grid grid-cols-12 w-full gap-2 mt-2'>
-                              {workspace?.boards?.map((board) => {
+                              {w?.boards?.map((board) => {
                                  return (
                                     <BoardItem
                                        changeStar={props.changeStar}
-                                       workspace={workspace.id}
+                                       workspace={w.id}
                                        board={board}
                                        key={board.id}
                                     />
                                  )
                               })}
-                              <CreateBoardButton
-                                 addBoard={props.addBoard}
-                                 workspaceId={workspace.id}
-                                 workspaces={props.workspaces}
-                                 type=''
-                              />
+                              <CreateBoardButton type='' />
                            </div>
                         </div>
                      )

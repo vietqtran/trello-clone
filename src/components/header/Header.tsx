@@ -1,35 +1,37 @@
 "use client"
 
+import { Board, User, WorkspaceType } from "@/types"
+import React, { memo, useEffect, useState } from "react"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import Avatar from "./right/Avatar"
+import Create from "./left/Create"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useState, useEffect, memo } from "react"
-import Workspaces from "./left/Workspaces"
-import Recent from "./left/Recent"
-import Starred from "./left/Starred"
-import Create from "./left/Create"
-import Search from "./right/Search"
-import Avatar from "./right/Avatar"
 import More from "./left/More"
-import WorkspaceModal from "./left/WorkspaceModal"
-import { Board, User, WorkspaceType } from "@/types"
-import { useRouter } from "next/navigation"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { collection, getDocs } from "@firebase/firestore"
-import { db } from "@/firebase"
+import Recent from "./left/Recent"
+import { RootState } from "../../../redux/reducers"
+import Search from "./right/Search"
+import Starred from "./left/Starred"
 import Templates from "./left/Templates"
+import WorkspaceModal from "./left/WorkspaceModal"
+import Workspaces from "./left/Workspaces"
+import { useRouter } from "next/navigation"
+import { useSelector } from "react-redux"
 
-// Define the Props type that describes the expected props for this component
-type Props = {
-   workspaces: WorkspaceType[]
-   starredBoards: Board[]
-   addBoard: Function
-}
+type Props = {}
 
-// Define the Header component
 function Header(props: Props) {
-   // State to control the display of modal
    const [showModal, setShowModal] = useState({ show: false, type: "" })
+   const starredBoards: Board[] = useSelector(
+      (state: RootState) => state.board as Board[]
+   ).filter((b) => b.star)
+   const user: User = useSelector((state: RootState) => state.user)
+   const workspaces: WorkspaceType[] = useSelector(
+      (state: RootState) => state.workspaces as WorkspaceType[]
+   )
 
+<<<<<<< HEAD
    // State to store user information
    const [user, setUser] = useState<User>({
       id: "123",
@@ -63,6 +65,8 @@ function Header(props: Props) {
    }, [])
 
    // Render the component's UI
+=======
+>>>>>>> 535644d (change to redux)
    return (
       <>
          <div className='z-30 sticky top-0 left-0 right-0 bg-white p-2 border-b-[1px] border-slate-300 flex items-center justify-between'>
@@ -83,31 +87,24 @@ function Header(props: Props) {
                {/* More, Create, Workspaces, Recent, Starred, and Templates links */}
                <div className='items-center justify-start md:hidden flex'>
                   <More
-                     workspaces={props.workspaces}
-                     starredBoards={props.starredBoards}
+                     workspaces={workspaces}
+                     starredBoards={starredBoards}
                      recentBoards={user.recentBoard}
                      headerType={""}
                   />
                   <Create
-                     workspaceId={props.workspaces[0]?.id}
-                     addBoard={props.addBoard}
-                     workspaces={props.workspaces}
+                     workspaceId={workspaces[0]?.id}
                      headerType={""}
                      setShowModal={setShowModal}
                   />
                </div>
                <div className='items-center justify-start md:flex hidden'>
-                  <Workspaces workspaces={props.workspaces} headerType={""} />
+                  <Workspaces workspaces={workspaces} headerType={""} />
                   <Recent recentBoards={user.recentBoard} headerType={""} />
-                  <Starred
-                     starredBoards={props.starredBoards}
-                     headerType={""}
-                  />
+                  <Starred starredBoards={starredBoards} headerType={""} />
                   <Templates headerType={""} />
                   <Create
-                     workspaceId={props.workspaces[0]?.id}
-                     addBoard={props.addBoard}
-                     workspaces={props.workspaces}
+                     workspaceId={workspaces[0]?.id}
                      headerType={""}
                      setShowModal={setShowModal}
                   />

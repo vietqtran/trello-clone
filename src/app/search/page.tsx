@@ -1,13 +1,21 @@
 "use client"
 
-import Search from "@/components/search/Search"
-import Header from "@/components/header/Header"
 import { Board, WorkspaceType } from "@/types"
+<<<<<<< HEAD
 import { useEffect, useState } from "react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { collection, getDocs, updateDoc, doc } from "@firebase/firestore"
 import { useRouter } from "next/navigation"
 import { db } from "@/firebase"
+=======
+import { collection, getDocs } from "@firebase/firestore"
+import { useEffect, useState } from "react"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import Header from "@/components/header/Header"
+import Search from "@/components/search/Search"
+import { db } from "../../../utils/firebase"
+>>>>>>> 535644d (change to redux)
 import { nanoid } from "nanoid"
 
 export default function SearchPage() {

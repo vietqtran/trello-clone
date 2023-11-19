@@ -1,22 +1,21 @@
 "use client"
 
 import React, { memo, useContext } from "react"
-import { RxPlus } from "react-icons/rx"
-import { useState } from "react"
-import { FaTrello } from "react-icons/fa"
-import { FiTrello } from "react-icons/fi"
+
 import { BsPeople } from "react-icons/bs"
 import CreateBoard from "./CreateBoard"
-import { useRef } from "react"
-import { useOnClickOutside } from "usehooks-ts"
-import { WorkspaceType } from "@/types"
 import CreateTemplate from "./CreateTemplate"
+import { FaTrello } from "react-icons/fa"
+import { FiTrello } from "react-icons/fi"
+import { RxPlus } from "react-icons/rx"
+import { WorkspaceType } from "@/types"
+import { useOnClickOutside } from "usehooks-ts"
+import { useRef } from "react"
+import { useState } from "react"
 
 type Props = {
    setShowModal: Function
    headerType: string
-   workspaces: WorkspaceType[]
-   addBoard: Function
    workspaceId: string
 }
 
@@ -116,8 +115,6 @@ function Create(props: Props) {
             {show.show && show.tab === "board" && (
                <CreateBoard
                   workspaceId={props.workspaceId}
-                  addBoard={props.addBoard}
-                  workspaces={props.workspaces}
                   type=''
                   setShow={setShow}
                />

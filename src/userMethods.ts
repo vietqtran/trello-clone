@@ -1,7 +1,8 @@
-import { db } from '@/firebase'
-import { collection, getDocs, addDoc, doc, updateDoc } from '@firebase/firestore'
-import { Board } from './types'
+import { addDoc, collection, doc, getDocs, updateDoc } from '@firebase/firestore'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Board } from './types'
+import { db } from '../utils/firebase'
 
 export const addRecent = async (board: Board) => {
     try {

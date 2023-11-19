@@ -1,22 +1,25 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import SideImage from "../SideImage"
-import Image from "next/image"
+import React, { useEffect, useState } from "react"
+import { addDoc, collection, getDocs } from "@firebase/firestore"
+import { auth, db, googleProvider } from "../../../utils/firebase"
+import { useDispatch, useSelector } from "react-redux"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import AuthButton from "../AuthButton"
+import Eye from "../Eye"
+import Image from "next/image"
 import Link from "next/link"
 import { PiDotOutlineFill } from "react-icons/pi"
-import Eye from "../Eye"
-import { collection, getDocs, addDoc } from "@firebase/firestore"
+import { RootState } from "../../../redux/reducers"
+import SideImage from "../SideImage"
+import { User } from "@/types"
+import dynamic from "next/dynamic"
+import { getUsers } from "../../../utils/fetch/user"
+import { login } from "../../../redux/actions/userActions"
 import { signInWithPopup } from "firebase/auth"
 import { useRouter } from "next/navigation"
-import dynamic from "next/dynamic"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useDispatch } from "react-redux"
-import { logIn } from "@/app/redux/features/user/userSlice"
-import { auth, db, googleProvider } from "@/firebase"
-import { User } from "@/types"
-import { AppDispatch } from "@/app/redux/store"
+
 var generator = require("generate-password")
 var passwordGenerate = generator.generate({
    length: 8,
@@ -24,37 +27,28 @@ var passwordGenerate = generator.generate({
 })
 
 function Login() {
+   const user: User = useSelector((state: RootState) => state.user)
+   const dispatch = useDispatch()
    const [show, setShow] = useState(false)
    const [emailInput, setEmailInput] = useState("")
    const [password, setPassword] = useState("")
    const [error, setError] = useState({ show: false, message: "" })
-   const [users, setUsers] = useState<User[]>([])
    const userCollectionRef = collection(db, "users")
    const workspaceCollectionRef = collection(db, "workspaces")
    const router = useRouter()
-   const dispatch = useDispatch<AppDispatch>()
+   const [users, setUsers] = useState<User[]>([])
+
+   console.log(user)
 
    useEffect(() => {
-      getUsers()
+      if (user !== null) {
+         router.push("/boards")
+         return
+      }
+      getUsers().then((res) => {
+         setUsers(res)
+      })
    }, [])
-
-   const getUsers = async () => {
-      await getDocs(userCollectionRef)
-         .then((dataRef) => {
-            setUsers(
-               dataRef.docs.map((doc) => {
-                  return {
-                     id: doc.id,
-                     email: doc.data().email,
-                     password: doc.data().password,
-                     recentBoard: doc.data().recentBoard,
-                     auth: doc.data().auth,
-                  }
-               })
-            )
-         })
-         .catch((err) => {})
-   }
 
    const addUser = async (email: any) => {
       const setUser = async (user: any) => {
@@ -72,6 +66,7 @@ function Login() {
             description: "Frist Workspace",
          })
       }
+
       const passwordCreate = passwordGenerate
       await addDoc(userCollectionRef, {
          email: email,
@@ -88,7 +83,7 @@ function Login() {
                auth: "google",
             }
             setUser(userCreate)
-            dispatch(logIn(userCreate))
+            dispatch(login(userCreate))
             addWorkspace(userCreate.id)
             return userCreate
          })
@@ -112,7 +107,7 @@ function Login() {
                   if (user.email === result.user.email) {
                      check = true
                      setUser(user)
-                     dispatch(logIn(user))
+                     dispatch(login(user))
                   }
                }
             })
@@ -135,7 +130,7 @@ function Login() {
             check = true
             if (password === user.password) {
                userLocal = { ...user }
-               dispatch(logIn(user))
+               dispatch(login(user))
             } else {
                setError({ show: true, message: "Password is incorrect!" })
             }

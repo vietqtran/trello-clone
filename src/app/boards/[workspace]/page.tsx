@@ -1,19 +1,20 @@
 "use client"
 
+import { Board, WorkspaceType } from "@/types"
 import React, { useEffect, useState } from "react"
-import Workspace from "@/components/boards/workspace/Workspace"
-import Header from "@/components/header/Header"
-import { usePathname, useRouter } from "next/navigation"
-import { db } from "@/firebase"
 import {
    collection,
-   getDocs,
-   doc,
-   updateDoc,
    deleteDoc,
+   doc,
+   getDocs,
+   updateDoc,
 } from "@firebase/firestore"
-import { Board, WorkspaceType } from "@/types"
+import { usePathname, useRouter } from "next/navigation"
+
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import Header from "@/components/header/Header"
+import Workspace from "@/components/boards/workspace/Workspace"
+import { db } from "../../../../utils/firebase"
 import { nanoid } from "nanoid"
 
 export default function WorkspacePage() {

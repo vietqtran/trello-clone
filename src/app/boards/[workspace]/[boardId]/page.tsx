@@ -1,19 +1,15 @@
 "use client"
+
+import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import React, { useEffect, useState } from "react"
+import { collection, doc, getDocs, updateDoc } from "@firebase/firestore"
+import { usePathname, useRouter } from "next/navigation"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import BoardContent from "@/components/boards/board/Board"
 import HeaderBoard from "@/components/header/HeaderBoard"
-import { usePathname, useRouter } from "next/navigation"
-import { db } from "@/firebase"
-import {
-   collection,
-   getDocs,
-   doc,
-   updateDoc,
-   getDoc,
-} from "@firebase/firestore"
-import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import Image from "next/image"
+import { db } from "../../../../../utils/firebase"
 import { nanoid } from "nanoid"
 
 export default function BoardDetailPage() {
@@ -465,13 +461,13 @@ export default function BoardDetailPage() {
                />
                <BoardContent
                   moveColumn={moveColumn}
-                  updateColumn={updateColumn}
-                  reSetBoard={reSetBoard}
-                  renameBoard={renameBoard}
+                  updateColumn={updateColumn} // sau khi đã viết fuction dùng chung thì tạo ra 1 hook trong thư mục board, dùng fuction chung đã viết để xử lý luôn ở component cuối cùng
+                  reSetBoard={reSetBoard} // tương tự update
+                  renameBoard={renameBoard} // tương tự update
                   getWorkspaces={getWorkspaces}
-                  starBoard={starBoard}
-                  board={board}
-                  workspaces={workspaces}
+                  starBoard={starBoard} // tương tự update
+                  board={board} //Xem xét xem có xử lý ở 1 board duy nhất ko? nếu có thì truyền
+                  workspaces={workspaces} //xem xét xem có thực sự cần truyền phần này xuống ko?
                   boardId={pathName}
                   workspace={getWorkspace(board.workspaceId)}
                   moveCardBetweenWorkspaces={moveCardBetweenWorkspaces}

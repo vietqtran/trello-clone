@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Image from "next/image"
 import React, { useEffect } from "react"
 import { SlArrowLeft } from "react-icons/sl"
@@ -8,24 +9,39 @@ import { useState } from "react"
 import BackgroundSelect from "./BackgroundSelect"
 import { collection, updateDoc, doc, getDocs } from "@firebase/firestore"
 import { db } from "@/firebase"
+=======
+>>>>>>> 535644d (change to redux)
 import { Board, WorkspaceType } from "@/types"
-import { useAppSelector } from "@/app/redux/store"
-import { useRouter } from "next/navigation"
+import React, { useEffect } from "react"
+import { collection, doc, getDocs, updateDoc } from "@firebase/firestore"
+import { useDispatch, useSelector } from "react-redux"
+import { usePathname, useRouter } from "next/navigation"
+
+import { AiOutlineClose } from "react-icons/ai"
+import Background from "./Background"
+import BackgroundSelect from "./BackgroundSelect"
+import { HiOutlineDotsHorizontal } from "react-icons/hi"
+import Image from "next/image"
+import { RootState } from "../../../../redux/reducers"
+import { SlArrowLeft } from "react-icons/sl"
+import { addBoardAsync } from "../../../../utils/board/addBoard"
 import { addRecent } from "@/userMethods"
 import { nanoid } from "nanoid"
+<<<<<<< HEAD
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io"
 import { BsGlobeAsiaAustralia, BsPeople } from "react-icons/bs"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+=======
+import { useState } from "react"
+>>>>>>> 535644d (change to redux)
 
 type Props = {
    setShow: Function
    type: string
-   workspaces: WorkspaceType[] | undefined
-   workspaceId: string
-   addBoard: Function
 }
 
 function CreateBoard(props: Props) {
+<<<<<<< HEAD
    const [userId, setUserId] = useState("")
 
    const getUser = async () => {
@@ -42,7 +58,20 @@ function CreateBoard(props: Props) {
    const [visibility, setVisibility] = useState("Workspace")
    const [showVisibility, setShowVisibility] = useState(false)
    const [workspace, setWorkspace] = useState(props.workspaceId)
+=======
+   const pathnameElements = usePathname().split("/")
+   const [selectBg, setSelectBg] = useState({ ntn: 1, type: "image" })
+   const [showSelectBg, setShowSelectBg] = useState(false)
+   const [title, setTitle] = useState("")
+   const [workspaceId, setWorkspaceId] = useState(
+      pathnameElements[pathnameElements.lastIndexOf("boards") + 1]
+   )
+>>>>>>> 535644d (change to redux)
    const router = useRouter()
+   const dispatch = useDispatch()
+   const workspaces: WorkspaceType[] = useSelector(
+      (state: RootState) => state.workspaces
+   )
 
    return (
       <>
@@ -199,23 +228,21 @@ function CreateBoard(props: Props) {
                   </label>
                   <select
                      onChange={(e) => {
-                        setWorkspace(e.target.value)
+                        setWorkspaceId(e.target.value)
                      }}
-                     value={workspace}
+                     value={workspaceId}
                      name='workspace'
                      id='workspace'
                      className='overflow-y-scroll w-full outline-none p-2 border-slate-400 border-2 rounded-md'
                   >
-                     {props.workspaces?.map((workspace) => {
+                     {workspaces?.map((workspace) => {
                         return (
                            <option
                               key={workspace.id}
                               value={workspace.id}
                               className='p-2 flex flex-col'
                               aria-checked={
-                                 workspace.id == props.workspaceId
-                                    ? true
-                                    : false
+                                 workspace.id == workspaceId ? true : false
                               }
                            >
                               {workspace.name}
@@ -309,7 +336,7 @@ function CreateBoard(props: Props) {
                      </div>
                   </div>
                   <button
-                     onClick={() => {
+                     onClick={async () => {
                         const id = nanoid()
                         addRecent({
                            id: id,
@@ -320,12 +347,34 @@ function CreateBoard(props: Props) {
                            columns: [],
                            star: false,
                            title: title,
+<<<<<<< HEAD
                            workspaceId: props.workspaceId,
                            visibility: visibility,
                         })
                         props.addBoard(selectBg, title, workspace, visibility)
                         router.push(`/boards/${props.workspaceId}/${id}`)
                         return
+=======
+                           workspaceId: workspaceId,
+                        })
+                        await addBoardAsync(
+                           selectBg,
+                           title,
+                           workspaces?.find((w) => w.id === workspaceId) || {
+                              boards: [],
+                              description: "",
+                              id: "",
+                              name: "",
+                              type: "",
+                              userId: "",
+                           }
+                        ).then((res) => {
+                           if (res === true) {
+                              router.push(`/boards/${workspaceId}/${id}`)
+                           }
+                           return
+                        })
+>>>>>>> 535644d (change to redux)
                      }}
                      className={`w-full py-2 rounded-md mt-3 ${
                         title

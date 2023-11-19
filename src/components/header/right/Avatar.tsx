@@ -1,4 +1,5 @@
 import React, { memo, useRef, useState } from "react"
+<<<<<<< HEAD
 import { useOnClickOutside } from "usehooks-ts"
 import { useRouter } from "next/navigation"
 import { User } from "@/types"
@@ -6,6 +7,14 @@ import { useDispatch } from "react-redux"
 import { useAppSelector } from "@/app/redux/store"
 import { logOut } from "@/app/redux/features/user/userSlice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+=======
+
+import { User } from "@/types"
+import { logout } from "../../../../redux/actions/userActions"
+import { useDispatch } from "react-redux"
+import { useOnClickOutside } from "usehooks-ts"
+import { useRouter } from "next/navigation"
+>>>>>>> 535644d (change to redux)
 
 type Props = {
    headerType: string
@@ -24,6 +33,7 @@ function Avatar(props: Props) {
    const handleClickInside = () => {}
    useOnClickOutside(ref, handleClickOutside)
 
+<<<<<<< HEAD
    const removeUser = async () => {
       try {
          await AsyncStorage.removeItem("USER")
@@ -33,6 +43,10 @@ function Avatar(props: Props) {
    const handleLogOut = () => {
       dispatch(logOut())
       removeUser()
+=======
+   const handleLogOut = () => {
+      dispatch(logout())
+>>>>>>> 535644d (change to redux)
       router.push("/")
       return
    }

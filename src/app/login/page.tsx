@@ -1,10 +1,10 @@
 "use client"
 
 import Login from "@/components/login/Login"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { useRouter } from "next/navigation"
+import ReduxWrapper from "@components/ReduxWrapper"
 
 export default function Home() {
+<<<<<<< HEAD
    const router = useRouter()
 
    const start = async () => {
@@ -19,9 +19,13 @@ export default function Home() {
 
    start()
 
+=======
+>>>>>>> 535644d (change to redux)
    return (
-      <main>
-         <Login />
-      </main>
+      <ReduxWrapper>
+         <main>
+            <Login />
+         </main>
+      </ReduxWrapper>
    )
 }

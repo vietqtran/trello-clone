@@ -1,3 +1,4 @@
+import { AiOutlineClose, AiOutlineDelete, AiOutlineMenu } from "react-icons/ai"
 import {
    Board,
    CardType,
@@ -14,32 +15,33 @@ import {
    WorkspaceType,
 } from "@/types"
 import React, { useEffect, useRef, useState } from "react"
-import { AiOutlineClose, AiOutlineDelete, AiOutlineMenu } from "react-icons/ai"
-import { FaFlipboard } from "react-icons/fa"
-import { useOnClickOutside } from "usehooks-ts"
-import CardEdit from "./CardEdit"
-import { MdOutlineLabel } from "react-icons/md"
-import { BiImage } from "react-icons/bi"
-import CardLabelSelect from "./CardLabelSelect"
-import Image from "next/image"
-import CardCoverSelect from "./CardCoverSelect"
-import { IoIosArrowRoundForward } from "react-icons/io"
-import CardMoveSelect from "./CardMoveSelect"
-import { RxActivityLog } from "react-icons/rx"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import CardComment from "./CardComment"
-import { CKEditor } from "@ckeditor/ckeditor5-react"
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
-import { LuRectangleHorizontal } from "react-icons/lu"
-import CardFieldsSelect from "./CardFieldsSelect"
-import { db } from "@/firebase"
-import { collection, addDoc, getDocs } from "@firebase/firestore"
-import FieldPreview from "./field/FieldPreview"
+import { addDoc, collection, getDocs } from "@firebase/firestore"
+import { deleteDoc, doc, updateDoc } from "firebase/firestore"
+
 import AddField from "./field/AddField"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { BiImage } from "react-icons/bi"
+import { CKEditor } from "@ckeditor/ckeditor5-react"
+import CardComment from "./CardComment"
+import CardCoverSelect from "./CardCoverSelect"
+import CardEdit from "./CardEdit"
+import CardFieldsSelect from "./CardFieldsSelect"
+import CardLabelSelect from "./CardLabelSelect"
+import CardMoveSelect from "./CardMoveSelect"
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic"
 import EditDropdownField from "./editField/EditDropdownField"
-import { updateDoc, doc, deleteDoc } from "firebase/firestore"
-const renderHTML = require("react-render-html")
+import { FaFlipboard } from "react-icons/fa"
+import FieldPreview from "./field/FieldPreview"
+import Image from "next/image"
+import { IoIosArrowRoundForward } from "react-icons/io"
+import { LuRectangleHorizontal } from "react-icons/lu"
+import { MdOutlineLabel } from "react-icons/md"
+import { RxActivityLog } from "react-icons/rx"
+import { db } from "../../../../utils/firebase"
 import { nanoid } from "nanoid"
+import { useOnClickOutside } from "usehooks-ts"
+
+const renderHTML = require("react-render-html")
 
 type Props = {
    setShowModal: Function

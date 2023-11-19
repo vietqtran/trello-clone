@@ -1,21 +1,25 @@
 "use client" // Use 'use client' for ES modules in Node.js
 
-import React, { useEffect } from "react"
-import SideImage from "../SideImage"
-import Image from "next/image"
-import AuthButton from "../AuthButton"
-import Link from "next/link"
-import Eye from "../Eye"
-import { useState } from "react"
-import { useSearchParams, useRouter } from "next/navigation"
 import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai"
-import { collection, addDoc, getDocs } from "@firebase/firestore"
-import { User } from "@/types"
-import { useDispatch } from "react-redux"
-import { logIn } from "@/app/redux/features/user/userSlice"
-import { auth, db, googleProvider } from "@/firebase"
-import { signInWithPopup } from "firebase/auth"
+import React, { useEffect } from "react"
+import { addDoc, collection, getDocs } from "@firebase/firestore"
+import { auth, db, googleProvider } from "../../../utils/firebase"
+import { useDispatch, useSelector } from "react-redux"
+import { useRouter, useSearchParams } from "next/navigation"
+
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import AuthButton from "../AuthButton"
+import Eye from "../Eye"
+import Image from "next/image"
+import Link from "next/link"
+import { RootState } from "../../../redux/reducers"
+import SideImage from "../SideImage"
+import { User } from "@/types"
+import { getUsers } from "../../../utils/fetch/user"
+import { login } from "../../../redux/actions/userActions"
+import { signInWithPopup } from "firebase/auth"
+import { useState } from "react"
+import { userCollectionRef } from "../../../utils/firebase/collection"
 
 // Generate a random password
 var generator = require("generate-password")
@@ -25,7 +29,6 @@ var passwordGenerate: string = generator.generate({
 })
 
 function SignUp() {
-   // Initialize state and variables
    const searchParams = useSearchParams()
    const email = searchParams.get("email")
    const [emailInput, setEmailInput] = useState(email ? email : "")
@@ -34,34 +37,20 @@ function SignUp() {
    const [show, setShow] = useState(false)
    const [error, setError] = useState({ show: false, message: "" })
    const [users, setUsers] = useState<User[]>([])
-   const userCollectionRef = collection(db, "users")
    const workspaceCollectionRef = collection(db, "workspaces")
    const router = useRouter()
    const dispatch = useDispatch()
+   const user: User = useSelector((state: RootState) => state.user)
 
-   // Fetch user data from Firestore on component mount
    useEffect(() => {
-      getUsers()
+      if (user !== null) {
+         router.push("/boards")
+         return
+      }
+      getUsers().then((res) => {
+         setUsers(res)
+      })
    }, [])
-
-   // Fetch user data from Firestore
-   const getUsers = async () => {
-      await getDocs(userCollectionRef)
-         .then((dataRef) => {
-            setUsers(
-               dataRef.docs.map((doc) => {
-                  return {
-                     id: doc.id,
-                     email: doc.data().email,
-                     password: doc.data().password,
-                     recentBoard: doc.data().recentBoard,
-                     auth: doc.data().auth,
-                  }
-               })
-            )
-         })
-         .catch((err) => {})
-   }
 
    // Handle Google sign-in
    const googleSignIn = () => {
@@ -82,7 +71,7 @@ function SignUp() {
                      check = true
                      userLocal = { ...user }
                      setUser(user)
-                     dispatch(logIn(user))
+                     dispatch(login(user))
                      return
                   }
                }
@@ -137,7 +126,7 @@ function SignUp() {
                auth: auth,
             }
             setUser(userCreate)
-            dispatch(logIn(userCreate))
+            dispatch(login(userCreate))
             addWorkspace(userCreate.id)
             return userCreate
          })

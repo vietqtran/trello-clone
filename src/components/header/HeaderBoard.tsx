@@ -1,21 +1,24 @@
 "use client"
 
+import { Board, User, WorkspaceType } from "@/types"
+import React, { memo, useEffect, useState } from "react"
+import { collection, getDocs } from "@firebase/firestore"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import Avatar from "./right/Avatar"
+import Create from "./left/Create"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useState, useEffect, memo } from "react"
-import Workspaces from "./left/Workspaces"
-import Recent from "./left/Recent"
-import Starred from "./left/Starred"
-import Create from "./left/Create"
-import Search from "./right/Search"
-import Avatar from "./right/Avatar"
 import More from "./left/More"
+import Recent from "./left/Recent"
+import { RootState } from "../../../redux/reducers"
+import Search from "./right/Search"
+import Starred from "./left/Starred"
 import WorkspaceModal from "./left/WorkspaceModal"
-import { Board, User, WorkspaceType } from "@/types"
+import Workspaces from "./left/Workspaces"
+import { db } from "../../../utils/firebase"
 import { useRouter } from "next/navigation"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { collection, getDocs } from "@firebase/firestore"
-import { db } from "@/firebase"
+import { useSelector } from "react-redux"
 
 type Props = {
    workspaces: WorkspaceType[]
@@ -31,6 +34,7 @@ type Props = {
  */
 function HeaderBoard(props: Props) {
    const [showModal, setShowModal] = useState({ show: false, type: "" })
+<<<<<<< HEAD
    const [user, setUser] = useState<User>({
       id: "123",
       email: "viet",
@@ -54,6 +58,11 @@ function HeaderBoard(props: Props) {
       }
       getUser()
    }, [])
+=======
+   const router = useRouter()
+
+   const user: User = useSelector((state: RootState) => state.user)
+>>>>>>> 535644d (change to redux)
 
    return (
       <div className='z-[10000] w-full bg-black bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-20 border-b-[1px] border-slate-400 flex items-center justify-between'>
