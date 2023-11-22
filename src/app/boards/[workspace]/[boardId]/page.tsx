@@ -1,13 +1,15 @@
 "use client"
+
+import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import React, { useEffect, useState } from "react"
+import { collection, doc, getDocs, updateDoc } from "@firebase/firestore"
+import { usePathname, useRouter } from "next/navigation"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import BoardContent from "@/components/boards/board/Board"
 import HeaderBoard from "@/components/header/HeaderBoard"
-import { usePathname, useRouter } from "next/navigation"
-import { db } from "@/firebase"
-import { collection, getDocs, doc, updateDoc } from "@firebase/firestore"
-import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import Image from "next/image"
+import { db } from "@/firebase"
 import { nanoid } from "nanoid"
 
 export default function BoardDetailPage() {
@@ -17,7 +19,7 @@ export default function BoardDetailPage() {
    const workspaceCollectionRef = collection(db, "workspaces")
    const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
    // Xác đinh xem là thao tác với 1 workspace duy nhất hay không, nếu thao tác với 1 workspace duy nhất thì nên tạo thêm 1 biến mới và truyền xuống
-   // const [currentWorkspace, setCurrentWorkspace] = useState<WorkspaceType>()
+   const [currentWorkspace, setCurrentWorkspace] = useState<WorkspaceType>()
    const [board, setBoard] = useState<Board>()
    const router = useRouter()
 
@@ -26,7 +28,10 @@ export default function BoardDetailPage() {
    }, [])
 
    useEffect(() => {
-      getBoard()
+      const workspace = workspaces.find((w) => w.id === workspaceId)
+      const board = workspace?.boards?.find((b) => b.id === id)
+      setCurrentWorkspace(workspace)
+      setBoard(board)
    }, [workspaces])
 
    // hàm này dùng đi dùng lại khá nhiều lần, nên export ra và gọi vào các file cần dùng, như thế để tránh việc phải viết lại nhiều lần.
@@ -77,23 +82,6 @@ export default function BoardDetailPage() {
       return newStarredBoards
    }
 
-   const getWorkspace = (id: string) => {
-      return workspaces.find((w) => w.id === id)
-   }
-
-   const getBoard = () => {
-      workspaces.forEach((w) => {
-         if (w.id === workspaceId) {
-            const newBoard = w.boards?.find((b) => b.id === id)
-            if (!newBoard) {
-               router.push("/boards")
-            }
-            setBoard(newBoard)
-            return
-         }
-      })
-   }
-
    const addBoard = async (
       selectBg: { ntn: number; type: string },
       title: string,
@@ -140,30 +128,32 @@ export default function BoardDetailPage() {
    }
    //Thay sử dụng hàm updateBoard để update lại board
    const renameBoard = async (newName: string) => {
-      const workspace = getWorkspace(workspaceId || "")
-      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
-         if (b.id === id) {
-            return { ...b, title: newName }
+      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
+         (b) => {
+            if (b.id === id) {
+               return { ...b, title: newName }
+            }
+            return b
          }
-         return b
-      })
-      await updateDoc(doc(db, "workspaces", workspace?.id || ""), {
-         ...workspace,
+      )
+      await updateDoc(doc(db, "workspaces", currentWorkspace?.id || ""), {
+         ...currentWorkspace,
          boards: newBoards,
       })
       getWorkspaces()
    }
    //Thay sử dụng hàm updateBoard để update lại board
    const reSetBoard = async (columns: ColumnType[]) => {
-      const workspace = getWorkspace(workspaceId || "")
-      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
-         if (b.id === id) {
-            return { ...b, columns: [...columns] }
+      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
+         (b) => {
+            if (b.id === id) {
+               return { ...b, columns: [...columns] }
+            }
+            return b
          }
-         return b
-      })
-      await updateDoc(doc(db, "workspaces", workspace?.id || ""), {
-         ...workspace,
+      )
+      await updateDoc(doc(db, "workspaces", currentWorkspace?.id || ""), {
+         ...currentWorkspace,
          boards: newBoards,
       })
       getWorkspaces()
@@ -179,21 +169,22 @@ export default function BoardDetailPage() {
 
    //Thay sử dụng hàm updateBoard để update lại board
    const updateColumn = async (column: ColumnType) => {
-      const workspace = getWorkspace(workspaceId || "")
-      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
-         if (b.id === id) {
-            const newColumns = b.columns.map((c) => {
-               if (c.id === column.id) {
-                  return column
-               }
-               return c
-            })
-            return { ...b, columns: [...newColumns] }
+      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
+         (b) => {
+            if (b.id === id) {
+               const newColumns = b.columns.map((c) => {
+                  if (c.id === column.id) {
+                     return column
+                  }
+                  return c
+               })
+               return { ...b, columns: [...newColumns] }
+            }
+            return b
          }
-         return b
-      })
-      await updateDoc(doc(db, "workspaces", workspace?.id || ""), {
-         ...workspace,
+      )
+      await updateDoc(doc(db, "workspaces", currentWorkspace?.id || ""), {
+         ...currentWorkspace,
          boards: newBoards,
       })
       getWorkspaces()
@@ -449,23 +440,22 @@ export default function BoardDetailPage() {
                </div>
                {/* Header and Board Content */}
                <HeaderBoard
-                  addBoard={addBoard}
                   starredBoards={getStarredBoards()}
                   workspaces={workspaces}
                />
                {/* Xem xem xét chỉ truyền xuống những props thực sự cần thiết thôi, tránh việc truyền quá sâu các props không cần thiết */}
                {/* VD: currentWorkspace, getWorkspace*/}
                <BoardContent
-                  moveColumn={moveColumn} 
+                  moveColumn={moveColumn}
                   updateColumn={updateColumn} // sau khi đã viết fuction dùng chung thì tạo ra 1 hook trong thư mục board, dùng fuction chung đã viết để xử lý luôn ở component cuối cùng
                   reSetBoard={reSetBoard} // tương tự update
                   renameBoard={renameBoard} // tương tự update
                   getWorkspaces={getWorkspaces}
-                  starBoard={starBoard}// tương tự update
+                  starBoard={starBoard} // tương tự update
                   board={board} //Xem xét xem có xử lý ở 1 board duy nhất ko? nếu có thì truyền
                   workspaces={workspaces} //xem xét xem có thực sự cần truyền phần này xuống ko?
                   boardId={pathName}
-                  workspace={getWorkspace(board.workspaceId)} // thay thế bằng currentWorkspace
+                  workspace={currentWorkspace} // thay thế bằng currentWorkspace
                   moveCardBetweenWorkspaces={moveCardBetweenWorkspaces}
                   moveCardWithinWorkspace={moveCardWithinWorkspace}
                   moveCardWithinBoard={moveCardWithinBoard}

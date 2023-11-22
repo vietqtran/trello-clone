@@ -1,26 +1,26 @@
 "use client"
 
+import { Board, User, WorkspaceType } from "@/types"
+import React, { memo, useEffect, useState } from "react"
+import { collection, getDocs } from "@firebase/firestore"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import Avatar from "./right/Avatar"
+import Create from "./left/Create"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useState, useEffect, memo } from "react"
-import Workspaces from "./left/Workspaces"
-import Recent from "./left/Recent"
-import Starred from "./left/Starred"
-import Create from "./left/Create"
-import Search from "./right/Search"
-import Avatar from "./right/Avatar"
 import More from "./left/More"
+import Recent from "./left/Recent"
+import Search from "./right/Search"
+import Starred from "./left/Starred"
 import WorkspaceModal from "./left/WorkspaceModal"
-import { Board, User, WorkspaceType } from "@/types"
-import { useRouter } from "next/navigation"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { collection, getDocs } from "@firebase/firestore"
+import Workspaces from "./left/Workspaces"
 import { db } from "@/firebase"
+import { useRouter } from "next/navigation"
 
 type Props = {
    workspaces: WorkspaceType[]
    starredBoards: Board[]
-   addBoard: Function
 }
 
 /**
@@ -79,7 +79,6 @@ function HeaderBoard(props: Props) {
                   />
                   <Create
                      workspaceId={props.workspaces[0]?.id}
-                     addBoard={props.addBoard}
                      workspaces={props.workspaces}
                      headerType={""}
                      setShowModal={setShowModal}
@@ -100,7 +99,6 @@ function HeaderBoard(props: Props) {
                   />
                   <Create
                      workspaceId={props.workspaces[0]?.id}
-                     addBoard={props.addBoard}
                      workspaces={props.workspaces}
                      headerType={"board"}
                      setShowModal={setShowModal}

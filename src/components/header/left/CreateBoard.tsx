@@ -1,25 +1,26 @@
-import Image from "next/image"
-import React, { useEffect } from "react"
-import { SlArrowLeft } from "react-icons/sl"
-import { AiOutlineClose } from "react-icons/ai"
-import { HiOutlineDotsHorizontal } from "react-icons/hi"
-import Background from "./Background"
-import { useState } from "react"
-import BackgroundSelect from "./BackgroundSelect"
-import { collection, updateDoc, doc, getDocs } from "@firebase/firestore"
-import { db } from "@/firebase"
 import { Board, WorkspaceType } from "@/types"
+import React, { useEffect } from "react"
+import { collection, doc, getDocs, updateDoc } from "@firebase/firestore"
+
+import { AiOutlineClose } from "react-icons/ai"
+import Background from "./Background"
+import BackgroundSelect from "./BackgroundSelect"
+import { HiOutlineDotsHorizontal } from "react-icons/hi"
+import Image from "next/image"
+import { SlArrowLeft } from "react-icons/sl"
+import { addBoardAsync } from "@/hooks/board"
+import { addRecent } from "@/userMethods"
+import { db } from "@/firebase"
+import { nanoid } from "nanoid"
 import { useAppSelector } from "@/app/redux/store"
 import { useRouter } from "next/navigation"
-import { addRecent } from "@/userMethods"
-import { nanoid } from "nanoid"
+import { useState } from "react"
 
 type Props = {
    setShow: Function
    type: string
    workspaces: WorkspaceType[] | undefined
    workspaceId: string
-   addBoard: Function
 }
 
 function CreateBoard(props: Props) {
@@ -28,6 +29,26 @@ function CreateBoard(props: Props) {
    const [title, setTitle] = useState("")
    const [workspace, setWorkspace] = useState(props.workspaceId)
    const router = useRouter()
+
+   const addBoard = async () => {
+      const id = nanoid()
+      addRecent({
+         id: id,
+         background: {
+            ntn: selectBg.ntn,
+            type: selectBg.type,
+         },
+         columns: [],
+         star: false,
+         title: title,
+         workspaceId: props.workspaceId,
+      })
+      const w = props.workspaces?.find((w) => w.id === props.workspaceId)
+      console.log("wwwwwww", w)
+      await addBoardAsync(selectBg, title, workspace).then((res: any) => {
+         router.push(`/boards/${res.workspaceId}/${res.id}`)
+      })
+   }
 
    return (
       <>
@@ -209,22 +230,7 @@ function CreateBoard(props: Props) {
                      })}
                   </select>
                   <button
-                     onClick={() => {
-                        const id = nanoid()
-                        addRecent({
-                           id: id,
-                           background: {
-                              ntn: selectBg.ntn,
-                              type: selectBg.type,
-                           },
-                           columns: [],
-                           star: false,
-                           title: title,
-                           workspaceId: props.workspaceId,
-                        })
-                        props.addBoard(selectBg, title, workspace)
-                        router.push(`/boards/${props.workspaceId}/${id}`)
-                     }}
+                     onClick={addBoard}
                      className={`w-full py-2 rounded-md mt-3 ${
                         title
                            ? "bg-blue-500 text-white"
