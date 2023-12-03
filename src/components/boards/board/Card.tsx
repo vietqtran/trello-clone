@@ -1,9 +1,3 @@
-import Image from "next/image"
-import React, { memo, useState } from "react"
-import { HiOutlineMenuAlt2, HiOutlinePencil } from "react-icons/hi"
-import CardLabels from "./CardLabels"
-import { Draggable } from "react-beautiful-dnd"
-import CardModal from "./CardModal"
 import {
    Board,
    CheckboxFieldType,
@@ -16,12 +10,19 @@ import {
    TextFieldType,
    WorkspaceType,
 } from "@/types"
-import { PiChatThin } from "react-icons/pi"
-import DropdownField from "./cardField/DropdownField"
+import { HiOutlineMenuAlt2, HiOutlinePencil } from "react-icons/hi"
+import React, { memo, useState } from "react"
+
+import CardLabels from "./CardLabels"
+import CardModal from "./CardModal"
 import CheckboxField from "./cardField/CheckboxField"
 import DateField from "./cardField/DateField"
-import TextField from "./cardField/TextField"
+import { Draggable } from "react-beautiful-dnd"
+import DropdownField from "./cardField/DropdownField"
+import Image from "next/image"
 import NumberField from "./cardField/NumberField"
+import { PiChatThin } from "react-icons/pi"
+import TextField from "./cardField/TextField"
 
 type Props = {
    card: {
@@ -46,7 +47,7 @@ type Props = {
    workspaces: WorkspaceType[]
    board: Board | undefined
    moveCardWithinWorkspace: Function
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    moveCardWithinBoard: Function
    updateColumn: Function
    addCardDescription: Function

@@ -1,9 +1,10 @@
-import React, { memo, useEffect, useState } from "react"
-import BoardRightHeader from "./BoardRightHeader"
-import Column from "./Column"
-import AddAnotherListButton from "./AddAnotherListButton"
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd"
+import React, { memo, useEffect, useState } from "react"
+
+import AddAnotherListButton from "./AddAnotherListButton"
+import BoardRightHeader from "./BoardRightHeader"
+import Column from "./Column"
 
 // Define the Props type for the BoardRight component
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
    updateColumn: Function
    moveColumn: Function
    workspaces: WorkspaceType[]
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    moveCardBetweenWorkspaces: Function
    moveCardWithinWorkspace: Function
    moveCardWithinBoard: Function

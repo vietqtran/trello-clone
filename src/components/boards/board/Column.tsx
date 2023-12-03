@@ -1,10 +1,3 @@
-import React, { useRef, useState } from "react"
-import { BiDotsHorizontalRounded } from "react-icons/bi"
-import { BsPlusLg } from "react-icons/bs"
-import { IoMdClose } from "react-icons/io"
-import Card from "./Card"
-import { useOnClickOutside } from "usehooks-ts"
-import ColumnOptions from "./ColumnOptions"
 import {
    Board,
    CardType,
@@ -15,10 +8,18 @@ import {
    TextFieldType,
    WorkspaceType,
 } from "@/types"
-import CopyList from "./CopyList"
 import { Draggable, Droppable } from "react-beautiful-dnd"
-import { nanoid } from "nanoid"
+import React, { useRef, useState } from "react"
+
+import { BiDotsHorizontalRounded } from "react-icons/bi"
+import { BsPlusLg } from "react-icons/bs"
+import Card from "./Card"
+import ColumnOptions from "./ColumnOptions"
+import CopyList from "./CopyList"
+import { IoMdClose } from "react-icons/io"
 import MoveList from "./MoveList"
+import { nanoid } from "nanoid"
+import { useOnClickOutside } from "usehooks-ts"
 
 type Props = {
    column: ColumnType
@@ -31,7 +32,7 @@ type Props = {
    updateColumn: Function
    moveColumn: Function
    workspaces: WorkspaceType[]
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    board: Board | undefined
    moveCardWithinWorkspace: Function
    moveCardBetweenWorkspaces: Function

@@ -1,67 +1,142 @@
-import { Board, ColumnType, WorkspaceType } from "@/types"
-import { doc, updateDoc } from "firebase/firestore"
+import { Board, CardType, ColumnType } from "@/types"
+import { doc, getDoc, updateDoc } from "@firebase/firestore"
+import { useCallback, useEffect, useState } from "react"
 
 import { db } from "@/firebase"
-import { getWorkspaces } from "./workspace"
 import { nanoid } from "nanoid"
+import { setDoc } from "firebase/firestore"
+import { useRouter } from "next/navigation"
 
-// File này để viết những cái tổng quát như này
+function useBoard(boardId: string, workspaceId: string) {
+   const [board, setBoard] = useState<Board | null>(null)
+   const router = useRouter()
 
-//Đây chỉ là ví dụ demo, có thể thay thế và viết lại để hàm tổng quát hơn.
-export const updateBoard = async ({
-   workspace,
-   boardId,
-   title,
-   columns,
-   star,
-}: {
-   workspace: WorkspaceType
-   boardId: string
-   title?: string
-   columns?: ColumnType[]
-   star?: boolean
-}) => {
-   const newBoards: Board[] | undefined = workspace?.boards?.map((board) => {
-      if (board.id === boardId) {
-         return {
-            ...board,
-            title: title || board.title,
-            columns: columns || board.columns,
-            star: star || board.star,
+   const fetchBoard = useCallback(async () => {
+      try {
+         const boardDocRef = doc(
+            db,
+            "workspaces",
+            workspaceId,
+            "boards",
+            boardId
+         )
+         const boardSnapshot = await getDoc(boardDocRef)
+
+         if (boardSnapshot.exists()) {
+            const data = boardSnapshot.data()
+            setBoard({
+               id: boardId,
+               ...data,
+            } as Board)
          }
+      } catch (error) {}
+   }, [boardId, workspaceId])
+
+   useEffect(() => {
+      if (boardId && workspaceId) {
+         fetchBoard()
       }
-      return board
-   })
+   }, [boardId, workspaceId, fetchBoard])
 
-   //Có thể viết thêm 1 hàm updatedoc tương tự như cách viết hàm update brand vì thấy khá nhiều chỗ đang sử dụng hàm này.
-   await updateDoc(doc(db, "workspaces", workspace?.id || ""), {
-      ...workspace,
-      boards: newBoards,
-   })
-}
-
-export const addBoardAsync = async (
-   selectBg: { ntn: number; type: string },
-   title: string,
-   workspace: string
-) => {
-   const boardCreate: Board = {
-      id: nanoid(),
-      background: { ...selectBg },
-      columns: [],
-      star: false,
-      title: title,
-      workspaceId: workspace,
+   const addBoard = async (newBoardData: Board) => {
+      try {
+         const newBoardId = nanoid()
+         const boardDocRef = doc(
+            db,
+            "workspaces",
+            workspaceId,
+            "boards",
+            newBoardId
+         )
+         await setDoc(boardDocRef, newBoardData)
+         router.push(`/boards/${workspaceId}/${newBoardId}`)
+      } catch (error) {}
    }
-   const workspaces = await getWorkspaces().then((res) => res)
-   const workspaceUpdate = workspaces?.find((w) => {
-      return w.id === workspace
-   })
-   const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
-   // Xem xet có viết lại được kiểu tổng quát không, nếu có thì nên viết lại, export ra để sử dụng ở nhiều chỗ
-   await updateDoc(doc(db, "workspaces", workspace), {
-      boards: boardsUpdate,
-      ...workspaceUpdate,
-   })
-   return boardCreate
+
+   const updateBoard = async (columns: ColumnType[]) => {
+      try {
+         const boardDocRef = doc(
+            db,
+            "workspaces",
+            workspaceId,
+            "boards",
+            boardId
+         )
+         await updateDoc(boardDocRef, { ...board, columns: columns })
+         fetchBoard()
+      } catch (error) {}
+   }
+
+   const addColumn = async (name: string) => {
+      const newColumn: ColumnType = {
+         id: nanoid(),
+         name: name,
+         cards: [],
+      }
+      if (board) {
+         const updatedColumns = [...board.columns, newColumn]
+         await updateBoard(updatedColumns)
+      }
+   }
+
+   const addCardToColumn = async (columnId: string, cardText: string) => {
+      const newCard: CardType = {
+         id: nanoid(),
+         text: cardText,
+         labels: [],
+         image: {
+            ntn: 0,
+            type: "",
+         },
+         comments: [],
+         description: "",
+         fields: [],
+      }
+
+      if (board) {
+         const updatedColumns = board.columns.map((column) =>
+            column.id === columnId
+               ? { ...column, cards: [...column.cards, newCard] }
+               : column
+         )
+         await updateBoard(updatedColumns)
+      }
+   }
+
+   const removeColumn = async (columnId: string) => {
+      if (board) {
+         const updatedColumns = board.columns.filter(
+            (column) => column.id !== columnId
+         )
+         await updateBoard(updatedColumns)
+      }
+   }
+
+   const removeCardFromColumn = async (columnId: string, cardId: string) => {
+      if (board) {
+         const updatedColumns = board.columns.map((column) =>
+            column.id === columnId
+               ? {
+                    ...column,
+                    cards: column.cards.filter((card) => card.id !== cardId),
+                 }
+               : column
+         )
+         await updateBoard(updatedColumns)
+      }
+   }
+
+   return {
+      board,
+      addBoard,
+      setBoard,
+      fetchBoard,
+      updateBoard,
+      addColumn,
+      addCardToColumn,
+      removeColumn,
+      removeCardFromColumn,
+   }
 }
+
+export default useBoard

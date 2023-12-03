@@ -1,113 +1,32 @@
 "use client"
 
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
-import React, { useEffect, useState } from "react"
-import { collection, doc, getDocs, updateDoc } from "@firebase/firestore"
-import { usePathname, useRouter } from "next/navigation"
+import { doc, updateDoc } from "firebase/firestore"
 
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import BoardContent from "@/components/boards/board/Board"
 import HeaderBoard from "@/components/header/HeaderBoard"
 import Image from "next/image"
 import { db } from "@/firebase"
 import { nanoid } from "nanoid"
+import useBoard from "@/hooks/board"
+import { useEffect } from "react"
+import { usePathname } from "next/navigation"
+import useWorkspaces from "@/hooks/workspace"
 
 export default function BoardDetailPage() {
    const pathName = usePathname()
    const id = pathName.split("/").at(-1)
    const workspaceId = pathName.split("/").at(-2)
-   const workspaceCollectionRef = collection(db, "workspaces")
-   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
-   // Xác đinh xem là thao tác với 1 workspace duy nhất hay không, nếu thao tác với 1 workspace duy nhất thì nên tạo thêm 1 biến mới và truyền xuống
-   const [currentWorkspace, setCurrentWorkspace] = useState<WorkspaceType>()
-   const [board, setBoard] = useState<Board>()
-   const router = useRouter()
+
+   const { board, fetchBoard } = useBoard(id as string, workspaceId ?? "")
+
+   const { workspaces, getWorkspaces, currentWorkspace, getStarredBoards } =
+      useWorkspaces(workspaceId ?? "")
 
    useEffect(() => {
       getWorkspaces()
-   }, [])
+   }, [getWorkspaces])
 
-   useEffect(() => {
-      const workspace = workspaces.find((w) => w.id === workspaceId)
-      const board = workspace?.boards?.find((b) => b.id === id)
-      setCurrentWorkspace(workspace)
-      setBoard(board)
-   }, [workspaces])
-
-   // hàm này dùng đi dùng lại khá nhiều lần, nên export ra và gọi vào các file cần dùng, như thế để tránh việc phải viết lại nhiều lần.
-   const getWorkspaces = async () => {
-      try {
-         // Get the user's data from AsyncStorage
-         const data = await AsyncStorage.getItem("USER")
-         const userId = JSON.parse(data || "").id
-
-         // Fetch workspaces from Firestore and filter by userId
-         await getDocs(workspaceCollectionRef)
-            .then((dataRef) => {
-               const newWorkspaces: WorkspaceType[] = []
-               dataRef.docs.forEach((doc) => {
-                  if (doc.data().userId === userId) {
-                     newWorkspaces.push({
-                        id: doc.id,
-                        userId: String(doc.data().userId),
-                        name: String(doc.data().name),
-                        type: String(doc.data().type),
-                        boards: [...doc.data().boards],
-                        description: String(doc.data().description),
-                     })
-                  }
-               })
-               setWorkspaces(newWorkspaces)
-            })
-            .catch((err) => {})
-      } catch (error) {}
-   }
-
-   const getStarredBoards = () => {
-      const newStarredBoards: Board[] = []
-      workspaces.forEach((w) => {
-         w.boards?.forEach((board: Board) => {
-            if (board.star) {
-               newStarredBoards.push({
-                  id: board.id,
-                  workspaceId: board.workspaceId,
-                  title: board.title,
-                  columns: [...board.columns],
-                  star: board.star,
-                  background: { ...board.background },
-               })
-            }
-         })
-      })
-      return newStarredBoards
-   }
-
-   const addBoard = async (
-      selectBg: { ntn: number; type: string },
-      title: string,
-      workspace: string
-   ) => {
-      const boardCreate: Board = {
-         id: nanoid(),
-         background: { ...selectBg },
-         columns: [],
-         star: false,
-         title: title,
-         workspaceId: workspace,
-      }
-      const workspaceUpdate = workspaces?.find((w) => {
-         return w.id === workspace
-      })
-      const boardsUpdate = workspaceUpdate?.boards?.push(boardCreate)
-      // Xem xet có viết lại được kiểu tổng quát không, nếu có thì nên viết lại, export ra để sử dụng ở nhiều chỗ
-      await updateDoc(doc(db, "workspaces", workspace), {
-         boards: boardsUpdate,
-         ...workspaceUpdate,
-      })
-      router.push(`/boards/${workspace}/${boardCreate.id}`)
-   }
-
-   //Thay sử dụng hàm updateBoard để update lại board
    const starBoard = async (boardId: string, workspaceId: string) => {
       const workspaceUpdate = workspaces?.find((w) => {
          return w.id === workspaceId
@@ -126,39 +45,59 @@ export default function BoardDetailPage() {
       })
       getWorkspaces()
    }
-   //Thay sử dụng hàm updateBoard để update lại board
+
+   const getWorkspace = (id: string) => {
+      return workspaces.find((w) => w.id === id)
+   }
+
+   const updateBoard = async (columns: ColumnType[]) => {
+      try {
+         const workspace = getWorkspace(workspaceId ?? "")
+         if (workspace) {
+            await updateDoc(doc(db, "workspaces", workspace.id), {
+               ...workspace,
+               board: { ...workspace.boards, columns: columns },
+            })
+            fetchBoard()
+         }
+      } catch (error) {
+         console.error("Error updating board:", error)
+      }
+   }
+
    const renameBoard = async (newName: string) => {
-      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
-         (b) => {
-            if (b.id === id) {
-               return { ...b, title: newName }
-            }
-            return b
+      const workspace = getWorkspace(workspaceId ?? "")
+      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
+         if (b.id === id) {
+            return { ...b, title: newName }
          }
-      )
-      await updateDoc(doc(db, "workspaces", currentWorkspace?.id || ""), {
-         ...currentWorkspace,
+         return b
+      })
+      await updateDoc(doc(db, "workspaces", workspace?.id ?? ""), {
+         ...workspace,
          boards: newBoards,
       })
       getWorkspaces()
    }
-   //Thay sử dụng hàm updateBoard để update lại board
+
    const reSetBoard = async (columns: ColumnType[]) => {
-      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
-         (b) => {
-            if (b.id === id) {
-               return { ...b, columns: [...columns] }
-            }
-            return b
+      const workspace = getWorkspace(workspaceId || "")
+      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
+         if (b.id === id) {
+            return { ...b, columns: [...columns] }
          }
-      )
-      await updateDoc(doc(db, "workspaces", currentWorkspace?.id || ""), {
-         ...currentWorkspace,
-         boards: newBoards,
+         return b
       })
-      getWorkspaces()
+      if (workspace) {
+         const workspaceDocRef = doc(db, "workspaces", workspace.id)
+         await updateDoc(workspaceDocRef, {
+            ...workspace,
+            boards: newBoards,
+         })
+         await updateBoard(columns)
+      }
    }
-   //Thay sử dụng hàm updateBoard để update lại board
+
    const deleteColumn = (id: string) => {
       const newList = board?.columns.filter((col) => {
          return col.id !== id
@@ -167,24 +106,22 @@ export default function BoardDetailPage() {
       getWorkspaces()
    }
 
-   //Thay sử dụng hàm updateBoard để update lại board
    const updateColumn = async (column: ColumnType) => {
-      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
-         (b) => {
-            if (b.id === id) {
-               const newColumns = b.columns.map((c) => {
-                  if (c.id === column.id) {
-                     return column
-                  }
-                  return c
-               })
-               return { ...b, columns: [...newColumns] }
-            }
-            return b
+      const workspace = getWorkspace(workspaceId || "")
+      const newBoards: Board[] | undefined = workspace?.boards?.map((b) => {
+         if (b.id === id) {
+            const newColumns = b.columns.map((c) => {
+               if (c.id === column.id) {
+                  return column
+               }
+               return c
+            })
+            return { ...b, columns: [...newColumns] }
          }
-      )
-      await updateDoc(doc(db, "workspaces", currentWorkspace?.id || ""), {
-         ...currentWorkspace,
+         return b
+      })
+      await updateDoc(doc(db, "workspaces", workspace?.id || ""), {
+         ...workspace,
          boards: newBoards,
       })
       getWorkspaces()
@@ -206,7 +143,7 @@ export default function BoardDetailPage() {
          boards: [],
          type: "",
          description: "",
-      } // define 1 biến defaultColumn để dùng ko phải viết lại nhiều lần
+      }
       const receiveBoard: Board = receiveWorkspace.boards?.find(
          (b) => b.id === receiveBoardId
       ) || {
@@ -222,23 +159,10 @@ export default function BoardDetailPage() {
       }
       const columns: ColumnType[] = [...receiveBoard.columns]
       let newColumns: ColumnType[] = []
-      // Có thể sử dụng hàm splice
-      // if(columns.length === 0 || columns.length === receiveIndex) {
-      //    newColumns.push(column)
-      // } else {
-      //    newColumns.splice(receiveIndex, 0, column);
-      // }
-      if (columns.length == 0) {
+      if (columns.length === 0 || columns.length === receiveIndex) {
          newColumns.push(column)
-      } else if (receiveIndex === columns.length) {
-         newColumns = [...columns, column]
       } else {
-         columns.forEach((c, index) => {
-            if (index === receiveIndex) {
-               newColumns.push(column)
-            }
-            newColumns.push(c)
-         })
+         newColumns.splice(receiveIndex, 0, column)
       }
       const newBoard = { ...receiveBoard, columns: newColumns }
       const newBoards = receiveWorkspace.boards?.map((b) => {
@@ -421,47 +345,50 @@ export default function BoardDetailPage() {
       )
       reSetBoard(updatedColumns)
    }
-
    return (
       <div
-         className={`relative max-w-[100vw] overflow-hidden flex flex-col items-center justify-start max-h-[100vh] min-h-[100vh]`}
+         className={`relative flex max-h-[100vh] min-h-[100vh] max-w-[100vw] flex-col items-center justify-start overflow-hidden`}
       >
          {board && (
             <>
                {/* Background Image */}
-               <div className='w-full h-full absolute top-0 left-0 bottom-0 right-0 bg-black z-[-1]'>
-                  <Image
-                     width={2000}
-                     height={2000}
-                     src={`/assets/background/bg-${board?.background?.type}/bg${board?.background?.ntn}.jpg`}
-                     alt='bg'
-                     className='w-full h-full object-cover'
-                  />
-               </div>
+               <BackgroundImage board={board} />
                {/* Header and Board Content */}
                <HeaderBoard
                   starredBoards={getStarredBoards()}
                   workspaces={workspaces}
                />
-               {/* Xem xem xét chỉ truyền xuống những props thực sự cần thiết thôi, tránh việc truyền quá sâu các props không cần thiết */}
-               {/* VD: currentWorkspace, getWorkspace*/}
                <BoardContent
+                  starBoard={starBoard}
+                  renameBoard={renameBoard}
+                  reSetBoard={reSetBoard}
                   moveColumn={moveColumn}
-                  updateColumn={updateColumn} // sau khi đã viết fuction dùng chung thì tạo ra 1 hook trong thư mục board, dùng fuction chung đã viết để xử lý luôn ở component cuối cùng
-                  reSetBoard={reSetBoard} // tương tự update
-                  renameBoard={renameBoard} // tương tự update
-                  getWorkspaces={getWorkspaces}
-                  starBoard={starBoard} // tương tự update
-                  board={board} //Xem xét xem có xử lý ở 1 board duy nhất ko? nếu có thì truyền
-                  workspaces={workspaces} //xem xét xem có thực sự cần truyền phần này xuống ko?
-                  boardId={pathName}
-                  workspace={currentWorkspace} // thay thế bằng currentWorkspace
                   moveCardBetweenWorkspaces={moveCardBetweenWorkspaces}
                   moveCardWithinWorkspace={moveCardWithinWorkspace}
                   moveCardWithinBoard={moveCardWithinBoard}
+                  board={board}
+                  workspace={currentWorkspace}
+                  boardId={id ?? ""}
+                  getWorkspaces={getWorkspaces}
+                  updateColumn={updateColumn}
+                  workspaces={workspaces}
                />
             </>
          )}
+      </div>
+   )
+}
+
+function BackgroundImage({ board }: { board: Board }) {
+   return (
+      <div className='absolute bottom-0 left-0 right-0 top-0 z-[-1] h-full w-full bg-black'>
+         <Image
+            width={2000}
+            height={2000}
+            src={`/assets/background/bg-${board?.background?.type}/bg${board?.background?.ntn}.jpg`}
+            alt='bg'
+            className='h-full w-full object-cover'
+         />
       </div>
    )
 }

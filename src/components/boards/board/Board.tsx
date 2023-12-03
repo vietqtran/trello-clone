@@ -1,7 +1,8 @@
+import { Board, WorkspaceType } from "@/types"
 import React, { useEffect, useState } from "react"
+
 import BoardLeft from "./BoardLeft"
 import BoardRight from "./BoardRight"
-import { Board, WorkspaceType } from "@/types"
 
 type Props = {
    boardId: string
@@ -13,7 +14,7 @@ type Props = {
    reSetBoard: Function
    updateColumn: Function
    moveColumn: Function
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    moveCardBetweenWorkspaces: Function
    moveCardWithinWorkspace: Function
    moveCardWithinBoard: Function
@@ -32,7 +33,6 @@ function BoardContent(props: Props) {
          props.workspaces?.forEach((w) => {
             if (w.id === workspaceId) {
                setWorkspace(w)
-               return
             }
          })
       }
@@ -40,8 +40,8 @@ function BoardContent(props: Props) {
    })
 
    return (
-      <div className={`flex min-w-full max-w-full max-h-full min-h-full`}>
-         <div className='sidebar text-white min-h-full border-r-[1px] border-slate-300 h-[calc(100vh-55px)] bg-transparent text-inherit glassmorphism'>
+      <div className={`flex max-h-full min-h-full min-w-full max-w-full`}>
+         <div className='sidebar glassmorphism h-[calc(100vh-55px)] min-h-full border-r-[1px] border-slate-300 bg-transparent text-inherit text-white'>
             <BoardLeft
                workspace={workspace}
                board={props.board}
@@ -49,7 +49,7 @@ function BoardContent(props: Props) {
                setShowSideBar={setShowSideBar}
             />
          </div>
-         <div className='flex-1 h-[calc(100vh-55px)]'>
+         <div className='h-[calc(100vh-55px)] flex-1'>
             <BoardRight
                moveColumn={props.moveColumn}
                updateColumn={props.updateColumn}

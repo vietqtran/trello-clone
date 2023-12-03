@@ -1,15 +1,16 @@
 import { Board, ColumnType, WorkspaceType } from "@/types"
 import React, { useEffect, useRef, useState } from "react"
 import { RiArrowLeftSLine, RiCloseLine } from "react-icons/ri"
-import { useOnClickOutside } from "usehooks-ts"
+
 import { nanoid } from "nanoid"
+import { useOnClickOutside } from "usehooks-ts"
 
 type Props = {
    column: ColumnType
    setShowActions: Function
    moveColumn: Function
    workspaces: WorkspaceType[]
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    board: Board | undefined
 }
 

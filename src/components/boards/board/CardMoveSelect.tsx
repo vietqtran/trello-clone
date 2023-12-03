@@ -1,5 +1,6 @@
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import React, { memo, useRef, useState } from "react"
+
 import { GrClose } from "react-icons/gr"
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
    column: ColumnType
    deleteCard: Function
    moveCardWithinWorkspace: Function
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    moveCardWithinBoard: Function
 }
 
