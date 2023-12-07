@@ -18,11 +18,10 @@ export default function BoardDetailPage() {
    const id = pathName.split("/").at(-1)
    const workspaceId = pathName.split("/").at(-2)
 
+   const { workspaces, getWorkspaces, currentWorkspace, getStarredBoards } = useWorkspaces(workspaceId ?? "")
    const { board, fetchBoard } = useBoard(id as string, workspaceId ?? "")
 
-   const { workspaces, getWorkspaces, currentWorkspace, getStarredBoards } =
-      useWorkspaces(workspaceId ?? "")
-
+   // TODO: Bỏ useEffect này vì đã viết trong hook rồi. dùng luôn workspaces bên trên.
    useEffect(() => {
       getWorkspaces()
    }, [getWorkspaces])
@@ -345,6 +344,7 @@ export default function BoardDetailPage() {
       )
       reSetBoard(updatedColumns)
    }
+   
    return (
       <div
          className={`relative flex max-h-[100vh] min-h-[100vh] max-w-[100vw] flex-col items-center justify-start overflow-hidden`}

@@ -11,7 +11,7 @@ function useBoard(boardId: string, workspaceId: string) {
    const [board, setBoard] = useState<Board | null>(null)
    const router = useRouter()
 
-   const fetchBoard = useCallback(async () => {
+      const fetchBoard = useCallback(async () => {
       try {
          const boardDocRef = doc(
             db,
@@ -20,8 +20,9 @@ function useBoard(boardId: string, workspaceId: string) {
             "boards",
             boardId
          )
+         //TODO: Check lai doan nay xem, Missing boardSnapshot => khong set duoc board
          const boardSnapshot = await getDoc(boardDocRef)
-
+         
          if (boardSnapshot.exists()) {
             const data = boardSnapshot.data()
             setBoard({
@@ -33,7 +34,7 @@ function useBoard(boardId: string, workspaceId: string) {
    }, [boardId, workspaceId])
 
    useEffect(() => {
-      if (boardId && workspaceId) {
+      if (boardId && workspaceId) {         
          fetchBoard()
       }
    }, [boardId, workspaceId, fetchBoard])
