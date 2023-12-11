@@ -63,6 +63,7 @@ const useWorkspaces = (workspaceId: string) => {
 
    useEffect(() => {
       getWorkspaces()
+      // return Promise<void> => await ????
    }, [getWorkspaces])
 
    return { workspaces, getWorkspaces, currentWorkspace, getStarredBoards }

@@ -325,6 +325,7 @@ export default function BoardDetailPage() {
       )
       reSetBoard(updatedColumns)
    }
+
    return (
       <div
          className={`relative flex max-h-[100vh] min-h-[100vh] max-w-[100vw] flex-col items-center justify-start overflow-hidden`}
