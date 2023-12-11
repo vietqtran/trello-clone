@@ -1,27 +1,27 @@
-import { WorkspaceType } from "@/types"
-import React from "react"
 import { AiOutlineDelete } from "react-icons/ai"
 import { BsPersonAdd } from "react-icons/bs"
 import { HiOutlinePencil } from "react-icons/hi"
+import React from "react"
+import { WorkspaceType } from "@/types"
 
 type Props = {
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    deleteWorkspace: Function
 }
 
 function WorkspaceRightTop(props: Props) {
    return (
-      <div className='w-full border-b-2 flex items-center justify-center'>
-         <div className='max-w-[855px] w-full'>
-            <div className='py-8 flex items-center justify-between'>
+      <div className='flex w-full items-center justify-center border-b-2'>
+         <div className='w-full max-w-[855px]'>
+            <div className='flex items-center justify-between py-8'>
                <div className='flex items-center justify-start'>
-                  <div className='relative bg-gradient-to-r from-sky-500 to-indigo-500 p-7 rounded-md w-fit mr-3'>
-                     <span className='absolute w-full h-full flex items-center justify-center text-2xl top-0 left-0 text-white font-bold'>
+                  <div className='relative mr-3 w-fit rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 p-7'>
+                     <span className='absolute left-0 top-0 flex h-full w-full items-center justify-center text-2xl font-bold text-white'>
                         {props.workspace?.name.toUpperCase().charAt(0)}
                      </span>
                   </div>
-                  <div className='flex items-center justify-start mr-2'>
-                     <p className='font-semibold text-lg truncate max-w-[100px] whitespace-normal md:max-w-[300px] leading-5'>
+                  <div className='mr-2 flex items-center justify-start'>
+                     <p className='max-w-[100px] truncate whitespace-normal text-lg font-semibold leading-5 md:max-w-[300px]'>
                         {props.workspace?.name}
                      </p>
                   </div>
@@ -31,7 +31,7 @@ function WorkspaceRightTop(props: Props) {
                      onClick={() => {
                         props.deleteWorkspace()
                      }}
-                     className='flex text-sm items-center justify-center text-white bg-red-500 py-2 px-4 rounded-md whitespace-nowrap'
+                     className='flex items-center justify-center whitespace-nowrap rounded-md bg-red-500 px-4 py-2 text-sm text-white'
                   >
                      <span className='mr-2'>
                         <AiOutlineDelete />

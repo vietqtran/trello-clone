@@ -1,9 +1,10 @@
-import React, { memo, useEffect, useState } from "react"
-import BoardRightHeader from "./BoardRightHeader"
-import Column from "./Column"
-import AddAnotherListButton from "./AddAnotherListButton"
 import { Board, CardType, ColumnType, WorkspaceType } from "@/types"
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd"
+import React, { memo, useEffect, useState } from "react"
+
+import AddAnotherListButton from "./AddAnotherListButton"
+import BoardRightHeader from "./BoardRightHeader"
+import Column from "./Column"
 
 // Define the Props type for the BoardRight component
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
    updateColumn: Function
    moveColumn: Function
    workspaces: WorkspaceType[]
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    moveCardBetweenWorkspaces: Function
    moveCardWithinWorkspace: Function
    moveCardWithinBoard: Function
@@ -34,9 +35,9 @@ function BoardRight(props: Props) {
    }
 
    // Function to add a new list (column)
-   const handleAddList = (list: ColumnType) => {
+   const handleAddList = async (list: ColumnType) => {
       const newList = [...(props.board?.columns || []), list]
-      props.reSetBoard(newList)
+      await props.reSetBoard(newList)
    }
 
    // Function to delete a list (column)
@@ -124,7 +125,7 @@ function BoardRight(props: Props) {
    }
 
    return (
-      <div className='h-full w-full z-10'>
+      <div className='z-10 h-full w-full'>
          {/* Render the board header */}
          <BoardRightHeader
             renameBoard={props.renameBoard}
@@ -136,7 +137,7 @@ function BoardRight(props: Props) {
                reorder(result)
             }}
          >
-            <div className='w-full h-auto'>
+            <div className='h-auto w-full'>
                <Droppable direction='horizontal' droppableId='board'>
                   {(droppableProvided) => (
                      <div

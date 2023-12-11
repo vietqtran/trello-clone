@@ -1,20 +1,21 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import { AiOutlineClockCircle, AiOutlineStar } from "react-icons/ai"
+import { Board, User, WorkspaceType } from "@/types"
+import { HiPlus, HiTemplate } from "react-icons/hi"
+import React, { useEffect, useState } from "react"
+import { addDoc, collection, getDocs } from "@firebase/firestore"
+
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import BoardItem from "./BoardItem"
 import { BsTrello } from "react-icons/bs"
-import { HiTemplate, HiPlus } from "react-icons/hi"
+import CreateBoardButton from "./CreateBoardButton"
 import { RiHomeFill } from "react-icons/ri"
 import WorkspaceLeftItem from "./WorkspaceLeftItem"
-import { AiOutlineStar, AiOutlineClockCircle } from "react-icons/ai"
-import BoardItem from "./BoardItem"
-import CreateBoardButton from "./CreateBoardButton"
-import { collection, addDoc, getDocs } from "@firebase/firestore"
+import WorkspaceModal from "../header/left/WorkspaceModal"
+import { changeStar } from "@/userMethods"
 import { db } from "@/firebase"
 import { useRouter } from "next/navigation"
-import WorkspaceModal from "../header/left/WorkspaceModal"
-import { Board, User, WorkspaceType } from "@/types"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { changeStar } from "@/userMethods"
 
 type Props = {
    workspaces: WorkspaceType[]
@@ -48,12 +49,14 @@ function Boards(props: Props) {
       getUser()
    }, [])
 
+   console.log(props.workspaces)
+
    return (
       <div>
-         <div className='z-[-1] flex md:items-start md:justify-center justify-start items-start'>
-            <div className='grid grid-cols-4 w-full md:w-auto'>
-               <div className='col-span-1 pt-10 relative'>
-                  <div className='sticky left-0 top-[90px] md:block hidden min-w-[260px] max-w-[260px]'>
+         <div className='z-[-1] flex items-start justify-start md:items-start md:justify-center'>
+            <div className='grid w-full grid-cols-4 md:w-auto'>
+               <div className='relative col-span-1 pt-10'>
+                  <div className='sticky left-0 top-[90px] hidden min-w-[260px] max-w-[260px] md:block'>
                      <div>
                         <div
                            onClick={() => {
@@ -63,7 +66,7 @@ function Boards(props: Props) {
                               tab === "board" ? "bg-blue-100 text-blue-600" : ""
                            } cursor-pointer hover:bg-blue-100 hover:text-blue-600 mb-1 flex items-center justify-start font-semibold text-sm p-2 pl-3 rounded-md`}
                         >
-                           <span className='mr-2 ml-1'>
+                           <span className='ml-1 mr-2'>
                               <BsTrello />
                            </span>
                            <span>Boards</span>
@@ -99,13 +102,13 @@ function Boards(props: Props) {
                      </div>
                      <hr className='my-3' />
                      <div>
-                        <div className='p-2 pb-0 flex items-center justify-between'>
-                           <h1 className='font-semibold text-xs'>Workspace</h1>
+                        <div className='flex items-center justify-between p-2 pb-0'>
+                           <h1 className='text-xs font-semibold'>Workspace</h1>
                            <h1
                               onClick={() => {
                                  setShowModal({ show: true, type: "workspace" })
                               }}
-                              className='p-2 hover:bg-slate-100 cursor-pointer rounded-md'
+                              className='cursor-pointer rounded-md p-2 hover:bg-slate-100'
                            >
                               <HiPlus />
                            </h1>
@@ -123,17 +126,17 @@ function Boards(props: Props) {
                      </div>
                   </div>
                </div>
-               <div className='md:col-span-3 w-full col-span-4 md:mt-10 mt-5 md:px-0 px-3 md:ml-5 ml-0 bg-white'>
+               <div className='col-span-4 ml-0 mt-5 w-full bg-white px-3 md:col-span-3 md:ml-5 md:mt-10 md:px-0'>
                   <div className='mb-10'>
-                     <h1 className='flex items-center justify-start mb-4'>
-                        <span className='text-2xl mr-3'>
+                     <h1 className='mb-4 flex items-center justify-start'>
+                        <span className='mr-3 text-2xl'>
                            <AiOutlineStar />
                         </span>
-                        <span className='font-bold text-base'>
+                        <span className='text-base font-bold'>
                            Starred boards
                         </span>
                      </h1>
-                     <div className='grid grid-cols-12 w-full gap-2 mt-2'>
+                     <div className='mt-2 grid w-full grid-cols-12 gap-2'>
                         {props.starredBoards.map((board) => {
                            return (
                               <BoardItem
@@ -147,15 +150,15 @@ function Boards(props: Props) {
                      </div>
                   </div>
                   <div className='mb-10'>
-                     <h1 className='flex items-center justify-start mb-4'>
-                        <span className='text-2xl mr-3'>
+                     <h1 className='mb-4 flex items-center justify-start'>
+                        <span className='mr-3 text-2xl'>
                            <AiOutlineClockCircle />
                         </span>
-                        <span className='font-bold text-base'>
+                        <span className='text-base font-bold'>
                            Recent viewed
                         </span>
                      </h1>
-                     <div className='grid grid-cols-12 w-full gap-2 mt-2'>
+                     <div className='mt-2 grid w-full grid-cols-12 gap-2'>
                         {user.recentBoard?.map((board) => {
                            if (board !== null) {
                               return (
@@ -174,19 +177,19 @@ function Boards(props: Props) {
                      </div>
                   </div>
 
-                  <h1 className='font-bold mb-5'>YOUR WORKSPACES</h1>
+                  <h1 className='mb-5 font-bold'>YOUR WORKSPACES</h1>
                   {props.workspaces?.map((workspace) => {
                      return (
                         <div className='mb-10' key={workspace.id}>
-                           <div className='flex items-center mb-4'>
-                              <div className='relative p-5 mr-2 rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 w-fit'>
-                                 <span className='text-white font-bold absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] '>
+                           <div className='mb-4 flex items-center'>
+                              <div className='relative mr-2 w-fit rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 p-5'>
+                                 <span className='absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] font-bold text-white'>
                                     {workspace.name.toUpperCase().charAt(0)}
                                  </span>
                               </div>
                               <h1 className='font-bold'>{workspace.name}</h1>
                            </div>
-                           <div className='grid grid-cols-12 w-full gap-2 mt-2'>
+                           <div className='mt-2 grid w-full grid-cols-12 gap-2'>
                               {workspace?.boards?.map((board) => {
                                  return (
                                     <BoardItem

@@ -1,22 +1,23 @@
-import React, { useState } from "react"
-import { FiSearch } from "react-icons/fi"
-import { MdOutlineKeyboardArrowDown } from "react-icons/md"
-import CreateBoardButton from "../CreateBoardButton"
-import BoardItem from "../BoardItem"
 import { Board, WorkspaceType } from "@/types"
-import { db } from "@/firebase"
+import React, { useState } from "react"
 import {
-   collection,
-   getDocs,
    addDoc,
+   collection,
    doc,
+   getDocs,
    updateDoc,
 } from "@firebase/firestore"
-import { useRouter } from "next/navigation"
+
+import BoardItem from "../BoardItem"
+import CreateBoardButton from "../CreateBoardButton"
+import { FiSearch } from "react-icons/fi"
+import { MdOutlineKeyboardArrowDown } from "react-icons/md"
+import { db } from "@/firebase"
 import { nanoid } from "nanoid"
+import { useRouter } from "next/navigation"
 
 type Props = {
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    workspaces: WorkspaceType[] | undefined
    addBoard: Function
    changeStar: Function
@@ -25,61 +26,57 @@ function WorkspaceContent(props: Props) {
    const [search, setSearch] = useState("")
 
    return (
-      <div className='w-full mx-auto mb-10'>
-         <span className='text-xl font-semibold my-8 block'>Boards</span>
-         <div className='w-full my-3'>
+      <div className='mx-auto mb-10 w-full'>
+         <span className='my-8 block text-xl font-semibold'>Boards</span>
+         <div className='my-3 w-full'>
             <span className='text-xs font-bold'>Sort by</span>
-            <div
-               className='relative group hover:bg-slate-50 cursor-pointer w-[200px] h-[32px] flex items-center justify-between border-2 px-2 text-sm rounded-sm py-1
-                  before:contents-[] before:absolute before:top-[20px] before:left-0 before:w-full before:h-[20px] before:bg-transparent
-            '
-            >
+            <div className='before:contents-[] group relative flex h-[32px] w-[200px] cursor-pointer items-center justify-between rounded-sm border-2 px-2 py-1 text-sm before:absolute before:left-0 before:top-[20px] before:h-[20px] before:w-full before:bg-transparent hover:bg-slate-50'>
                <div>
                   <span>Most recently active</span>
                </div>
                <span>
                   <MdOutlineKeyboardArrowDown />
                </span>
-               <div className='z-10 hidden bg-white group-hover:block w-full drop-menu-shadow rounded-md absolute top-[35px] left-0'>
-                  <ul className='w-full my-2'>
-                     <li className='p-2 w-full hover:bg-blue-100'>
+               <div className='drop-menu-shadow absolute left-0 top-[35px] z-10 hidden w-full rounded-md bg-white group-hover:block'>
+                  <ul className='my-2 w-full'>
+                     <li className='w-full p-2 hover:bg-blue-100'>
                         Most recently active
                      </li>
-                     <li className='p-2 w-full hover:bg-blue-100'>
+                     <li className='w-full p-2 hover:bg-blue-100'>
                         Least recently active
                      </li>
-                     <li className='p-2 w-full hover:bg-blue-100'>
+                     <li className='w-full p-2 hover:bg-blue-100'>
                         Alphabetically A-Z
                      </li>
-                     <li className='p-2 w-full hover:bg-blue-100'>
+                     <li className='w-full p-2 hover:bg-blue-100'>
                         Alphabetically Z-A
                      </li>
                   </ul>
                </div>
             </div>
          </div>
-         <div className='my-3 py-1 rounded-sm z-[-1]'>
+         <div className='z-[-1] my-3 rounded-sm py-1'>
             <div>
                <span className='text-xs font-bold'>Search</span>
             </div>
-            <div className='relative hover:bg-slate-50 border-2 flex items-center w-fit'>
+            <div className='relative flex w-fit items-center border-2 hover:bg-slate-50'>
                <input
                   type='text'
-                  className='pl-7 text-sm bg-transparent outline-none h-[32px] w-[250px]'
+                  className='h-[32px] w-[250px] bg-transparent pl-7 text-sm outline-none'
                   value={search}
                   onChange={(e) => {
                      setSearch(e.target.value)
                   }}
                   placeholder='Search boards'
                />
-               <div className='absolute top-[50%] px-2 translate-y-[-50%] left-0'>
+               <div className='absolute left-0 top-[50%] translate-y-[-50%] px-2'>
                   <FiSearch />
                </div>
             </div>
          </div>
-         <div className='w-full grid grid-cols-12 gap-3'>
-            <div className='relative cursor-pointer group bg-slate-100 bg-cover rounded-sm lg:col-span-3 md:col-span-4 col-span-6 w-full min-h-[100px]'>
-               <div className='absolute top-0 left-0 w-full'>
+         <div className='grid w-full grid-cols-12 gap-3'>
+            <div className='group relative col-span-6 min-h-[100px] w-full cursor-pointer rounded-sm bg-slate-100 bg-cover md:col-span-4 lg:col-span-3'>
+               <div className='absolute left-0 top-0 w-full'>
                   <CreateBoardButton
                      addBoard={props.addBoard}
                      workspaceId={props.workspace?.id || ""}
