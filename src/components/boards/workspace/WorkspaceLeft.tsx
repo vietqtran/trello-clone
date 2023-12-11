@@ -1,23 +1,24 @@
-import React, { useState } from "react"
+import { FaTrello, FaUser } from "react-icons/fa"
 import {
+   MdKeyboardArrowDown,
    MdKeyboardArrowLeft,
    MdKeyboardArrowRight,
    MdSettings,
-   MdKeyboardArrowDown,
 } from "react-icons/md"
-import { FaTrello, FaUser } from "react-icons/fa"
+import React, { useState } from "react"
+
+import { BsCalendarMinus } from "react-icons/bs"
 import { BsPlus } from "react-icons/bs"
 import { ImTable2 } from "react-icons/im"
-import { BsCalendarMinus } from "react-icons/bs"
+import WorkspaceLeftPreviewItem from "./WorkspaceLeftPreviewItem"
 import WorkspaceLeftTab from "./WorkspaceLeftTab"
 import WorkspaceLeftTabFeature from "./WorkspaceLeftTabFeature"
-import WorkspaceLeftPreviewItem from "./WorkspaceLeftPreviewItem"
 import { WorkspaceType } from "@/types"
 
 type Props = {
    showSideBar: boolean
    setShowSideBar: Function
-   workspace: WorkspaceType | undefined
+   workspace: WorkspaceType | null
    changeStar: Function
 }
 
@@ -35,26 +36,26 @@ function WorkspaceLeft(props: Props) {
                   props.showSideBar ? "translate-x-0" : "translate-x-[-260px]"
                } ease-in duration-200`}
             >
-               <div className=' flex items-center border-b-[1px] p-2 border-slate-300 justify-between w-full'>
-                  <div className='relative p-5 bg-gradient-to-r from-sky-500 to-indigo-500 w-fit rounded-md h-fit'>
-                     <span className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-white font-bold '>
+               <div className='flex w-full items-center justify-between border-b-[1px] border-slate-300 p-2'>
+                  <div className='relative h-fit w-fit rounded-md bg-gradient-to-r from-sky-500 to-indigo-500 p-5'>
+                     <span className='absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] font-bold text-white'>
                         {props.workspace?.name.toUpperCase().charAt(0)}
                      </span>
                   </div>
                   <div>
                      <div className='w-[150px]'>
-                        <p className='truncate whitespace-normal w-full block font-semibold text-sm'>
+                        <p className='block w-full truncate whitespace-normal text-sm font-semibold'>
                            {props.workspace?.name}
                         </p>
                      </div>
                      <span className='text-sm'>Free</span>
                   </div>
-                  <div className='h-full flex items-center justify-center'>
+                  <div className='flex h-full items-center justify-center'>
                      <span
                         onClick={() => {
                            props.setShowSideBar(false)
                         }}
-                        className='p-2 rounded-sm cursor-pointer hover:backdrop-blur-md bg-clip-padding backdrop-filter hover:bg-opacity-10 bg-opacity-0 bg-black'
+                        className='cursor-pointer rounded-sm bg-black bg-opacity-0 bg-clip-padding p-2 backdrop-filter hover:bg-opacity-10 hover:backdrop-blur-md'
                      >
                         <MdKeyboardArrowLeft />
                      </span>
@@ -76,7 +77,7 @@ function WorkspaceLeft(props: Props) {
                      <MdSettings />
                      <MdKeyboardArrowDown />
                   </WorkspaceLeftTabFeature>
-                  <h1 className='text-black font-semibold text-sm px-2 my-2'>
+                  <h1 className='my-2 px-2 text-sm font-semibold text-black'>
                      Workspace views
                   </h1>
                   <WorkspaceLeftTab currentTab={tab} tab='Table'>
@@ -87,10 +88,10 @@ function WorkspaceLeft(props: Props) {
                      {" "}
                      <BsCalendarMinus />
                   </WorkspaceLeftTab>
-                  <h1 className='text-black font-semibold text-sm px-2 my-2'>
+                  <h1 className='my-2 px-2 text-sm font-semibold text-black'>
                      Your boards
                   </h1>
-                  <div className='overflow-y-auto max-h-[40vh]'>
+                  <div className='max-h-[40vh] overflow-y-auto'>
                      {props.workspace?.boards?.map((board) => {
                         return (
                            <WorkspaceLeftPreviewItem
@@ -115,12 +116,12 @@ function WorkspaceLeft(props: Props) {
                } ease-in duration-200
             `}
             >
-               <div className='w-full h-full relative'>
+               <div className='relative h-full w-full'>
                   <span
                      onClick={() => {
                         props.setShowSideBar(true)
                      }}
-                     className='z-50 absolute top-[30px] left-[5px] cursor-pointer p-1 bg-slate-500 text-white block w-fit h-fit rounded-full'
+                     className='absolute left-[5px] top-[30px] z-50 block h-fit w-fit cursor-pointer rounded-full bg-slate-500 p-1 text-white'
                   >
                      <MdKeyboardArrowRight />
                   </span>

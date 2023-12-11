@@ -1,20 +1,22 @@
 "use client"
 
+import { Board, WorkspaceType } from "@/types"
 import React, { useEffect, useState } from "react"
-import Workspace from "@/components/boards/workspace/Workspace"
-import Header from "@/components/header/Header"
-import { usePathname, useRouter } from "next/navigation"
-import { db } from "@/firebase"
 import {
    collection,
-   getDocs,
-   doc,
-   updateDoc,
    deleteDoc,
+   doc,
+   getDocs,
+   updateDoc,
 } from "@firebase/firestore"
-import { Board, WorkspaceType } from "@/types"
+import { usePathname, useRouter } from "next/navigation"
+
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import Header from "@/components/header/Header"
+import Workspace from "@/components/boards/workspace/Workspace"
+import { db } from "@/firebase"
 import { nanoid } from "nanoid"
+import useWorkspaces from "@/hooks/workspace"
 
 export default function WorkspacePage() {
    // Extract the workspace ID from the URL path
@@ -23,50 +25,11 @@ export default function WorkspacePage() {
    // Firestore reference to the "workspaces" collection
    const workspaceCollectionRef = collection(db, "workspaces")
 
-   // State to store the user's workspaces
-   const [workspaces, setWorkspaces] = useState<WorkspaceType[]>([])
+   const { workspaces, getWorkspaces, currentWorkspace, getStarredBoards } =
+      useWorkspaces(id ?? "")
 
    // Next.js router
    const router = useRouter()
-
-   useEffect(() => {
-      // Fetch user's workspaces on component mount
-      getWorkspaces()
-   }, [])
-
-   useEffect(() => {
-      // Fetch starred boards
-      getStarredBoards()
-   }, [])
-
-   // Function to fetch user's workspaces from Firestore
-   const getWorkspaces = async () => {
-      try {
-         // Get the user's data from AsyncStorage
-         const data = await AsyncStorage.getItem("USER")
-         const userId = JSON.parse(data || "").id
-
-         // Fetch workspaces from Firestore and filter by userId
-         await getDocs(workspaceCollectionRef)
-            .then((dataRef) => {
-               const newWorkspaces: WorkspaceType[] = []
-               dataRef.docs.forEach((doc) => {
-                  if (doc.data().userId === userId) {
-                     newWorkspaces.push({
-                        id: doc.id,
-                        userId: String(doc.data().userId),
-                        name: String(doc.data().name),
-                        type: String(doc.data().type),
-                        boards: [...doc.data().boards],
-                        description: String(doc.data().description),
-                     })
-                  }
-               })
-               setWorkspaces(newWorkspaces)
-            })
-            .catch((err) => {})
-      } catch (error) {}
-   }
 
    // Function to add a new board
    const addBoard = async (
@@ -92,39 +55,6 @@ export default function WorkspacePage() {
       })
       getWorkspaces()
       router.push(`/boards/${workspace}/${boardCreate.id}`)
-   }
-
-   // Function to get starred boards
-   const getStarredBoards = () => {
-      const newStarredBoards: Board[] = []
-      workspaces.forEach((w) => {
-         w.boards?.forEach((board: Board) => {
-            if (board.star) {
-               newStarredBoards.push({
-                  id: board.id,
-                  workspaceId: board.workspaceId,
-                  title: board.title,
-                  columns: [...board.columns],
-                  star: board.star,
-                  background: { ...board.background },
-               })
-            }
-         })
-      })
-      return newStarredBoards
-   }
-
-   // Function to get the current workspace
-   const getWorkspace = () => {
-      if (workspaces.length == 1) {
-         if (workspaces[0].id != id) {
-            router.push("/boards")
-         } else {
-            return workspaces[0]
-         }
-      }
-      const workspace = workspaces?.find((w) => w.id === id)
-      return workspace
    }
 
    // Function to toggle star status of a board
@@ -169,7 +99,7 @@ export default function WorkspacePage() {
             addBoard={addBoard}
             changeStar={changeStar}
             workspaces={workspaces}
-            workspace={getWorkspace()}
+            workspace={currentWorkspace}
          />
       </div>
    )

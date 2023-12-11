@@ -18,14 +18,9 @@ export default function BoardDetailPage() {
    const id = pathName.split("/").at(-1)
    const workspaceId = pathName.split("/").at(-2)
 
-   const { board, fetchBoard } = useBoard(id as string, workspaceId ?? "")
-
+   const { board, updateBoard } = useBoard(id as string, workspaceId ?? "")
    const { workspaces, getWorkspaces, currentWorkspace, getStarredBoards } =
       useWorkspaces(workspaceId ?? "")
-
-   useEffect(() => {
-      getWorkspaces()
-   }, [getWorkspaces])
 
    const starBoard = async (boardId: string, workspaceId: string) => {
       const workspaceUpdate = workspaces?.find((w) => {
@@ -48,21 +43,6 @@ export default function BoardDetailPage() {
 
    const getWorkspace = (id: string) => {
       return workspaces.find((w) => w.id === id)
-   }
-
-   const updateBoard = async (columns: ColumnType[]) => {
-      try {
-         const workspace = getWorkspace(workspaceId ?? "")
-         if (workspace) {
-            await updateDoc(doc(db, "workspaces", workspace.id), {
-               ...workspace,
-               board: { ...workspace.boards, columns: columns },
-            })
-            fetchBoard()
-         }
-      } catch (error) {
-         console.error("Error updating board:", error)
-      }
    }
 
    const renameBoard = async (newName: string) => {
@@ -98,11 +78,11 @@ export default function BoardDetailPage() {
       }
    }
 
-   const deleteColumn = (id: string) => {
+   const deleteColumn = async (id: string) => {
       const newList = board?.columns.filter((col) => {
          return col.id !== id
       })
-      reSetBoard(newList || [])
+      await reSetBoard(newList || [])
       getWorkspaces()
    }
 

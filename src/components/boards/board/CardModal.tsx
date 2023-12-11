@@ -287,7 +287,6 @@ function CardModal(props: Props) {
    }
 
    const addOption = async (fieldId: string, option: DropdownFieldItem) => {
-      console.log(option)
       const field = fields.filter(
          (f) => f.id === fieldId
       )[0] as DropdownFieldType
@@ -295,7 +294,6 @@ function CardModal(props: Props) {
          ...field,
          options: [...field.options, option],
       }
-      console.log(newField)
       await updateDoc(doc(db, "fields", newField.id), newField)
       getFields()
    }
@@ -450,357 +448,350 @@ function CardModal(props: Props) {
    }
 
    return (
-      <>
-         <div className=' z-40 overflow-y-auto w-full h-full min-h-[100vh] min-w-[100vw] top-0 left-0 right-0 bottom-0 fixed bg-black bg-opacity-75 flex items-start pt-20 pb-10 justify-center'>
+      <div className='fixed bottom-0 left-0 right-0 top-0 z-40 flex h-full min-h-[100vh] w-full min-w-[100vw] items-start justify-center overflow-y-auto bg-black bg-opacity-75 pb-10 pt-20'>
+         <div
+            onClick={handleClickInside}
+            ref={ref}
+            className='modal relative z-50 w-full max-w-[1000px] rounded-xl bg-white pb-5'
+         >
             <div
-               onClick={handleClickInside}
-               ref={ref}
-               className='w-full rounded-xl modal z-50 bg-white pb-5 max-w-[1000px] relative'
+               onClick={handleClickOutside}
+               className={`p-2 rounded-full bg-opacity-0 hover:bg-opacity-30 bg-slate-200 cursor-pointer absolute ${
+                  props.card?.image.type && props.card?.image.ntn
+                     ? "text-white"
+                     : "text-black"
+               } text-xl right-[5px] top-[5px] hover:backdrop-blur-md bg-clip-padding backdrop-filter `}
             >
-               <div
-                  onClick={handleClickOutside}
-                  className={`p-2 rounded-full bg-opacity-0 hover:bg-opacity-30 bg-slate-200 cursor-pointer absolute ${
-                     props.card?.image.type && props.card?.image.ntn
-                        ? "text-white"
-                        : "text-black"
-                  } text-xl right-[5px] top-[5px] hover:backdrop-blur-md bg-clip-padding backdrop-filter `}
-               >
-                  <AiOutlineClose />
+               <AiOutlineClose />
+            </div>
+            {cover.ntn > 0 && cover.type && (
+               <div className='flex h-[400px] w-full items-center justify-center overflow-hidden rounded-t-xl'>
+                  <Image
+                     width={1000}
+                     height={1000}
+                     className='h-full object-fill'
+                     src={`/assets/background/bg-${cover.type}/bg${cover.ntn}.jpg`}
+                     alt=''
+                     priority
+                  />
                </div>
-               {cover.ntn > 0 && cover.type && (
-                  <div className='w-full h-[400px] overflow-hidden flex items-center justify-center rounded-t-xl'>
-                     <Image
-                        width={1000}
-                        height={1000}
-                        className='h-full object-fill'
-                        src={`/assets/background/bg-${cover.type}/bg${cover.ntn}.jpg`}
-                        alt=''
-                        priority
-                     />
+            )}
+            <div className='flex items-start justify-between p-3'>
+               <div className='flex items-start justify-start'>
+                  <div className='p-2 text-xl'>
+                     <FaFlipboard />
                   </div>
-               )}
-               <div className='flex items-start justify-between p-3'>
-                  <div className='flex items-start justify-start'>
-                     <div className='p-2 text-xl'>
-                        <FaFlipboard />
+                  <div className='p-1'>
+                     <h2 className='text-lg font-medium'>{props.card.text}</h2>
+                     <span className='text-sm'>
+                        in list{" "}
+                        <span className='underline'>{props.column.name}</span>
+                     </span>
+                  </div>
+               </div>
+            </div>
+
+            <div className='mt-2 grid grid-cols-5 gap-3 p-3'>
+               <div className='col-span-5 md:col-span-4'>
+                  {props.card.labels.length > 0 && (
+                     <div className='mb-5 w-full pl-10'>
+                        <h2 className='text-sm font-medium'>Labels</h2>
+                        <br />
+                        <div className='flex flex-wrap items-start justify-start'>
+                           {props.card.labels.map((l, index) => {
+                              return (
+                                 <div
+                                    style={{ backgroundColor: l }}
+                                    className='mb-[2px] mr-[2px] h-[35px] w-[50px] rounded-md'
+                                    key={index}
+                                 ></div>
+                              )
+                           })}
+                        </div>
+                     </div>
+                  )}
+                  <div className='flex w-full items-center justify-start'>
+                     <div className='p-2 text-lg'>
+                        <AiOutlineMenu />
                      </div>
                      <div className='p-1'>
-                        <h2 className='text-lg font-medium'>
-                           {props.card.text}
-                        </h2>
-                        <span className='text-sm'>
-                           in list{" "}
-                           <span className='underline'>
-                              {props.column.name}
-                           </span>
-                        </span>
+                        <h2 className='text-lg font-medium'>Description</h2>
                      </div>
                   </div>
-               </div>
-
-               <div className='grid grid-cols-5 gap-3 mt-2 p-3'>
-                  <div className='md:col-span-4 col-span-5'>
-                     {props.card.labels.length > 0 && (
-                        <div className='w-full mb-5 pl-10'>
-                           <h2 className='font-medium text-sm'>Labels</h2>
-                           <br />
-                           <div className=' flex items-start justify-start flex-wrap '>
-                              {props.card.labels.map((l, index) => {
-                                 return (
-                                    <div
-                                       style={{ backgroundColor: l }}
-                                       className='w-[50px] h-[35px] rounded-md mr-[2px] mb-[2px]'
-                                       key={index}
-                                    ></div>
-                                 )
-                              })}
+                  <div className='w-full pl-10'>
+                     {!showInput && description !== "" && (
+                        <div
+                           onClick={() => {
+                              setShowInput(true)
+                           }}
+                           className='w-full cursor-pointer bg-slate-50 p-3'
+                        >
+                           {renderHTML(description)}
+                        </div>
+                     )}
+                     {!showInput && description === "" && (
+                        <div
+                           onClick={() => {
+                              setShowInput(true)
+                           }}
+                           className='relative h-[70px] w-full cursor-pointer rounded-md bg-slate-50 hover:bg-slate-100'
+                        >
+                           <span className='absolute left-0 top-0 p-2 text-opacity-50'>
+                              Add a more detailed description...
+                           </span>
+                        </div>
+                     )}
+                     {showInput && (
+                        <div className=''>
+                           <CKEditor
+                              editor={ClassicEditor}
+                              data={description}
+                              onChange={(event, editor) => {
+                                 const data = editor.getData()
+                                 setDescription(data)
+                              }}
+                           />
+                           <div className='mt-5'>
+                              <button
+                                 onClick={() => {
+                                    props.addCardDescription(
+                                       props.card.id,
+                                       description
+                                    )
+                                    setShowInput(false)
+                                 }}
+                                 className='mr-4 rounded-sm bg-blue-500 px-3 py-2 text-sm font-medium text-white hover:bg-blue-600'
+                              >
+                                 Save
+                              </button>
+                              <button
+                                 onClick={() => {
+                                    setShowInput(false)
+                                 }}
+                                 className='rounded-sm bg-slate-100 px-3 py-2 text-sm font-medium hover:bg-slate-200'
+                              >
+                                 Cancel
+                              </button>
                            </div>
                         </div>
                      )}
-                     <div className='w-full flex items-center justify-start'>
-                        <div className='p-2 text-lg'>
-                           <AiOutlineMenu />
+                  </div>
+                  {fields.length > 0 && (
+                     <>
+                        <div className='mt-5 flex items-center justify-start p-1'>
+                           <div className='p-2 text-lg'>
+                              <LuRectangleHorizontal />
+                           </div>
+                           <h2 className='text-lg font-medium'>
+                              Custom Fields
+                           </h2>
                         </div>
-                        <div className='p-1'>
-                           <h2 className='text-lg font-medium'>Description</h2>
+                        <div className='mt-3 grid w-full grid-cols-2 items-center justify-start gap-3 pl-10 sm:grid-cols-3 md:grid-cols-4'>
+                           {fields.map((f, i) => {
+                              return (
+                                 <FieldPreview
+                                    columnId={props.column.id}
+                                    addField={props.addField}
+                                    removeField={props.removeField}
+                                    card={props.card}
+                                    key={i}
+                                    field={f}
+                                    updateOrAddField={props.updateOrAddField}
+                                 />
+                              )
+                           })}
                         </div>
+                     </>
+                  )}
+                  <div className='mt-5 flex w-full items-center justify-start'>
+                     <div className='p-2 text-lg'>
+                        <RxActivityLog />
                      </div>
-                     <div className='w-full pl-10'>
-                        {!showInput && description !== "" && (
-                           <div
-                              onClick={() => {
-                                 setShowInput(true)
-                              }}
-                              className='cursor-pointer w-full p-3 bg-slate-50'
-                           >
-                              {renderHTML(description)}
-                           </div>
-                        )}
-                        {!showInput && description === "" && (
-                           <div
-                              onClick={() => {
-                                 setShowInput(true)
-                              }}
-                              className='bg-slate-50 hover:bg-slate-100 cursor-pointer relative w-full h-[70px] rounded-md '
-                           >
-                              <span className='p-2 absolute top-0 left-0 text-opacity-50 '>
-                                 Add a more detailed description...
-                              </span>
-                           </div>
-                        )}
-                        {showInput && (
-                           <div className=''>
-                              <CKEditor
-                                 editor={ClassicEditor}
-                                 data={description}
-                                 onChange={(event, editor) => {
-                                    const data = editor.getData()
-                                    setDescription(data)
-                                 }}
-                              />
-                              <div className='mt-5'>
-                                 <button
-                                    onClick={() => {
-                                       props.addCardDescription(
-                                          props.card.id,
-                                          description
-                                       )
-                                       setShowInput(false)
-                                    }}
-                                    className='py-2 px-3 bg-blue-500 text-white mr-4 hover:bg-blue-600 rounded-sm text-sm font-medium'
-                                 >
-                                    Save
-                                 </button>
-                                 <button
-                                    onClick={() => {
-                                       setShowInput(false)
-                                    }}
-                                    className='py-2 px-3 bg-slate-100 hover:bg-slate-200 rounded-sm text-sm font-medium'
-                                 >
-                                    Cancel
-                                 </button>
-                              </div>
-                           </div>
-                        )}
+                     <div className='p-1'>
+                        <h2 className='text-lg font-medium'>Activities</h2>
                      </div>
-                     {fields.length > 0 && (
+                  </div>
+                  <div className='mt-3 flex w-full items-start pb-5'>
+                     <div className='relative mr-3 w-fit rounded-full bg-gradient-to-r from-sky-500 to-indigo-500 p-4 text-sm font-semibold text-white'>
+                        <span className='absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]'>
+                           {user.email.toUpperCase().charAt(0)}
+                        </span>
+                     </div>
+                     {showComment && (
                         <>
-                           <div className='p-1  flex items-center justify-start mt-5'>
-                              <div className='p-2 text-lg'>
-                                 <LuRectangleHorizontal />
-                              </div>
-                              <h2 className='text-lg font-medium'>
-                                 Custom Fields
-                              </h2>
-                           </div>
-                           <div className='w-full items-center justify-start mt-3 pl-10 grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4'>
-                              {/* TODO  */}
-                              {fields.map((f, i) => {
-                                 return (
-                                    <FieldPreview
-                                       columnId={props.column.id}
-                                       addField={props.addField}
-                                       removeField={props.removeField}
-                                       card={props.card}
-                                       key={i}
-                                       field={f}
-                                       updateOrAddField={props.updateOrAddField}
-                                    />
-                                 )
-                              })}
+                           <div className='mr-3 w-full'>
+                              <input
+                                 value={comment}
+                                 onChange={(e) => {
+                                    setComment(e.target.value)
+                                 }}
+                                 className='card-shadow relative w-full rounded-[10px] p-3 outline-none'
+                                 placeholder='Write a comment...'
+                                 autoFocus
+                              />
+                              <button
+                                 onClick={addComment}
+                                 className='mt-3 rounded-sm bg-blue-500 px-3 py-1 font-semibold text-white hover:bg-blue-600'
+                              >
+                                 Save
+                              </button>
                            </div>
                         </>
                      )}
-                     <div className='w-full flex items-center justify-start mt-5'>
-                        <div className='p-2 text-lg'>
-                           <RxActivityLog />
-                        </div>
-                        <div className='p-1'>
-                           <h2 className='text-lg font-medium'>Activities</h2>
-                        </div>
-                     </div>
-                     <div className='w-full mt-3 flex pb-5 items-start'>
-                        <div className='relative mr-3 p-4 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-indigo-500 w-fit'>
-                           <span className='absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] '>
-                              {user.email.toUpperCase().charAt(0)}
-                           </span>
-                        </div>
-                        {showComment && (
-                           <>
-                              <div className='w-full mr-3'>
-                                 <input
-                                    value={comment}
-                                    onChange={(e) => {
-                                       setComment(e.target.value)
-                                    }}
-                                    className='relative w-full rounded-[10px] card-shadow outline-none p-3'
-                                    placeholder='Write a comment...'
-                                    autoFocus
-                                 />
-                                 <button
-                                    onClick={addComment}
-                                    className='py-1 mt-3 px-3 rounded-sm bg-blue-500 hover:bg-blue-600 text-white font-semibold'
-                                 >
-                                    Save
-                                 </button>
-                              </div>
-                           </>
-                        )}
-                        {!showComment && (
-                           <>
-                              <div
-                                 onClick={() => {
-                                    setShowComment(true)
-                                 }}
-                                 className='relative w-full rounded-[10px] card-shadow p-4 mr-3 bg-white hover:bg-slate-50 cursor-pointer'
-                              >
-                                 <span className='absolute top-[50%] translate-y-[-50%] text-sm '>
-                                    Write a comment...
-                                 </span>
-                              </div>
-                           </>
-                        )}
-                     </div>
-                     <div className='w-full'>
-                        {props.card.comments.map((c) => {
-                           return (
-                              <CardComment
-                                 updateComment={updateComment}
-                                 key={c.id}
-                                 comment={c}
-                                 deleteComment={deleteComment}
-                              />
-                           )
-                        })}
-                     </div>
+                     {!showComment && (
+                        <>
+                           <div
+                              onClick={() => {
+                                 setShowComment(true)
+                              }}
+                              className='card-shadow relative mr-3 w-full cursor-pointer rounded-[10px] bg-white p-4 hover:bg-slate-50'
+                           >
+                              <span className='absolute top-[50%] translate-y-[-50%] text-sm'>
+                                 Write a comment...
+                              </span>
+                           </div>
+                        </>
+                     )}
                   </div>
-                  <div className='md:col-span-1 col-span-5'>
-                     <div>
-                        <span className='text-xs font-medium'>Add to card</span>
-                     </div>
-                     <div>
-                        <div className='relative'>
-                           <div
-                              onClick={() => {
-                                 setShowSelectLabel(!showSelectLabel)
-                              }}
-                           >
-                              <CardEdit type={"Labels"}>
-                                 <MdOutlineLabel />
-                              </CardEdit>
-                           </div>
-                           {showSelectLabel && (
-                              <CardLabelSelect
-                                 cardId={props.card.id}
-                                 setLabels={props.setLabels}
-                                 labels={labels}
-                                 setShowSelectLabel={setShowSelectLabel}
-                              />
-                           )}
+                  <div className='w-full'>
+                     {props.card.comments.map((c) => {
+                        return (
+                           <CardComment
+                              updateComment={updateComment}
+                              key={c.id}
+                              comment={c}
+                              deleteComment={deleteComment}
+                           />
+                        )
+                     })}
+                  </div>
+               </div>
+               <div className='col-span-5 md:col-span-1'>
+                  <div>
+                     <span className='text-xs font-medium'>Add to card</span>
+                  </div>
+                  <div>
+                     <div className='relative'>
+                        <div
+                           onClick={() => {
+                              setShowSelectLabel(!showSelectLabel)
+                           }}
+                        >
+                           <CardEdit type={"Labels"}>
+                              <MdOutlineLabel />
+                           </CardEdit>
                         </div>
-                        <div className='relative'>
-                           <div
-                              onClick={() => {
-                                 setShowSelectCover(!showSelectCover)
-                              }}
-                           >
-                              <CardEdit type={"Cover"}>
-                                 <BiImage />
-                              </CardEdit>
-                           </div>
-                           {showSelectCover && (
-                              <CardCoverSelect
-                                 setCoverCard={props.setCoverCard}
-                                 cover={cover}
-                                 setShowSelectCover={setShowSelectCover}
-                              />
-                           )}
-                        </div>
-                        <div className='relative'>
-                           <div
-                              onClick={() => {
-                                 setShowSelectFields({
-                                    show: !showSelectFields.show,
-                                    tab: "",
-                                 })
-                              }}
-                           >
-                              <CardEdit type={"Custom Fields"}>
-                                 <LuRectangleHorizontal />
-                              </CardEdit>
-                           </div>
-                           {showSelectFields.show &&
-                              showSelectFields.tab === "" && (
-                                 <CardFieldsSelect
-                                    fields={fields}
-                                    addField={addField}
-                                    boardId={props.board?.id}
-                                    showSelectFields={showSelectFields}
-                                    setShowSelectFields={setShowSelectFields}
-                                    addOption={addOption}
-                                    renameField={renameField}
-                                    changeBgOption={changeBgOption}
-                                    changeTitleOption={changeTitleOption}
-                                    deleteField={deleteField}
-                                    deleteOption={deleteOption}
-                                 />
-                              )}
-                           {showSelectFields.show &&
-                              showSelectFields.tab === "addField" && (
-                                 <AddField
-                                    showSelectFields={showSelectFields}
-                                    setShowSelectFields={setShowSelectFields}
-                                    addField={addField}
-                                 />
-                              )}
-                        </div>
-                     </div>
-                     <div>
-                        <span className='text-xs font-medium'>Actions</span>
+                        {showSelectLabel && (
+                           <CardLabelSelect
+                              cardId={props.card.id}
+                              setLabels={props.setLabels}
+                              labels={labels}
+                              setShowSelectLabel={setShowSelectLabel}
+                           />
+                        )}
                      </div>
                      <div className='relative'>
                         <div
                            onClick={() => {
-                              setShowMoveSelect(!showMoveSelect)
+                              setShowSelectCover(!showSelectCover)
                            }}
                         >
-                           <CardEdit type={"Move"}>
-                              <IoIosArrowRoundForward />
+                           <CardEdit type={"Cover"}>
+                              <BiImage />
                            </CardEdit>
                         </div>
-                        {showMoveSelect && (
-                           <CardMoveSelect
-                              moveCardBetweenWorkspaces={
-                                 props.moveCardBetweenWorkspaces
-                              }
-                              setShowMoveSelect={setShowMoveSelect}
-                              workspaces={props.workspaces}
-                              board={props.board}
-                              card={props.card}
-                              column={props.column}
-                              deleteCard={props.deleteCard}
-                              moveCardWithinWorkspace={
-                                 props.moveCardWithinWorkspace
-                              }
-                              workspace={props.workspace}
-                              moveCardWithinBoard={props.moveCardWithinBoard}
+                        {showSelectCover && (
+                           <CardCoverSelect
+                              setCoverCard={props.setCoverCard}
+                              cover={cover}
+                              setShowSelectCover={setShowSelectCover}
                            />
                         )}
                      </div>
+                     <div className='relative'>
+                        <div
+                           onClick={() => {
+                              setShowSelectFields({
+                                 show: !showSelectFields.show,
+                                 tab: "",
+                              })
+                           }}
+                        >
+                           <CardEdit type={"Custom Fields"}>
+                              <LuRectangleHorizontal />
+                           </CardEdit>
+                        </div>
+                        {showSelectFields.show &&
+                           showSelectFields.tab === "" && (
+                              <CardFieldsSelect
+                                 fields={fields}
+                                 addField={addField}
+                                 boardId={props.board?.id}
+                                 showSelectFields={showSelectFields}
+                                 setShowSelectFields={setShowSelectFields}
+                                 addOption={addOption}
+                                 renameField={renameField}
+                                 changeBgOption={changeBgOption}
+                                 changeTitleOption={changeTitleOption}
+                                 deleteField={deleteField}
+                                 deleteOption={deleteOption}
+                              />
+                           )}
+                        {showSelectFields.show &&
+                           showSelectFields.tab === "addField" && (
+                              <AddField
+                                 showSelectFields={showSelectFields}
+                                 setShowSelectFields={setShowSelectFields}
+                                 addField={addField}
+                              />
+                           )}
+                     </div>
+                  </div>
+                  <div>
+                     <span className='text-xs font-medium'>Actions</span>
+                  </div>
+                  <div className='relative'>
                      <div
                         onClick={() => {
-                           props.deleteCard(props.card.id)
+                           setShowMoveSelect(!showMoveSelect)
                         }}
                      >
-                        <CardEdit type={"Delete"}>
-                           <AiOutlineDelete />
+                        <CardEdit type={"Move"}>
+                           <IoIosArrowRoundForward />
                         </CardEdit>
                      </div>
+                     {showMoveSelect && (
+                        <CardMoveSelect
+                           moveCardBetweenWorkspaces={
+                              props.moveCardBetweenWorkspaces
+                           }
+                           setShowMoveSelect={setShowMoveSelect}
+                           workspaces={props.workspaces}
+                           board={props.board}
+                           card={props.card}
+                           column={props.column}
+                           deleteCard={props.deleteCard}
+                           moveCardWithinWorkspace={
+                              props.moveCardWithinWorkspace
+                           }
+                           workspace={props.workspace}
+                           moveCardWithinBoard={props.moveCardWithinBoard}
+                        />
+                     )}
+                  </div>
+                  <div
+                     onClick={() => {
+                        props.deleteCard(props.card.id)
+                     }}
+                  >
+                     <CardEdit type={"Delete"}>
+                        <AiOutlineDelete />
+                     </CardEdit>
                   </div>
                </div>
             </div>
          </div>
-      </>
+      </div>
    )
 }
 

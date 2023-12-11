@@ -1,17 +1,13 @@
-import { Board, WorkspaceType } from "@/types"
-import React, { useEffect } from "react"
-import { collection, doc, getDocs, updateDoc } from "@firebase/firestore"
-
 import { AiOutlineClose } from "react-icons/ai"
 import Background from "./Background"
 import BackgroundSelect from "./BackgroundSelect"
 import { HiOutlineDotsHorizontal } from "react-icons/hi"
 import Image from "next/image"
+import React from "react"
 import { SlArrowLeft } from "react-icons/sl"
+import { WorkspaceType } from "@/types"
 import { addRecent } from "@/userMethods"
-import { db } from "@/firebase"
 import { nanoid } from "nanoid"
-import { useAppSelector } from "@/app/redux/store"
 import useBoard from "@/hooks/board"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -45,14 +41,15 @@ function CreateBoard(props: Props) {
          workspaceId: props.workspaceId,
       })
       const w = props.workspaces?.find((w) => w.id === props.workspaceId)
-      await addBoard({
+      const board = {
          background: selectBg,
          columns: [],
          id: nanoid(),
          star: false,
          title: title,
          workspaceId: w?.id ?? props.workspaceId,
-      })
+      }
+      await addBoard(board)
    }
 
    return (

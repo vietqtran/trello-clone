@@ -4,67 +4,54 @@ import { useCallback, useEffect, useState } from "react"
 
 import { db } from "@/firebase"
 import { nanoid } from "nanoid"
-import { setDoc } from "firebase/firestore"
 import { useRouter } from "next/navigation"
+import useWorkspaces from "./workspace"
 
 function useBoard(boardId: string, workspaceId: string) {
    const [board, setBoard] = useState<Board | null>(null)
    const router = useRouter()
+   const { workspaces, currentWorkspace } = useWorkspaces(workspaceId)
 
    const fetchBoard = useCallback(async () => {
       try {
-         const boardDocRef = doc(
-            db,
-            "workspaces",
-            workspaceId,
-            "boards",
-            boardId
-         )
-         const boardSnapshot = await getDoc(boardDocRef)
-
-         if (boardSnapshot.exists()) {
-            const data = boardSnapshot.data()
-            setBoard({
-               id: boardId,
-               ...data,
-            } as Board)
+         const workspace = workspaces.find((w) => w.id === workspaceId)
+         const board = workspace?.boards?.find((b) => b.id === boardId)
+         if (board) {
+            setBoard(board)
          }
       } catch (error) {}
-   }, [boardId, workspaceId])
+   }, [workspaces])
 
    useEffect(() => {
-      if (boardId && workspaceId) {
-         fetchBoard()
-      }
-   }, [boardId, workspaceId, fetchBoard])
+      fetchBoard()
+   }, [fetchBoard])
 
    const addBoard = async (newBoardData: Board) => {
-      try {
-         const newBoardId = nanoid()
-         const boardDocRef = doc(
-            db,
-            "workspaces",
-            workspaceId,
-            "boards",
-            newBoardId
-         )
-         await setDoc(boardDocRef, newBoardData)
-         router.push(`/boards/${workspaceId}/${newBoardId}`)
-      } catch (error) {}
+      const workspaceUpdate = workspaces?.find((w) => {
+         return w.id === newBoardData.workspaceId
+      })
+      const boardsUpdate = workspaceUpdate?.boards?.push(newBoardData)
+      await updateDoc(doc(db, "workspaces", workspaceUpdate?.id ?? ""), {
+         boards: boardsUpdate,
+         ...workspaceUpdate,
+      })
+      router.push(`/boards/${workspaceUpdate?.id ?? ""}/${newBoardData.id}`)
    }
 
    const updateBoard = async (columns: ColumnType[]) => {
-      try {
-         const boardDocRef = doc(
-            db,
-            "workspaces",
-            workspaceId,
-            "boards",
-            boardId
-         )
-         await updateDoc(boardDocRef, { ...board, columns: columns })
-         fetchBoard()
-      } catch (error) {}
+      const newBoards: Board[] | undefined = currentWorkspace?.boards?.map(
+         (b) => {
+            if (b.id === board?.id) {
+               return { ...b, columns: [...columns] }
+            }
+            return { ...b }
+         }
+      )
+      await updateDoc(doc(db, "workspaces", currentWorkspace?.id ?? ""), {
+         ...currentWorkspace,
+         boards: newBoards,
+      })
+      fetchBoard()
    }
 
    const addColumn = async (name: string) => {

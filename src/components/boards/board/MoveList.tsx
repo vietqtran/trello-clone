@@ -105,7 +105,6 @@ function MoveList(props: Props) {
                                     return (
                                        <span
                                           onClick={() => {
-                                             console.log(b)
                                              setBoard(b)
                                           }}
                                           key={b.id}

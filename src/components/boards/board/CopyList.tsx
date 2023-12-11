@@ -1,8 +1,9 @@
-import { ColumnType } from "@/types"
 import React, { useRef, useState } from "react"
 import { RiArrowLeftSLine, RiCloseLine } from "react-icons/ri"
-import { useOnClickOutside } from "usehooks-ts"
+
+import { ColumnType } from "@/types"
 import { nanoid } from "nanoid"
+import { useOnClickOutside } from "usehooks-ts"
 
 type Props = {
    setShowActions: Function
@@ -19,7 +20,7 @@ function CopyList(props: Props) {
    const handleClickInside = () => {}
    useOnClickOutside(ref, handleClickOutside)
 
-   const handleAdd = () => {
+   const handleAdd = async () => {
       if (name.length === 0 || name === "") {
       } else {
          const newCards = props.column.cards.map((card) => {
@@ -28,21 +29,25 @@ function CopyList(props: Props) {
                id: nanoid(),
             }
          })
-         props.handleAddList({ id: nanoid(), name: name, cards: newCards })
+         await props.handleAddList({
+            id: nanoid(),
+            name: name,
+            cards: newCards,
+         })
       }
    }
    return (
       <div
          ref={ref}
          onClick={handleClickInside}
-         className='drop-menu-shadow pt-1 pb-2 absolute left-[calc(100%-40px)] top-[calc(100%+2px)] w-[306px] bg-white z-10 rounded-md'
+         className='drop-menu-shadow absolute left-[calc(100%-40px)] top-[calc(100%+2px)] z-10 w-[306px] rounded-md bg-white pb-2 pt-1'
       >
          <div className='mx-1 flex items-center justify-between'>
             <span
                onClick={() => {
                   props.setShowActions({ show: true, tab: "" })
                }}
-               className='p-2 cursor-pointer rounded-md hover:bg-slate-100'
+               className='cursor-pointer rounded-md p-2 hover:bg-slate-100'
             >
                <RiArrowLeftSLine />
             </span>
@@ -51,7 +56,7 @@ function CopyList(props: Props) {
                onClick={() => {
                   props.setShowActions({ show: false, tab: "" })
                }}
-               className='p-2 cursor-pointer rounded-md hover:bg-slate-100'
+               className='cursor-pointer rounded-md p-2 hover:bg-slate-100'
             >
                <RiCloseLine />
             </span>
@@ -59,7 +64,7 @@ function CopyList(props: Props) {
          <div className='p-2'>
             <h1 className='text-xs font-bold'>Name</h1>
             <textarea
-               className='p-2 border-2 w-full border-slate-500'
+               className='w-full border-2 border-slate-500 p-2'
                autoFocus
                value={name}
                onChange={(e) => {
@@ -68,7 +73,7 @@ function CopyList(props: Props) {
             ></textarea>
             <button
                onClick={handleAdd}
-               className='text-sm mt-2 px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white'
+               className='mt-2 rounded-md bg-blue-500 px-4 py-2 text-sm text-white hover:bg-blue-600'
             >
                Create List
             </button>
